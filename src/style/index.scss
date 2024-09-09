@@ -1,0 +1,41 @@
+// @import './iconfont.css';
+
+.test {
+  // 可以通过 @apply 多个样式封装整体样式
+  @apply mt-4 ml-4;
+
+  padding-top: 4px;
+  color: red;
+}
+
+:root,
+page {
+  // 修改按主题色
+  // --wot-color-theme: #37c2bc;
+
+  // 修改按钮背景色
+  // --wot-button-primary-bg-color: green;
+}
+
+.pageCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+div,
+view {
+  box-sizing: border-box;
+}
+
+@mixin CenterHorVertical() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

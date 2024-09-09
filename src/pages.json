@@ -1,0 +1,102 @@
+{
+  "globalStyle": {
+    "navigationStyle": "default",
+    "navigationBarTitleText": "unibest",
+    "navigationBarBackgroundColor": "#f8f8f8",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FFFFFF"
+  },
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue",
+      "^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "z-paging/components/z-paging$1/z-paging$1.vue"
+    }
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#018d71",
+    "backgroundColor": "#F8F8F8",
+    "borderStyle": "black",
+    "height": "50px",
+    "fontSize": "10px",
+    "iconWidth": "24px",
+    "spacing": "3px",
+    "list": [
+      {
+        "pagePath": "pages/noPage1/index",
+        "text": "noPage1"
+      },
+      {
+        "pagePath": "pages/noPage2/index",
+        "text": "noPage2"
+      }
+    ]
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "type": "home",
+      "style": {
+        "navigationStyle": "default",
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/about/about",
+      "type": "page",
+      "style": {
+        "navigationBarTitleText": "关于"
+      },
+      "needLogin": true
+    },
+    {
+      "path": "pages/blood/collect",
+      "type": "page"
+    },
+    {
+      "path": "pages/list/index",
+      "type": "page",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/login/face",
+      "type": "page",
+      "style": {
+        "navigationBarTitleText": "人脸识别认证"
+      }
+    },
+    {
+      "path": "pages/login/identity",
+      "type": "page",
+      "style": {
+        "navigationBarTitleText": "登录注册"
+      }
+    },
+    {
+      "path": "pages/login/index",
+      "type": "page",
+      "style": {
+        "navigationBarTitleText": "登录注册"
+      }
+    },
+    {
+      "path": "pages/login/loginByWx",
+      "type": "page",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/noPage1/index",
+      "type": "page"
+    },
+    {
+      "path": "pages/noPage2/index",
+      "type": "page"
+    }
+  ],
+  "subPackages": []
+}
