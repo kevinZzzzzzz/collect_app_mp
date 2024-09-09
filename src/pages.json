@@ -52,7 +52,10 @@
     },
     {
       "path": "pages/blood/collect",
-      "type": "page"
+      "type": "page",
+      "style": {
+        "navigationBarTitleText": "血液揽收"
+      }
     },
     {
       "path": "pages/list/index",
