@@ -70,7 +70,13 @@ export default defineManifestConfig({
       /* ios打包配置 */
       ios: {},
       /* SDK配置 */
-      sdkConfigs: {},
+      sdkConfigs: {
+        maps: {
+          qqmap: {
+            key: 'W5TBZ-QMOE5-JNOI4-QUFHU-3ITS2-2VFXD',
+          },
+        },
+      },
       /* 图标配置 */
       icons: {
         android: {

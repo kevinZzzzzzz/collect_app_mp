@@ -5,20 +5,17 @@
 
 interface NavigateToOptions {
   url: "/pages/index/index" |
-       "/pages/about/about" |
-       "/pages/blood/collect" |
-       "/pages/list/index" |
        "/pages/login/face" |
        "/pages/login/identity" |
        "/pages/login/index" |
        "/pages/login/loginByWx" |
-       "/pages/noPage1/index" |
-       "/pages/noPage2/index";
+       "/packageA/blood/collect" |
+       "/packageA/blood/detail";
 }
 interface RedirectToOptions extends NavigateToOptions {}
 
 interface SwitchTabOptions {
-  url: "/pages/noPage1/index" | "/pages/noPage2/index"
+  url: "/pages/index/index" | "/pages/login/index"
 }
 
 type ReLaunchOptions = NavigateToOptions | SwitchTabOptions;

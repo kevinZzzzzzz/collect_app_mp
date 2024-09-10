@@ -43,7 +43,13 @@
         ]
       },
       "ios": {},
-      "sdkConfigs": {},
+      "sdkConfigs": {
+        "maps": {
+          "qqmap": {
+            "key": "W5TBZ-QMOE5-JNOI4-QUFHU-3ITS2-2VFXD"
+          }
+        }
+      },
       "icons": {
         "android": {
           "hdpi": "static/app/icons/72x72.png",

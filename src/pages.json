@@ -24,15 +24,36 @@
     "spacing": "3px",
     "list": [
       {
-        "pagePath": "pages/noPage1/index",
-        "text": "noPage1"
+        "pagePath": "pages/index/index",
+        "text": "首页"
       },
       {
-        "pagePath": "pages/noPage2/index",
-        "text": "noPage2"
+        "pagePath": "pages/login/index",
+        "text": "登录"
       }
     ]
   },
+  "subPackages": [
+    {
+      "root": "packageA",
+      "pages": [
+        {
+          "path": "blood/collect",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "血液揽收"
+          }
+        },
+        {
+          "path": "blood/detail",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "待揽收"
+          }
+        }
+      ]
+    }
+  ],
   "pages": [
     {
       "path": "pages/index/index",
@@ -40,28 +61,6 @@
       "style": {
         "navigationStyle": "default",
         "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "pages/about/about",
-      "type": "page",
-      "style": {
-        "navigationBarTitleText": "关于"
-      },
-      "needLogin": true
-    },
-    {
-      "path": "pages/blood/collect",
-      "type": "page",
-      "style": {
-        "navigationBarTitleText": "血液揽收"
-      }
-    },
-    {
-      "path": "pages/list/index",
-      "type": "page",
-      "style": {
-        "navigationStyle": "custom"
       }
     },
     {
@@ -91,15 +90,6 @@
       "style": {
         "navigationBarTitleText": "登录"
       }
-    },
-    {
-      "path": "pages/noPage1/index",
-      "type": "page"
-    },
-    {
-      "path": "pages/noPage2/index",
-      "type": "page"
     }
-  ],
-  "subPackages": []
+  ]
 }

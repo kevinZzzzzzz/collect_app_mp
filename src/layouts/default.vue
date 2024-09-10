@@ -13,6 +13,7 @@ const themeVars: ConfigProviderThemeVars = {
   // colorTheme: 'red',
   buttonPrimaryBgColor: '#1890FF',
   buttonPrimaryColor: '#fff',
+  calendarActiveColor: '#1890FF',
 }
 </script>
 
