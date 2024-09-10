@@ -25,6 +25,13 @@ export default defineManifestConfig({
     router: {
       base: VITE_APP_PUBLIC_BASE,
     },
+    sdkConfigs: {
+      maps: {
+        qqmap: {
+          key: 'W5TBZ-QMOE5-JNOI4-QUFHU-3ITS2-2VFXD',
+        },
+      },
+    },
   },
   /* 5+App特有相关 */
   'app-plus': {
@@ -70,13 +77,7 @@ export default defineManifestConfig({
       /* ios打包配置 */
       ios: {},
       /* SDK配置 */
-      sdkConfigs: {
-        maps: {
-          qqmap: {
-            key: 'W5TBZ-QMOE5-JNOI4-QUFHU-3ITS2-2VFXD',
-          },
-        },
-      },
+      sdkConfigs: {},
       /* 图标配置 */
       icons: {
         android: {

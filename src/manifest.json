@@ -43,13 +43,7 @@
         ]
       },
       "ios": {},
-      "sdkConfigs": {
-        "maps": {
-          "qqmap": {
-            "key": "W5TBZ-QMOE5-JNOI4-QUFHU-3ITS2-2VFXD"
-          }
-        }
-      },
+      "sdkConfigs": {},
       "icons": {
         "android": {
           "hdpi": "static/app/icons/72x72.png",
@@ -113,6 +107,13 @@
   "h5": {
     "router": {
       "base": "/unibest/"
+    },
+    "sdkConfigs": {
+      "maps": {
+        "qqmap": {
+          "key": "W5TBZ-QMOE5-JNOI4-QUFHU-3ITS2-2VFXD"
+        }
+      }
     }
   }
 }

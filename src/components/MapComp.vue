@@ -1,6 +1,6 @@
 <template>
   <div class="map">
-    <map id="Map" style="width: 100%; height: 100%" />
+    <map id="Map" :latitude="latitude" :longitude="longitude" style="width: 100%; height: 100%" />
   </div>
 </template>
 
@@ -10,6 +10,8 @@ defineOptions({
   name: 'MapComp',
 })
 const mapCtx = ref(null)
+const latitude = ref(39.909)
+const longitude = ref(116.39742)
 onMounted(() => {
   mapCtx.value = wx.createMapContext('myMap')
 })
