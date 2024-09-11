@@ -9,8 +9,8 @@ interface NavigateToOptions {
        "/pages/login/identity" |
        "/pages/login/index" |
        "/pages/login/loginByWx" |
-       "/packageA/blood/collect" |
-       "/packageA/blood/detail";
+       "/packageA/collect/index" |
+       "/packageA/collect/detail";
 }
 interface RedirectToOptions extends NavigateToOptions {}
 

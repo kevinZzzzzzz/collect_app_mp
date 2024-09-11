@@ -31,7 +31,12 @@
                       </div>
                     </div>
                   </template>
-                  <div class="collect_item_order" v-for="(i, d) in item.data" :key="d">
+                  <div
+                    class="collect_item_order"
+                    v-for="(i, d) in item.data"
+                    :key="d"
+                    @click="goDetail(i)"
+                  >
                     <OrderItem :orderItem="i" :tabSel="tab" :tabsList="tabs">
                       <template v-slot:time>
                         <div class="collect_item_order_time">发血时间：2024-08-20 12:00</div>
@@ -86,6 +91,14 @@ const getData = () => {
   })
 }
 
+/**
+ * 跳转详情
+ */
+const goDetail = (data: any) => {
+  uni.navigateTo({
+    url: `/packageA/collect/detail?data=${encodeURIComponent(JSON.stringify(data))}`,
+  })
+}
 onMounted(() => {
   getData()
 })

@@ -1,4 +1,5 @@
 import { pages, subPackages, tabBar } from '@/pages.json'
+import PLATFORM from './platform'
 const getLastPage = () => {
   // getCurrentPages() 至少有1个元素，所以不再额外判断
   // const lastPage = getCurrentPages().at(-1)
@@ -127,4 +128,22 @@ export function sleep(second: number = 1) {
       resolve(true)
     }, 1000 * second)
   })
+}
+
+/**
+ * 获取navigate跳转携带的参数
+ * @params options
+ */
+export function getNavigateOptions(options: any) {
+  let obj = {}
+  if (PLATFORM.isMp) {
+    if (options.ctx.$scope.options.data) {
+      obj = JSON.parse(decodeURIComponent(options.ctx.$scope.options.data))
+    }
+  } else {
+    if (options.attrs.data) {
+      obj = JSON.parse(decodeURIComponent(options.attrs.data))
+    }
+  }
+  return obj
 }

@@ -41,14 +41,14 @@ export default defineUniPages({
       root: 'packageA',
       pages: [
         {
-          path: 'blood/collect',
+          path: 'collect/index',
           type: 'page',
           style: {
             navigationBarTitleText: '血液揽收',
           },
         },
         {
-          path: 'blood/detail',
+          path: 'collect/detail',
           type: 'page',
           style: {
             navigationBarTitleText: '待揽收',

@@ -18,36 +18,36 @@
           :key="idx"
           class="OrderItem_main_list_item"
         >
-          <div class="OrderItem_main_list_item_left">
+          <div class="OrderItem_main_list_item_col">
             <image
-              class="OrderItem_main_list_item_left_img"
+              class="OrderItem_main_list_item_col_img"
               src="@img/boxIcon.png"
               mode="scaleToFill"
             />
-            <div class="OrderItem_main_list_item_left_info">
-              <div class="OrderItem_main_list_item_left_info_id">{{ item.bloodId }}</div>
-              <div class="OrderItem_main_list_item_left_info_detail">
-                <span class="OrderItem_main_list_item_left_info_detail_num">86%</span>
+            <div class="OrderItem_main_list_item_col_info">
+              <div class="OrderItem_main_list_item_col_info_id">{{ item.bloodId }}</div>
+              <div class="OrderItem_main_list_item_col_info_detail">
+                <span class="OrderItem_main_list_item_col_info_detail_num">86%</span>
                 <image
-                  class="OrderItem_main_list_item_left_info_detail_img"
+                  class="OrderItem_main_list_item_col_info_detail_img"
                   src="@img/electricIcon.png"
                   mode="scaleToFill"
                 />
                 <image
-                  class="OrderItem_main_list_item_left_info_detail_img"
+                  class="OrderItem_main_list_item_col_info_detail_img"
                   src="@img/wifiIcon.png"
                   mode="scaleToFill"
                 />
               </div>
             </div>
           </div>
-          <div class="OrderItem_main_list_item_center">
-            <p class="OrderItem_main_list_item_center_num">16</p>
-            <p class="OrderItem_main_list_item_center_type">{{ item.bloodType }}</p>
+          <div class="OrderItem_main_list_item_col-2line">
+            <p class="OrderItem_main_list_item_col_num">16</p>
+            <p class="OrderItem_main_list_item_col_type">{{ item.bloodType }}</p>
           </div>
-          <div class="OrderItem_main_list_item_right">
-            <p class="OrderItem_main_list_item_right_num">-2°C</p>
-            <p class="OrderItem_main_list_item_right_type">温度</p>
+          <div class="OrderItem_main_list_item_col-2line">
+            <p class="OrderItem_main_list_item_col_num">-2°C</p>
+            <p class="OrderItem_main_list_item_col_type">温度</p>
           </div>
         </li>
       </ul>
@@ -126,7 +126,7 @@ const props = defineProps({
       &_item {
         display: grid;
         grid-template-columns: 1fr 0.6fr 0.6fr;
-        &_left {
+        &_col {
           display: flex;
           align-items: center;
           &_img {
@@ -154,13 +154,12 @@ const props = defineProps({
               }
             }
           }
-        }
-        &_center,
-        &_right {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
+          &-2line {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          }
           &_num {
             font-size: 14px;
             color: #1890ff;
