@@ -76,7 +76,7 @@ page {
   &_detail {
     position: absolute;
     top: 114px;
-    z-index: 0;
+    // z-index: 0;
     width: 100%;
     padding: 0px 16px 60px;
     &_block {
@@ -90,7 +90,7 @@ page {
   &_bottom {
     position: fixed;
     bottom: 0px;
-    z-index: 1;
+    // z-index: 1;
     display: grid;
     grid-template-columns: 0.15fr 1fr;
     grid-gap: 16px;

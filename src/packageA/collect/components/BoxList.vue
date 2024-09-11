@@ -47,6 +47,14 @@
       </li>
     </ul>
   </div>
+  <wd-popup
+    v-model="showActionSheet"
+    position="bottom"
+    custom-style="padding: 60px 40px;"
+    @close="handleClose"
+  >
+    内容
+  </wd-popup>
 </template>
 
 <script setup lang="ts">
@@ -62,6 +70,7 @@ const props = defineProps({
     },
   },
 })
+const showActionSheet = ref(false)
 const emit = defineEmits(['weighBox'])
 const boxAmount = computed(() => {
   return (props.bloodInfo.bloodBagList && props.bloodInfo.bloodBagList.length) || 0
@@ -69,8 +78,12 @@ const boxAmount = computed(() => {
 const bloodBagList = computed(() => {
   return props.bloodInfo.bloodBagList || []
 })
+const handleClose = () => {
+  showActionSheet.value = false
+}
 const weighBox = () => {
-  emit('weighBox', bloodBagList.value)
+  showActionSheet.value = true
+  // emit('weighBox', bloodBagList.value)
 }
 </script>
 
