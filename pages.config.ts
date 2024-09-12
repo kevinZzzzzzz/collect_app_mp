@@ -51,7 +51,14 @@ export default defineUniPages({
           path: 'collect/detail',
           type: 'page',
           style: {
-            navigationBarTitleText: '待揽收',
+            navigationBarTitleText: '',
+          },
+        },
+        {
+          path: 'collect/result',
+          type: 'page',
+          style: {
+            navigationBarTitleText: '血液揽收',
           },
         },
       ],

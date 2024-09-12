@@ -9,11 +9,11 @@
 </route>
 <template>
   <div class="home">
-    <h1 class="home_title">医院血液服务端</h1>
-    <h2 class="home_subTitle">供血运输</h2>
+    <h1 class="home_title">穿越血液服务</h1>
     <ul class="home_list">
       <li
         class="home_list_item"
+        @click="goUrl(item.route)"
         v-for="(item, idx) in routerList"
         :key="idx"
         :style="{
@@ -29,10 +29,10 @@
 </template>
 
 <script lang="ts" setup>
+import PLATFORM from '@/utils/platform'
 defineOptions({
   name: 'Home',
 })
-import PLATFORM from '@/utils/platform'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -40,25 +40,29 @@ const routerList = ref([
   {
     name: '血液揽收',
     bgImgUrl: 'pathBg1',
+    route: '/packageA/collect/index',
   },
   {
     name: '血液签收',
     bgImgUrl: 'pathBg2',
+    route: '',
   },
   {
     name: '我的任务',
     bgImgUrl: 'pathBg3',
+    route: '',
   },
   {
     name: '血液交接查询',
     bgImgUrl: 'pathBg4',
+    route: '',
   },
 ])
 const isMp = ref(PLATFORM.isMp)
 // 测试 uni API 自动引入
 onLoad(() => {})
 const goUrl = (url) => {
-  uni.navigateTo({ url, animationType: 'pop-in', animationDuration: 200 })
+  url && uni.navigateTo({ url, animationType: 'pop-in', animationDuration: 200 })
 }
 </script>
 
@@ -70,15 +74,16 @@ const goUrl = (url) => {
     font-size: 24px;
     font-weight: bold;
     color: #323233;
+    margin: 12px 0px 40px;
   }
-  &_subTitle {
-    margin-top: 8px;
-    margin-bottom: 24px;
-    font-family: PingFang SC;
-    font-size: 16px;
-    font-weight: bold;
-    color: #323233;
-  }
+  // &_subTitle {
+  //   margin-top: 8px;
+  //   margin-bottom: 24px;
+  //   font-family: PingFang SC;
+  //   font-size: 16px;
+  //   font-weight: bold;
+  //   color: #323233;
+  // }
   &_list {
     display: grid;
     grid-template-columns: 1fr;

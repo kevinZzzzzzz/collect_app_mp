@@ -21,11 +21,11 @@
     <div class="BloodPageSearch_icon">
       <image class="BloodPageSearch_icon_img" src="@img/taskIcon.png" mode="scaleToFill" />
     </div>
-    <wd-badge modelValue="12">
+    <!-- <wd-badge modelValue="12">
       <div class="BloodPageSearch_icon">
         <image class="BloodPageSearch_icon_img" src="@img/alertIcon.png" mode="scaleToFill" />
       </div>
-    </wd-badge>
+    </wd-badge> -->
   </div>
 </template>
 
@@ -40,8 +40,9 @@ const searchValue = ref('')
 <style scoped lang="scss">
 .BloodPageSearch {
   display: grid;
-  grid-template-columns: 82% 8% 6%;
-  grid-gap: 5px;
+  grid-template-columns: 92% 8%;
+  grid-gap: 2%;
+  align-items: center;
   width: 100%;
   padding: 8px 0;
   &_iptBox {
@@ -52,8 +53,8 @@ const searchValue = ref('')
     border-radius: 4px 4px 4px 4px;
   }
   &_icon {
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
     &_img {
       width: 100%;
       height: 100%;

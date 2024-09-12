@@ -9,19 +9,24 @@
     </div>
     <ul class="ExpressInfo_precess">
       <li
-        :class="['ExpressInfo_precess_item', item.stepFinish && 'ExpressInfo_precess_item-finish']"
+        :class="['ExpressInfo_precess_item', !item.stepFinish && 'ExpressInfo_precess_item-finish']"
         v-for="(item, idx) in precessList"
         :key="idx"
       >
         <div
           :class="[
             'ExpressInfo_precess_item_circle',
-            item.stepFinish && 'ExpressInfo_precess_item_circle-finish',
+            !item.stepFinish && 'ExpressInfo_precess_item_circle-finish',
           ]"
         >
           <div class="ExpressInfo_precess_item_circle_inner"></div>
         </div>
-        <p class="ExpressInfo_precess_item_step">
+        <p
+          :style="{
+            color: !item.stepFinish && '#1890ff',
+          }"
+          class="ExpressInfo_precess_item_step"
+        >
           {{ item.stepName }}
         </p>
         <div class="ExpressInfo_precess_item_info">
@@ -50,19 +55,19 @@ const precessList = computed(() => {
   return [
     {
       step: 1,
-      stepName: '已转箱',
-      stepTime: '2022-10-10 10:10:10',
-      stepLabel: '装箱人',
-      stepPerson: '陈xx',
-      stepFinish: true,
-    },
-    {
-      step: 2,
       stepName: '已发血',
       stepTime: '2022-10-10 10:10:10',
       stepLabel: '发血人',
       stepPerson: '郭xx',
       stepFinish: false,
+    },
+    {
+      step: 2,
+      stepName: '已装箱',
+      stepTime: '2022-10-10 10:10:10',
+      stepLabel: '装箱人',
+      stepPerson: '陈xx',
+      stepFinish: true,
     },
   ]
 })
@@ -116,7 +121,7 @@ const precessList = computed(() => {
           width: 0px;
           height: 24px;
           content: '';
-          border: 2px solid #1890ff;
+          border: 1px solid #1890ff;
         }
         width: 14px;
         height: 14px;

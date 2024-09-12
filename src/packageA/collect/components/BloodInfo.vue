@@ -114,7 +114,7 @@ const copyVal = (val) => {
       }
       &_addr {
         font-size: 14px;
-        font-weight: bold;
+        font-weight: 400;
         color: #323233;
       }
     }

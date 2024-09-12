@@ -5,15 +5,15 @@
     </div>
     <div class="CollectDetail_detail">
       <div class="CollectDetail_detail_block">
-        <BloodInfo :bloodInfo="collectItemData" />
+        <BloodInfo :bloodInfo="orderDetail" />
       </div>
 
       <div class="CollectDetail_detail_block">
-        <ExpressInfo :bloodInfo="collectItemData" />
+        <ExpressInfo :bloodInfo="orderDetail" />
       </div>
 
       <div class="CollectDetail_detail_block">
-        <BoxList :bloodInfo="collectItemData" @weighBox="weigh($event)" />
+        <BoxList :bloodInfo="orderDetail" @weighBox="weighBox($event)" />
       </div>
     </div>
     <div class="CollectDetail_bottom">
@@ -22,13 +22,13 @@
         <p class="CollectDetail_bottom_left_text">异常</p>
       </div>
       <div class="CollectDetail_bottom_right">
-        <p class="CollectDetail_bottom_right_text">确定揽收</p>
+        <p class="CollectDetail_bottom_right_text" @click="sureCollect()">确定揽收</p>
       </div>
     </div>
   </div>
-  <wd-action-sheet v-model="showActionSheet" title="运输箱称重" @close="closeActionSheet">
-    <BoxWeigh :weighBoxList="weighBoxList" />
-  </wd-action-sheet>
+  <wd-popup v-model="showWeighBox" position="bottom" @close="showWeighBox = false">
+    <BoxWeigh :weighBoxInfo="weighBoxInfo" @closeWeighBox="closeWeighBox" />
+  </wd-popup>
 </template>
 
 <script setup lang="ts">
@@ -42,21 +42,41 @@ import { getNavigateOptions } from '@/utils/index'
 defineOptions({
   name: 'CollectDetail',
 })
-const collectItemData = ref({}) // 揽收数据
-const weighBoxList = ref([]) // 称重运输箱数据
+const outboundOrderNo = ref({}) // 交接单号
+const orderDetail = ref({}) // 交接单详情
+
+const showWeighBox = ref(false) // 展示称重弹窗
+const weighBoxInfo = ref([]) // 称重数据
+
+const weighBox = (data) => {
+  if (!data) {
+    closeWeighBox()
+    return false
+  }
+  showWeighBox.value = true
+  weighBoxInfo.value = data
+}
+const closeWeighBox = () => {
+  showWeighBox.value = false
+  weighBoxInfo.value = []
+}
+const sureCollect = () => {
+  uni.navigateTo({
+    url: '/packageA/collect/result',
+  })
+}
 onMounted(() => {
   const options: any = getCurrentInstance()
-  collectItemData.value = getNavigateOptions(options)
+  outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
+  const titleName: string = getNavigateOptions(options, 'tabs') || ''
+  uni.setNavigationBarTitle({
+    title: titleName,
+  })
+  import('./detail.json').then(({ default: res }) => {
+    const { data } = res
+    orderDetail.value = data
+  })
 })
-const showActionSheet = ref(false)
-const closeActionSheet = () => {
-  showActionSheet.value = false
-}
-const weigh = (data) => {
-  console.log(data, 1111)
-  weighBoxList.value = data
-  showActionSheet.value = true
-}
 </script>
 
 <style scoped lang="scss">

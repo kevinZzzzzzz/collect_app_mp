@@ -1,15 +1,14 @@
 <route lang="json5">
 {
   style: {
-    navigationBarTitleText: '登录注册',
+    navigationBarTitleText: '登录',
   },
 }
 </route>
 <template>
   <div class="login pageCenter">
     <image class="login_logo" src="@img/logo.png" mode="scaleToFill" />
-    <h1 class="login_title">深圳市宝安中心血站</h1>
-    <h1 class="login_subTitle">医院血液服务端</h1>
+    <h1 class="login_title">穿越血液服务</h1>
     <div class="login_form">
       <div class="login_form_input">
         <wd-input
@@ -40,11 +39,38 @@
             <image class="inputIcon2" src="@img/authIcon.png" mode="scaleToFill" />
           </template>
         </wd-input>
-        <wd-button class="login_form_btn" plain hairline size="large">获取</wd-button>
+        <wd-button
+          custom-class="sendCode"
+          v-if="waitAuthCode"
+          class="login_form_btn"
+          :disabled="waitAuthTime"
+          :type="waitAuthTime ? 'info' : 'primary'"
+          plain
+          hairline
+          size="large"
+          @click="resendCode()"
+        >
+          {{ `重新发送（${waitAuthTime}s）` }}
+        </wd-button>
+        <wd-button
+          custom-class="sendCode"
+          v-else
+          class="login_form_btn"
+          plain
+          hairline
+          size="large"
+          @click="getAuthCode()"
+        >
+          获取验证码
+        </wd-button>
       </div>
     </div>
-    <div class="login_form_submit">
-      <!-- <wd-button class="login_form_submit_btn" plain hairline size="midium">确认登录</wd-button> -->
+    <div
+      :class="[
+        'login_form_submit',
+        !loginInfo.agreeProtocol ? 'login_form_submit-disable' : 'login_form_submit-able',
+      ]"
+    >
       <span class="login_form_submit_text">确认登录</span>
     </div>
     <div class="login_form_tips">
@@ -64,11 +90,36 @@ import { ref } from 'vue'
 defineOptions({
   name: 'Login',
 })
+let waitTimer = null
+const sendMinute = 10
 const loginInfo = ref({
   telephone: '',
   authCode: '',
   agreeProtocol: false,
 })
+const waitAuthCode = ref(false) // 等待验证码
+const waitAuthTime = ref(sendMinute) // 等待倒计时
+
+/**
+ * 获取验证码
+ */
+const getAuthCode = () => {
+  waitAuthCode.value = true
+  waitTimer = setInterval(() => {
+    waitAuthTime.value -= 1
+    if (waitAuthTime.value <= 0) {
+      clearInterval(waitTimer)
+    }
+  }, 1000)
+}
+/**
+ * 重新发送验证码
+ */
+const resendCode = () => {
+  if (waitAuthTime.value > 0) return
+  waitAuthTime.value = sendMinute
+  getAuthCode()
+}
 </script>
 
 <style scoped lang="scss">
@@ -80,7 +131,7 @@ const loginInfo = ref({
     margin-bottom: 16px;
   }
   &_title {
-    margin-bottom: 8px;
+    margin-bottom: 40px;
     font-family: PingFang SC;
     font-size: 20px;
     font-weight: bold;
@@ -116,9 +167,15 @@ const loginInfo = ref({
         font-weight: 400;
         color: #ffffff;
       }
-    }
-    &_submit:active {
-      opacity: 0.8;
+      &-disable {
+        opacity: 0.5;
+      }
+      &-able {
+        opacity: 1;
+      }
+      &-able:active {
+        opacity: 0.8;
+      }
     }
     &_tips {
       display: flex;
@@ -134,7 +191,7 @@ const loginInfo = ref({
 }
 .authLine {
   display: grid;
-  grid-template-columns: 4fr 1.5fr;
+  grid-template-columns: auto auto;
   grid-gap: 9px;
   margin-bottom: 33px;
 }
@@ -144,6 +201,10 @@ const loginInfo = ref({
   height: 44px;
   padding-left: 15px;
   background: #f2f3f5;
+}
+.sendCode {
+  width: 98%;
+  padding: 0 15px !important;
 }
 .inputIcon {
   width: 14px;

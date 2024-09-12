@@ -1,8 +1,12 @@
 <template>
   <div class="BoxWeigh">
-    <div class="BoxWeigh_item" v-for="(item, idx) in props.weighBoxList" :key="idx">
-      <image class="BoxWeigh_item_img" src="@img/boxIcon.png" mode="scaleToFill" />
-      <p class="BoxWeigh_item_text">{{ item.bloodId }}</p>
+    <div class="BoxWeigh_header">
+      <p class="BoxWeigh_header_title">运输箱称重</p>
+      <h6 class="BoxWeigh_header_cancel" @click="closeWeigh()">取消</h6>
+    </div>
+    <div class="BoxWeigh_item" v-for="(item, idx) in props.weighBoxInfo.bloodPackages" :key="idx">
+      <image class="BoxWeigh_item_img" src="@img/transBoxIcon.png" mode="scaleToFill" />
+      <p class="BoxWeigh_item_text">{{ item.code }}</p>
       <div class="BoxWeigh_item_ipt">
         <wd-input type="number" no-border v-model="value" placeholder="请输入" />
       </div>
@@ -19,21 +23,53 @@ import { ref } from 'vue'
 defineOptions({
   name: 'BoxWeigh',
 })
-const emit = defineEmits(['closeActionSheet'])
+const emit = defineEmits(['closeWeighBox'])
 const props = defineProps({
-  weighBoxList: {
-    type: Array,
+  weighBoxInfo: {
+    type: Object,
     default: () => {
-      return []
+      return {}
     },
   },
 })
+
+const closeWeigh = () => {
+  emit('closeWeighBox')
+}
 const value = ref('')
 </script>
 
 <style scoped lang="scss">
 .BoxWeigh {
   padding: 0 16px 16px;
+  &_header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0;
+    &_title {
+      font-weight: bold;
+      font-size: 17px;
+      color: #323233;
+      position: relative;
+    }
+    &_title::before {
+      position: absolute;
+      top: 5px;
+      left: -9px;
+      width: 3px;
+      height: 14px;
+      content: '';
+      background: #1890ff;
+      border-radius: 5px 5px 5px 5px;
+    }
+    &_cancel {
+      font-weight: 400;
+      font-size: 14px;
+      color: #1890ff;
+    }
+  }
   &_item {
     display: grid;
     grid-template-columns: 0.2fr 1fr 1.6fr 0.2fr;
@@ -41,13 +77,14 @@ const value = ref('')
     align-items: center;
     padding: 12px 16px;
     &_img {
-      width: 20px;
-      height: 22px;
+      width: 27px;
+      height: 27px;
     }
   }
   &_btn {
     width: 100%;
     height: 40px;
+    margin-top: 16px;
     @include CenterHorVertical();
     background: #1890ff;
     border-radius: 4px 4px 4px 4px;

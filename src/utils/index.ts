@@ -134,16 +134,16 @@ export function sleep(second: number = 1) {
  * 获取navigate跳转携带的参数
  * @params options
  */
-export function getNavigateOptions(options: any) {
-  let obj = {}
+export function getNavigateOptions(options: any, key: string) {
+  let result: any = null
   if (PLATFORM.isMp) {
-    if (options.ctx.$scope.options.data) {
-      obj = JSON.parse(decodeURIComponent(options.ctx.$scope.options.data))
+    if (options.ctx.$scope.options[key]) {
+      result = options.ctx.$scope.options[key]
     }
   } else {
-    if (options.attrs.data) {
-      obj = JSON.parse(decodeURIComponent(options.attrs.data))
+    if (options.attrs[key]) {
+      result = options.attrs[key]
     }
   }
-  return obj
+  return result
 }

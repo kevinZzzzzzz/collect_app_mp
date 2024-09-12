@@ -11,14 +11,14 @@
       <div class="DateSelect_block">
         <div class="DateSelect_block_item">
           <div class="DateSelect_block_item_left">
-            <p class="DateSelect_block_item_left_text1">开始时间</p>
+            <!-- <p class="DateSelect_block_item_left_text1">开始时间</p> -->
             <h3 class="DateSelect_block_item_left_text2">{{ dateValFormat[0] }}</h3>
           </div>
           <wd-icon name="swap-right" size="22px" color="#C6C6C7"></wd-icon>
         </div>
         <div class="DateSelect_block_item">
           <div class="DateSelect_block_item_left">
-            <p class="DateSelect_block_item_left_text1">结束时间</p>
+            <!-- <p class="DateSelect_block_item_left_text1">结束时间</p> -->
             <h3 class="DateSelect_block_item_left_text2">{{ dateValFormat[1] }}</h3>
           </div>
           <wd-icon name="chevron-right" size="22px" color="#C6C6C7"></wd-icon>
@@ -97,9 +97,9 @@ const handleConfirm = ({ value }) => {
         }
         &_text2 {
           font-family: PingFang SC;
-          font-size: 16px;
-          font-weight: bold;
-          color: #323233;
+          font-weight: 400;
+          font-size: 14px;
+          color: #989898;
         }
       }
     }

@@ -9,6 +9,11 @@
   <div class="collect pageCenter">
     <BloodPageSearch style="width: 100%" />
     <DateSelect style="width: 100%" />
+    <div class="collect_alert">
+      <wd-badge :top="10" modelValue="12" bg-color="red">
+        <image class="collect_alert_img" src="@img/bellIcon.png" mode="scaleToFill" />
+      </wd-badge>
+    </div>
     <wd-tabs v-model="tab" inactiveColor="#CDCDCD">
       <block v-for="(item, index) in tabs" :key="index">
         <wd-tab :title="`${item}`">
@@ -23,7 +28,7 @@
                         <p class="collect_item_header_left_name">{{ item.hosName }}</p>
                       </div>
                       <div class="collect_item_header_right">
-                        {{ (item?.data && item?.data?.length) || 0 }}条交接单
+                        {{ (item?.data && item?.data?.length) || 0 }}条
                         <wd-icon
                           :name="expanded ? 'caret-down-small' : 'caret-right-small'"
                           size="16px"
@@ -37,9 +42,22 @@
                     :key="d"
                     @click="goDetail(i)"
                   >
-                    <OrderItem :orderItem="i" :tabSel="tab" :tabsList="tabs">
+                    <OrderItem ref="OrderItemRef" :orderItem="i" :tabSel="tab" :tabsList="tabs">
                       <template v-slot:time>
                         <div class="collect_item_order_time">发血时间：2024-08-20 12:00</div>
+                      </template>
+                      <template v-slot:btm>
+                        <div class="collect_item_order_btm">
+                          <div class="collect_item_order_btm_btn">
+                            <div class="orderBtn collect_item_order_btm_btn_left">温度曲线</div>
+                            <div
+                              class="orderBtn collect_item_order_btm_btn_right"
+                              @click.stop="setWeigh(i)"
+                            >
+                              称重
+                            </div>
+                          </div>
+                        </div>
                       </template>
                     </OrderItem>
                   </div>
@@ -51,17 +69,22 @@
       </block>
     </wd-tabs>
   </div>
+
+  <wd-popup v-model="showWeighBox" position="bottom" @close="showWeighBox = false">
+    <BoxWeigh :weighBoxInfo="weighBoxInfo" @closeWeighBox="closeWeighBox" />
+  </wd-popup>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import BloodPageSearch from '@/components/BloodPageSearch.vue'
 import DateSelect from '@/components/DateSelect.vue'
-import OrderItem from './components/OrderItem.vue'
+import OrderItem from '@/components/OrderItem.vue'
+import BoxWeigh from '@/components/BoxWeigh.vue'
 defineOptions({
   name: 'Collect',
 })
-const tabs = ref(['待揽收', '已揽收', '异常件'])
+const tabs = ['待揽收', '已揽收', '异常件']
 const tab = ref(0)
 
 const collectData = ref<
@@ -70,7 +93,11 @@ const collectData = ref<
     data?: any
   }[]
 >([]) // 揽收数据
+const OrderItemRef = ref(null) // 运单组件实例
 const collapseOpen = ref<string[]>([])
+
+const showWeighBox = ref(false) // 展示称重弹窗
+const weighBoxInfo = ref([]) // 称重数据
 const getData = () => {
   import('./data.json').then(({ default: res }) => {
     const { data } = res
@@ -96,8 +123,20 @@ const getData = () => {
  */
 const goDetail = (data: any) => {
   uni.navigateTo({
-    url: `/packageA/collect/detail?data=${encodeURIComponent(JSON.stringify(data))}`,
+    url: `/packageA/collect/detail?outboundOrderNo=${data.outboundOrderNo}&tabs=${tabs[tab.value]}`,
   })
+}
+/**
+ * 称重
+ * @param data
+ */
+const setWeigh = (data: any) => {
+  showWeighBox.value = true
+  weighBoxInfo.value = data
+}
+const closeWeighBox = () => {
+  showWeighBox.value = false
+  weighBoxInfo.value = []
 }
 onMounted(() => {
   getData()
@@ -109,6 +148,24 @@ onMounted(() => {
   width: 100%;
   padding: 0 16px;
   overflow-y: scroll;
+  position: relative;
+  &_alert {
+    z-index: 1;
+    position: fixed;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    width: 80px;
+    height: 80px;
+    @include CenterHorVertical();
+    background: url('@img/bellBgIcon.png') no-repeat;
+    background-size: 100% 100%;
+    border-radius: 50%;
+    &_img {
+      width: 40px;
+      height: 40px;
+    }
+  }
   &_item {
     position: relative;
     width: 100%;
@@ -147,7 +204,30 @@ onMounted(() => {
         font-size: 12px;
         font-weight: 400;
         color: #999393;
-        text-align: center;
+        text-align: left;
+      }
+      &_btm {
+        width: 100%;
+        margin-top: 9px;
+
+        &_btn {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 26px;
+          font-size: 14px;
+          font-weight: 400;
+          &_left {
+            color: #1890ff;
+            background: #ffffff;
+            border: 1px solid #1890ff;
+            border-radius: 4px;
+          }
+          &_right {
+            color: #ffffff;
+            background: #1890ff;
+            border-radius: 4px;
+          }
+        }
       }
     }
   }
@@ -159,11 +239,17 @@ onMounted(() => {
   padding: 16px 0;
 }
 :deep(.wd-collapse-item__body) {
-  padding: 14px 16px !important;
+  padding: 0px 16px 14px !important;
 }
 :deep(.wd-collapse-item) {
   background: #ffffff;
   border-radius: 4px 4px 4px 4px;
   box-shadow: 0px 2px 12px 1px rgba(100, 101, 102, 0.12);
+}
+.orderBtn {
+  width: 129px;
+  height: 30px;
+  // background: #ffffff;
+  @include CenterHorVertical();
 }
 </style>
