@@ -4,60 +4,11 @@
       <p class="BoxList_header_title">揽件信息</p>
       <p class="BoxList_header_right">{{ boxAmount }}箱</p>
     </div>
-    <!-- <ul class="BoxList_list">
-      <li class="BoxItem" v-for="(item, idx) in bloodBagList" :key="idx">
-        <p class="BoxItem_header">运单号: {{ item.handoverId }}</p>
-        <div class="BoxItem_main">
-          <div class="BoxItem_main_ctx">
-            <div class="BoxItem_main_ctx_col">
-              <image class="BoxItem_main_ctx_col_img" src="@img/boxIcon.png" mode="scaleToFill" />
-              <div class="BoxItem_main_ctx_col_info">
-                <div class="BoxItem_main_ctx_col_info_id">{{ item.bloodId }}</div>
-                <div class="BoxItem_main_ctx_col_info_detail">
-                  <span class="BoxItem_main_ctx_col_info_detail_num">86%</span>
-                  <image
-                    class="BoxItem_main_ctx_col_info_detail_img"
-                    src="@img/electricIcon.png"
-                    mode="scaleToFill"
-                  />
-                  <image
-                    class="BoxItem_main_ctx_col_info_detail_img"
-                    src="@img/wifiIcon.png"
-                    mode="scaleToFill"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="BoxItem_main_ctx_col-2line">
-              <p class="BoxItem_main_ctx_col_num">16</p>
-              <p class="BoxItem_main_ctx_col_type">{{ item.bloodType }}</p>
-            </div>
-            <div class="BoxItem_main_ctx_col-2line">
-              <p class="BoxItem_main_ctx_col_num">-2°C</p>
-              <p class="BoxItem_main_ctx_col_type">温度</p>
-            </div>
-          </div>
-          <div class="BoxItem_main_btn">
-            <div class="orderBtn BoxItem_main_btn_left">温度曲线</div>
-            <div class="orderBtn BoxItem_main_btn_right" @click="weighBox">称重</div>
-          </div>
-          <div class="BoxItem_main_time">更新时间：2024-08-20 12:00</div>
-        </div>
-      </li>
-    </ul> -->
-    <OrderItem :orderItem="bloodInfo">
+    <!-- <OrderItem :needHandleWeightBtn="needHandleWeightBtn" :orderItem="bloodInfo">
       <template v-slot:time>
         <div class="BoxList_list_time">发血时间：2024-08-20 12:00</div>
       </template>
-      <template v-slot:btm>
-        <div class="BoxList_list_btm">
-          <div class="BoxList_list_btm_btn">
-            <div class="orderBtn BoxList_list_btm_btn_left">温度曲线</div>
-            <div class="orderBtn BoxList_list_btm_btn_right" @click="weighBox()">称重</div>
-          </div>
-        </div>
-      </template>
-    </OrderItem>
+    </OrderItem> -->
   </div>
 </template>
 
@@ -74,21 +25,16 @@ const props = defineProps({
       return {}
     },
   },
+  // 是否需要处理称重按钮
+  needHandleWeightBtn: {
+    type: Boolean,
+    default: false,
+  },
 })
-const showActionSheet = ref(false)
 const emit = defineEmits(['weighBox'])
 const boxAmount = computed(() => {
   return (props.bloodInfo.bloodPackages && props.bloodInfo.bloodPackages.length) || 0
 })
-const bloodPackages = computed(() => {
-  return props.bloodInfo.bloodPackages || []
-})
-const handleClose = () => {
-  emit('weighBox')
-}
-const weighBox = () => {
-  emit('weighBox', props.bloodInfo)
-}
 </script>
 
 <style scoped lang="scss">

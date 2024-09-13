@@ -18,6 +18,18 @@
           />
         </div>
       </div>
+      <div
+        v-show="boxItem.weight && needHandleWeightBtn"
+        class="BoxListInfo_header_editWeight"
+        @click="setWeight(boxItem)"
+      >
+        <p class="BoxListInfo_header_editWeight_text">{{ boxItem.weight }}KG</p>
+        <image
+          class="BoxListInfo_header_editWeight_img"
+          src="@img/editIcon.png"
+          mode="scaleToFill"
+        />
+      </div>
     </div>
     <ul class="BoxListInfo_list">
       <li
@@ -40,10 +52,6 @@
           <p class="BoxListInfo_list_item_col_num">{{ tempData }}</p>
           <p class="BoxListInfo_list_item_col_type">温度</p>
         </div>
-        <div class="BoxListInfo_list_item_col-2line" v-if="item.weight">
-          <p class="BoxListInfo_list_item_col_num">{{ item.weight }}KG</p>
-          <p class="BoxListInfo_list_item_col_type">重量</p>
-        </div>
       </li>
     </ul>
   </div>
@@ -52,7 +60,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 defineOptions({
-  name: 'BoxListInfo',
+  name: 'BoxListInfo', // 箱子信息组件
 })
 const props = defineProps({
   boxItem: {
@@ -61,7 +69,13 @@ const props = defineProps({
       return {}
     },
   },
+  // 是否需要处理称重按钮
+  needHandleWeightBtn: {
+    type: Boolean,
+    default: false,
+  },
 })
+const emit = defineEmits(['setWeight'])
 const bloodBagGroupList = computed(() => {
   const arr = []
   if (props.boxItem.bloodBagGroupMap) {
@@ -83,14 +97,22 @@ const tempData = computed(() => {
   }
   return tempL && tempR ? `${tempL}~${tempR}°C` : tempL ? `${tempL}°C` : tempR ? `${tempR}°C` : ''
 })
+
+// 单个称重
+const setWeight = (data) => {
+  emit('setWeight', data)
+}
 </script>
 
 <style scoped lang="scss">
 .BoxListInfo {
   width: 100%;
   &_header {
-    display: flex;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 27px 1fr 0.1fr;
     align-items: center;
+    justify-content: space-between;
     &_img {
       width: 27px;
       height: 27px;
@@ -118,6 +140,18 @@ const tempData = computed(() => {
           height: 7px;
           margin: 0 3px;
         }
+      }
+    }
+    &_editWeight {
+      display: flex;
+      &_text {
+        font-weight: bold;
+        font-size: 14px;
+        color: #323233;
+      }
+      &_img {
+        width: 20px;
+        height: 20px;
       }
     }
   }

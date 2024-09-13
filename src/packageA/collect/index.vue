@@ -9,7 +9,7 @@
   <div class="collect pageCenter">
     <BloodPageSearch style="width: 100%" />
     <DateSelect style="width: 100%" />
-    <div class="collect_alert">
+    <div class="collect_alert" @click="goNotified">
       <wd-badge :top="10" modelValue="12" bg-color="red">
         <image class="collect_alert_img" src="@img/bellIcon.png" mode="scaleToFill" />
       </wd-badge>
@@ -42,22 +42,11 @@
                     :key="d"
                     @click="goDetail(i)"
                   >
+                    <!-- 交接单组件 -->
                     <OrderItem ref="OrderItemRef" :orderItem="i" :tabSel="tab" :tabsList="tabs">
+                      <div></div>
                       <template v-slot:time>
                         <div class="collect_item_order_time">发血时间：2024-08-20 12:00</div>
-                      </template>
-                      <template v-slot:btm>
-                        <div class="collect_item_order_btm">
-                          <div class="collect_item_order_btm_btn">
-                            <div class="orderBtn collect_item_order_btm_btn_left">温度曲线</div>
-                            <div
-                              class="orderBtn collect_item_order_btm_btn_right"
-                              @click.stop="setWeigh(i)"
-                            >
-                              称重
-                            </div>
-                          </div>
-                        </div>
                       </template>
                     </OrderItem>
                   </div>
@@ -69,10 +58,6 @@
       </block>
     </wd-tabs>
   </div>
-
-  <wd-popup v-model="showWeighBox" position="bottom" @close="showWeighBox = false">
-    <BoxWeigh :weighBoxInfo="weighBoxInfo" @closeWeighBox="closeWeighBox" />
-  </wd-popup>
 </template>
 
 <script setup lang="ts">
@@ -80,7 +65,6 @@ import { onMounted, ref } from 'vue'
 import BloodPageSearch from '@/components/BloodPageSearch.vue'
 import DateSelect from '@/components/DateSelect.vue'
 import OrderItem from '@/components/OrderItem.vue'
-import BoxWeigh from '@/components/BoxWeigh.vue'
 defineOptions({
   name: 'Collect',
 })
@@ -96,8 +80,6 @@ const collectData = ref<
 const OrderItemRef = ref(null) // 运单组件实例
 const collapseOpen = ref<string[]>([])
 
-const showWeighBox = ref(false) // 展示称重弹窗
-const weighBoxInfo = ref([]) // 称重数据
 const getData = () => {
   import('./data.json').then(({ default: res }) => {
     const { data } = res
@@ -127,16 +109,12 @@ const goDetail = (data: any) => {
   })
 }
 /**
- * 称重
- * @param data
+ * 跳转消息通知
  */
-const setWeigh = (data: any) => {
-  showWeighBox.value = true
-  weighBoxInfo.value = data
-}
-const closeWeighBox = () => {
-  showWeighBox.value = false
-  weighBoxInfo.value = []
+const goNotified = (data: any) => {
+  uni.navigateTo({
+    url: `/packageB/notified/index?notifiedType=揽收`,
+  })
 }
 onMounted(() => {
   getData()

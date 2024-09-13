@@ -4,11 +4,11 @@
       <p class="BoxWeigh_header_title">运输箱称重</p>
       <h6 class="BoxWeigh_header_cancel" @click="closeWeigh()">取消</h6>
     </div>
-    <div class="BoxWeigh_item" v-for="(item, idx) in props.weighBoxInfo.bloodPackages" :key="idx">
+    <div class="BoxWeigh_item" v-for="(item, idx) in props.weighBoxList" :key="idx">
       <image class="BoxWeigh_item_img" src="@img/transBoxIcon.png" mode="scaleToFill" />
       <p class="BoxWeigh_item_text">{{ item.code }}</p>
       <div class="BoxWeigh_item_ipt">
-        <wd-input type="number" no-border v-model="value" placeholder="请输入" />
+        <wd-input type="number" no-border v-model="item.weight" placeholder="请输入" />
       </div>
       <p class="BoxWeigh_item_text">KG</p>
     </div>
@@ -31,9 +31,16 @@ const props = defineProps({
       return {}
     },
   },
+  weighBoxList: {
+    type: Array<any>,
+    default: () => {
+      return []
+    },
+  },
 })
 
 const closeWeigh = () => {
+  value.value = ''
   emit('closeWeighBox')
 }
 const value = ref('')
@@ -42,6 +49,7 @@ const value = ref('')
 <style scoped lang="scss">
 .BoxWeigh {
   padding: 0 16px 16px;
+  border-radius: 10px 10px 0 0 !important;
   &_header {
     width: 100%;
     display: flex;

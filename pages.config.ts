@@ -61,6 +61,25 @@ export default defineUniPages({
             navigationBarTitleText: '血液揽收',
           },
         },
+        {
+          path: 'collect/error',
+          type: 'page',
+          style: {
+            navigationBarTitleText: '揽收异常',
+          },
+        },
+      ],
+    },
+    {
+      root: 'packageB',
+      pages: [
+        {
+          path: 'notified/index',
+          type: 'page',
+          style: {
+            navigationBarTitleText: '消息通知',
+          },
+        },
       ],
     },
   ],

@@ -14,6 +14,7 @@ const themeVars: ConfigProviderThemeVars = {
   buttonPrimaryBgColor: '#1890FF',
   buttonPrimaryColor: '#fff',
   calendarActiveColor: '#1890FF',
+  radioDotCheckedBg: '#1890FF',
 }
 </script>
 

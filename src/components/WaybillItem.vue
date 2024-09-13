@@ -55,7 +55,7 @@ import { ref } from 'vue'
 import BoxListInfo from '@/components/BoxListInfo.vue'
 import BoxWeigh from '@/components/BoxWeigh.vue'
 defineOptions({
-  name: 'OrderItem', // 交接单组件
+  name: 'OrderItem', // 运输单组件
 })
 const props = defineProps({
   orderItem: {

@@ -11,7 +11,9 @@ interface NavigateToOptions {
        "/pages/login/loginByWx" |
        "/packageA/collect/index" |
        "/packageA/collect/detail" |
-       "/packageA/collect/result";
+       "/packageA/collect/result" |
+       "/packageA/collect/error" |
+       "/packageB/notified/index";
 }
 interface RedirectToOptions extends NavigateToOptions {}
 

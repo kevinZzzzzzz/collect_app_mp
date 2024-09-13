@@ -13,28 +13,24 @@
       </div>
 
       <div class="CollectDetail_detail_block">
-        <BoxList :bloodInfo="orderDetail" @weighBox="weighBox($event)" />
+        <BoxList needHandleWeightBtn :bloodInfo="orderDetail" @weighBox="weighBox($event)" />
       </div>
     </div>
     <div class="CollectDetail_bottom">
-      <div class="CollectDetail_bottom_left">
+      <div class="CollectDetail_bottom_left" @click="gotoError()">
         <wd-icon name="warning" color="#B7B7B8" size="22px"></wd-icon>
         <p class="CollectDetail_bottom_left_text">异常</p>
       </div>
-      <div class="CollectDetail_bottom_right">
-        <p class="CollectDetail_bottom_right_text" @click="sureCollect()">确定揽收</p>
+      <div class="CollectDetail_bottom_right" @click="sureCollect()">
+        <p class="CollectDetail_bottom_right_text">确定揽收</p>
       </div>
     </div>
   </div>
-  <wd-popup v-model="showWeighBox" position="bottom" @close="showWeighBox = false">
-    <BoxWeigh :weighBoxInfo="weighBoxInfo" @closeWeighBox="closeWeighBox" />
-  </wd-popup>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, getCurrentInstance } from 'vue'
 import MapComp from '@/components/MapComp.vue'
-import BoxWeigh from '@/components/BoxWeigh.vue'
 import BloodInfo from './components/BloodInfo.vue'
 import ExpressInfo from './components/ExpressInfo.vue'
 import BoxList from './components/BoxList.vue'
@@ -47,7 +43,9 @@ const orderDetail = ref({}) // 交接单详情
 
 const showWeighBox = ref(false) // 展示称重弹窗
 const weighBoxInfo = ref([]) // 称重数据
-
+/**
+ * 打开称重弹窗
+ */
 const weighBox = (data) => {
   if (!data) {
     closeWeighBox()
@@ -56,13 +54,27 @@ const weighBox = (data) => {
   showWeighBox.value = true
   weighBoxInfo.value = data
 }
+/**
+ * 关闭称重弹窗
+ */
 const closeWeighBox = () => {
   showWeighBox.value = false
   weighBoxInfo.value = []
 }
+/**
+ * 确定揽收
+ */
 const sureCollect = () => {
   uni.navigateTo({
     url: '/packageA/collect/result',
+  })
+}
+/**
+ * 跳转到异常页面
+ */
+const gotoError = () => {
+  uni.navigateTo({
+    url: '/packageA/collect/error',
   })
 }
 onMounted(() => {
