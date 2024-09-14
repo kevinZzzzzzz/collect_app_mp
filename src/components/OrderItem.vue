@@ -43,11 +43,11 @@
       </div>
     </div>
   </div>
-  <teleport to="body">
-    <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
-      <BoxWeigh :weighBoxList="weighBoxList" @closeWeighBox="closeWeighBox" />
-    </wd-popup>
-  </teleport>
+  <!-- <teleport to="body"> -->
+  <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
+    <BoxWeigh :weighBoxList="weighBoxList" @closeWeighBox="closeWeighBox" />
+  </wd-popup>
+  <!-- </teleport> -->
 </template>
 
 <script setup lang="ts">

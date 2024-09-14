@@ -92,23 +92,23 @@
     </div>
   </wd-popup>
   <!-- 无人机选择弹窗 -->
-  <teleport to="body">
-    <wd-popup
-      v-model="showUAVSelectPopup"
-      position="bottom"
-      custom-style="padding: 30px 40px;"
-      @close="closeUAVSelPopup"
-    >
-      <div class="UAVSelectPopup">
-        <div class="UAVSelectPopup_header">
-          <div class="UAVSelectPopup_header_left" @click="closeUAVSelPopup">取消</div>
-          <div class="UAVSelectPopup_header_center">无人机编号</div>
-          <div class="UAVSelectPopup_header_right" @click="makeSureUAV">确认</div>
-        </div>
-        <wd-picker-view :columns="columns" v-model="UAVSelectPopupValue" />
+  <!-- <teleport to="body"> -->
+  <wd-popup
+    v-model="showUAVSelectPopup"
+    position="bottom"
+    custom-style="padding: 30px 40px;"
+    @close="closeUAVSelPopup"
+  >
+    <div class="UAVSelectPopup">
+      <div class="UAVSelectPopup_header">
+        <div class="UAVSelectPopup_header_left" @click="closeUAVSelPopup">取消</div>
+        <div class="UAVSelectPopup_header_center">无人机编号</div>
+        <div class="UAVSelectPopup_header_right" @click="makeSureUAV">确认</div>
       </div>
-    </wd-popup>
-  </teleport>
+      <wd-picker-view :columns="columns" v-model="UAVSelectPopupValue" />
+    </div>
+  </wd-popup>
+  <!-- </teleport> -->
 </template>
 
 <script setup lang="ts">
