@@ -4,17 +4,13 @@
       <p class="BoxList_header_title">揽件信息</p>
       <p class="BoxList_header_right">{{ boxAmount }}箱</p>
     </div>
-    <!-- <OrderItem :needHandleWeightBtn="needHandleWeightBtn" :orderItem="bloodInfo">
-      <template v-slot:time>
-        <div class="BoxList_list_time">发血时间：2024-08-20 12:00</div>
-      </template>
-    </OrderItem> -->
+    <Waybill :needHandleWeightBtn="needHandleWeightBtn" :orderItem="bloodInfo"></Waybill>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import OrderItem from '@/components/OrderItem.vue'
+import Waybill from '@/components/Waybill.vue'
 defineOptions({
   name: 'BoxList',
 })

@@ -40,22 +40,19 @@ const props = defineProps({
 })
 
 const closeWeigh = () => {
-  value.value = ''
   emit('closeWeighBox')
 }
-const value = ref('')
 </script>
 
 <style scoped lang="scss">
 .BoxWeigh {
   padding: 0 16px 16px;
-  border-radius: 10px 10px 0 0 !important;
   &_header {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 13px 0;
+    padding: 13px 0 13px 10px;
     &_title {
       font-weight: bold;
       font-size: 17px;
@@ -84,6 +81,11 @@ const value = ref('')
     grid-gap: 10px;
     align-items: center;
     padding: 12px 16px;
+    &_text {
+      font-weight: bold;
+      font-size: 17px;
+      color: #323233;
+    }
     &_img {
       width: 27px;
       height: 27px;
@@ -102,5 +104,10 @@ const value = ref('')
       color: #ffffff;
     }
   }
+}
+:deep(.wd-input) {
+  background: #eef7ff;
+  padding: 1px 0 1px 8px !important;
+  border-radius: 4px 4px 4px 4px !important;
 }
 </style>

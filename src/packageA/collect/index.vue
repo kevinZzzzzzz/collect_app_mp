@@ -36,19 +36,9 @@
                       </div>
                     </div>
                   </template>
-                  <div
-                    class="collect_item_order"
-                    v-for="(i, d) in item.data"
-                    :key="d"
-                    @click="goDetail(i)"
-                  >
+                  <div class="collect_item_order" v-for="(i, d) in item.data" :key="d">
                     <!-- 交接单组件 -->
-                    <OrderItem ref="OrderItemRef" :orderItem="i" :tabSel="tab" :tabsList="tabs">
-                      <div></div>
-                      <template v-slot:time>
-                        <div class="collect_item_order_time">发血时间：2024-08-20 12:00</div>
-                      </template>
-                    </OrderItem>
+                    <OrderItem ref="OrderItemRef" :orderItem="i"></OrderItem>
                   </div>
                 </wd-collapse-item>
               </wd-collapse>
@@ -101,14 +91,6 @@ const getData = () => {
 }
 
 /**
- * 跳转详情
- */
-const goDetail = (data: any) => {
-  uni.navigateTo({
-    url: `/packageA/collect/detail?outboundOrderNo=${data.outboundOrderNo}&tabs=${tabs[tab.value]}`,
-  })
-}
-/**
  * 跳转消息通知
  */
 const goNotified = (data: any) => {
@@ -130,7 +112,7 @@ onMounted(() => {
   &_alert {
     z-index: 1;
     position: fixed;
-    top: 50%;
+    top: 18%;
     right: 6px;
     transform: translateY(-50%);
     width: 80px;

@@ -19,12 +19,13 @@
         </div>
       </div>
       <div
-        v-show="boxItem.weight && needHandleWeightBtn"
+        v-show="boxItem.weight"
         class="BoxListInfo_header_editWeight"
         @click="setWeight(boxItem)"
       >
         <p class="BoxListInfo_header_editWeight_text">{{ boxItem.weight }}KG</p>
         <image
+          v-show="!noEditWeight"
           class="BoxListInfo_header_editWeight_img"
           src="@img/editIcon.png"
           mode="scaleToFill"
@@ -32,11 +33,7 @@
       </div>
     </div>
     <ul class="BoxListInfo_list">
-      <li
-        :class="['BoxListInfo_list_item', item.weight && 'BoxListInfo_list_item-4col']"
-        v-for="(item, idx) in bloodBagGroupList"
-        :key="item.id"
-      >
+      <li class="BoxListInfo_list_item" v-for="(item, idx) in bloodBagGroupList" :key="item.id">
         <div class="BoxListInfo_list_item_col">
           <div class="BoxListInfo_list_item_col_name">
             <p class="BoxListInfo_list_item_col_name_text">
@@ -54,11 +51,15 @@
         </div>
       </li>
     </ul>
+    <div class="BoxListInfo_time">
+      <p class="BoxListInfo_time_text">{{ transOrderTimeTextMap[0] }}: 2024-08-20 12:00</p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { transOrderTimeTextMap } from '@/constant/index'
 defineOptions({
   name: 'BoxListInfo', // 箱子信息组件
 })
@@ -69,8 +70,7 @@ const props = defineProps({
       return {}
     },
   },
-  // 是否需要处理称重按钮
-  needHandleWeightBtn: {
+  noEditWeight: {
     type: Boolean,
     default: false,
   },
@@ -100,6 +100,7 @@ const tempData = computed(() => {
 
 // 单个称重
 const setWeight = (data) => {
+  if (props.noEditWeight) return false
   emit('setWeight', data)
 }
 </script>
@@ -161,16 +162,14 @@ const setWeight = (data) => {
     grid-gap: 16px;
     &_item {
       display: grid;
-      grid-template-columns: 0.5fr 1fr 1fr;
-      &-4col {
-        grid-template-columns: 0.5fr 1fr 1fr 1fr;
-      }
+      grid-template-columns: 0.4fr 1fr 1fr;
       &_col {
         display: flex;
         align-items: center;
         &_name {
-          width: 38px;
-          height: 22px;
+          // width: 38px;
+          // height: 22px;
+          padding: 3px 12px;
           background: #eef7ff;
           border-radius: 4px 4px 4px 4px;
           border: 1px solid #1890ff;
@@ -216,6 +215,15 @@ const setWeight = (data) => {
           color: #323233;
         }
       }
+    }
+  }
+  &_time {
+    width: 100%;
+    margin-bottom: 5px;
+    &_text {
+      font-weight: 400;
+      font-size: 12px;
+      color: #999393;
     }
   }
 }
