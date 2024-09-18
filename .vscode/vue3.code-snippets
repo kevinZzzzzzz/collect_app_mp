@@ -21,7 +21,7 @@
     "body": [
       "<route lang=\"json5\" type=\"page\">",
       "{",
-      "  layout: 'default',",
+      // "  layout: 'default',",
       "  style: {",
       "    navigationBarTitleText: '$1',",
       "  },",

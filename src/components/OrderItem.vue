@@ -48,6 +48,7 @@ import BoxTemp from '@/components/BoxTemp.vue'
 defineOptions({
   name: 'OrderItem',
 })
+const emit = defineEmits(['handleScroll'])
 const props = defineProps({
   orderItem: {
     type: Object,
@@ -67,11 +68,13 @@ const tempBoxList = ref([]) // 温度曲线数据
 const setWeigh = () => {
   weighBoxList.value = props.orderItem.bloodPackages || []
   showWeighBox.value = true // 打开称重弹窗
+  emit('handleScroll', true)
 }
 // 关闭称重弹窗
 const closeWeighBox = () => {
   showWeighBox.value = false
   weighBoxList.value = []
+  emit('handleScroll', false)
 }
 /**
  * 温度曲线
@@ -79,6 +82,7 @@ const closeWeighBox = () => {
 const setTemp = () => {
   tempBoxList.value = props.orderItem.bloodPackages || []
   showTempBox.value = true // 打开温度曲线弹窗
+  emit('handleScroll', true)
 }
 
 /**
@@ -87,6 +91,7 @@ const setTemp = () => {
 const closeTempBox = () => {
   showTempBox.value = false
   tempBoxList.value = []
+  emit('handleScroll', false)
 }
 /**
  * 跳转详情

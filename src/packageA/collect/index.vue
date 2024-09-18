@@ -6,6 +6,9 @@
 }
 </route>
 <template>
+  <page-meta :page-style="`overflow:${show10 ? 'hidden' : 'visible'};`">
+    <!-- <navigation-bar  /> -->
+  </page-meta>
   <div class="collect pageCenter">
     <BloodPageSearch style="width: 100%" />
     <DateSelect style="width: 100%" />
@@ -38,7 +41,11 @@
                   </template>
                   <div class="collect_item_order" v-for="(i, d) in item.data" :key="d">
                     <!-- 交接单组件 -->
-                    <OrderItem ref="OrderItemRef" :orderItem="i"></OrderItem>
+                    <OrderItem
+                      ref="OrderItemRef"
+                      :orderItem="i"
+                      @handleScroll="handleScroll($event)"
+                    ></OrderItem>
                   </div>
                 </wd-collapse-item>
               </wd-collapse>
@@ -60,7 +67,7 @@ defineOptions({
 })
 const tabs = ['待揽收', '已揽收', '异常件']
 const tab = ref(0)
-
+const show10 = ref(false)
 const collectData = ref<
   {
     hosName?: string
@@ -98,8 +105,21 @@ const goNotified = (data: any) => {
     url: `/packageB/notified/index?notifiedType=揽收`,
   })
 }
+const handleScroll = (data) => {
+  console.log(data, 'data')
+  show10.value = data
+}
 onMounted(() => {
   getData()
+
+  // const query = wx.createSelectorQuery()
+  // query
+  //   .select('#collect')
+  //   .boundingClientRect((data) => {
+  //     console.log(data, 123) // 在控制台打印元素的信息
+
+  //   })
+  //   .exec()
 })
 </script>
 

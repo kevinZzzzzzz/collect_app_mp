@@ -4,9 +4,12 @@
       <p class="BoxTemp_header_title">温度曲线</p>
       <h6 class="BoxTemp_header_cancel" @click="closeTemp()">取消</h6>
     </div>
-    <div class="charts-box">
+    <ul>
+      <li v-for="item in 20" :key="item">{{ item }}</li>
+    </ul>
+    <!-- <div class="charts-box">
       <qiunVueUcharts type="line" :opts="opts" :chartData="chartData" />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -76,13 +79,15 @@ const getServerData = () => {
   }, 500)
 }
 onMounted(() => {
-  getServerData()
+  // getServerData()
 })
 </script>
 
 <style scoped lang="scss">
 .BoxTemp {
   padding: 0 16px 16px;
+  max-height: 200px;
+  // overflow-y: scroll;
   &_header {
     width: 100%;
     display: flex;
