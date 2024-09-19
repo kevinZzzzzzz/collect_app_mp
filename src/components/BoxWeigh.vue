@@ -25,12 +25,6 @@ defineOptions({
 })
 const emit = defineEmits(['closeWeighBox'])
 const props = defineProps({
-  weighBoxInfo: {
-    type: Object,
-    default: () => {
-      return {}
-    },
-  },
   weighBoxList: {
     type: Array<any>,
     default: () => {
@@ -42,6 +36,9 @@ const props = defineProps({
 const closeWeigh = () => {
   emit('closeWeighBox')
 }
+onMounted(() => {
+  console.log(2222)
+})
 </script>
 
 <style scoped lang="scss">

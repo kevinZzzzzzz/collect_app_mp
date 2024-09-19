@@ -8,12 +8,19 @@ export default defineUniPages({
     navigationBarTextStyle: 'black',
     backgroundColor: '#FFFFFF',
   },
+  requiredPrivateInfos: [
+    'getLocation',
+    'onLocationChange',
+    'startLocationUpdateBackground',
+    'chooseAddress',
+  ],
   easycom: {
     autoscan: true,
     custom: {
       '^wd-(.*)': 'wot-design-uni/components/wd-$1/wd-$1.vue',
       '^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)':
         'z-paging/components/z-paging$1/z-paging$1.vue',
+      '^qiun-(.*)': '@/components/qiun-$1.vue',
     },
   },
   tabBar: {
@@ -45,6 +52,10 @@ export default defineUniPages({
           type: 'page',
           style: {
             navigationBarTitleText: '血液揽收',
+            // disableScroll: true,
+            'app-plus': {
+              bounce: 'none',
+            },
           },
         },
         {

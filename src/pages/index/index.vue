@@ -16,12 +16,8 @@
         @click="goUrl(item.route)"
         v-for="(item, idx) in routerList"
         :key="idx"
-        :style="{
-          backgroundImage: isMp
-            ? `url(/static/images/${item.bgImgUrl}.png)`
-            : `url(./static/images/${item.bgImgUrl}.png)`,
-        }"
       >
+        <image class="home_list_item_img" :src="item.bgImgUrl" mode="scaleToFill" />
         <p class="home_list_item_text">{{ item.name }}</p>
       </li>
     </ul>
@@ -30,6 +26,10 @@
 
 <script lang="ts" setup>
 import PLATFORM from '@/utils/platform'
+import pathBg1 from '@/static/images/pathBg1.png'
+import pathBg2 from '@/static/images/pathBg2.png'
+import pathBg3 from '@/static/images/pathBg3.png'
+import pathBg4 from '@/static/images/pathBg4.png'
 defineOptions({
   name: 'Home',
 })
@@ -39,22 +39,22 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
 const routerList = ref([
   {
     name: '血液揽收',
-    bgImgUrl: 'pathBg1',
+    bgImgUrl: pathBg1,
     route: '/packageA/collect/index',
   },
   {
     name: '血液签收',
-    bgImgUrl: 'pathBg2',
+    bgImgUrl: pathBg2,
     route: '',
   },
   {
     name: '我的任务',
-    bgImgUrl: 'pathBg3',
+    bgImgUrl: pathBg3,
     route: '',
   },
   {
     name: '血液交接查询',
-    bgImgUrl: 'pathBg4',
+    bgImgUrl: pathBg4,
     route: '',
   },
 ])
@@ -92,17 +92,24 @@ const goUrl = (url) => {
     &_item {
       position: relative;
       height: 94px;
+      &_img {
+        margin: -16px;
+        width: calc(100% + 32px);
+        height: calc(94px + 32px);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
       &_text {
+        position: absolute;
+        z-index: 2;
         margin: 32px;
         font-family: PingFang SC;
         font-size: 20px;
         font-weight: 800;
         color: #323233;
       }
-      background-repeat: no-repeat;
-      background-position: left center;
-      background-size: 100%;
-      border-radius: 8px 8px 8px 8px;
     }
   }
 }

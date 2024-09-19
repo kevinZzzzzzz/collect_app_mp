@@ -85,10 +85,24 @@
   "mp-weixin": {
     "appid": "wxef05ef5eca28a9af",
     "setting": {
-      "urlCheck": false
+      "urlCheck": false,
+      "minified": true,
+      "es6": true
     },
     "usingComponents": true,
-    "lazyCodeLoading": "requiredComponents"
+    "lazyCodeLoading": "requiredComponents",
+    "permission": {
+      "scope.userLocation": {
+        "desc": "为了方便用户选择起始地和目的地"
+      }
+    },
+    "requiredPrivateInfos": [
+      "getLocation",
+      "chooseAddress",
+      "chooseLocation",
+      "choosePoi",
+      "onLocationChange"
+    ]
   },
   "mp-alipay": {
     "usingComponents": true,

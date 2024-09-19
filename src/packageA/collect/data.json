@@ -187,6 +187,194 @@
         ],
         "packStatus": null
       }
+    ],
+    "大鹏镇人民医院1": [
+      {
+        "id": 8269,
+        "outboundOrderNo": "BA20240627-001",
+        "outboundApplicant": "深圳宝安中心血站120",
+        "outboundApplicantId": "BA",
+        "outboundApplyDate": "2024-03-18T10:03:39",
+        "outboundReceiver": "大鹏镇人民医院",
+        "outboundReceiverId": "150",
+        "outboundPerson": "穿越管理员",
+        "outboundType": 2,
+        "outboundStatus": 1,
+        "handoverId": "BA20240318-002",
+        "createTime": "2024-03-18T13:46:44.734832",
+        "description": "pda",
+        "bloodBagNum": null,
+        "hxbnum": null,
+        "xxbnum": null,
+        "xjnum": null,
+        "transportStatus": null,
+        "orderType": null,
+        "deliverAddressId": null,
+        "consigneeAddressId": null,
+        "deliverAddress": null,
+        "deliverPerson": null,
+        "deliverTelephone": null,
+        "consigneeAddress": null,
+        "consigneePerson": null,
+        "consigneeTelephone": null,
+        "consigneeLon": null,
+        "consigneeLat": null,
+        "deliverLon": null,
+        "deliverLat": null,
+        "bloodPackages": [
+          {
+            "code": "Y0001",
+            "packageType": 2,
+            "productType": null,
+            "weight": 150.0,
+            "productSubtype": null,
+            "energy": 59,
+            "signal": 18,
+            "insideTemp": null,
+            "updateTime": "2024-09-12T14:44:43",
+            "bloodBagList": null,
+            "bloodBagGroupMap": {
+              "血浆类": [
+                {
+                  "id": 42658,
+                  "bloodBagId": "020242010367400D6100000",
+                  "serialId": "440312401788900",
+                  "bloodId": "D6807000",
+                  "bloodType": "血浆类",
+                  "bloodSubtype": "病毒灭活新鲜冰冻血浆",
+                  "bloodName": "病毒灭活新鲜冰冻血浆",
+                  "bloodGroup": "B",
+                  "rhBloodGroup": 1,
+                  "capacity": 150.0,
+                  "unit": "ml",
+                  "conversion": 1.5,
+                  "expireDate": "2024-12-17 13:43:18",
+                  "produceDate": null,
+                  "updateDate": null,
+                  "handoverId": "BA20240627-001"
+                },
+                {
+                  "id": 45317,
+                  "bloodBagId": "020242020490000D6100000",
+                  "serialId": "440312300033400",
+                  "bloodId": "D6100000",
+                  "bloodType": "血浆类",
+                  "bloodSubtype": "冰冻血浆",
+                  "bloodName": "冰浆|CPD/150ml",
+                  "bloodGroup": "O",
+                  "rhBloodGroup": 1,
+                  "capacity": 150.0,
+                  "unit": "ml",
+                  "conversion": 1.5,
+                  "expireDate": "2027-11-20 15:20:00",
+                  "produceDate": null,
+                  "updateDate": "2024-03-18 14:12:20",
+                  "handoverId": "BA20240627-001"
+                }
+              ],
+              "红细胞类": [
+                {
+                  "id": 42661,
+                  "bloodBagId": "020242010286900D6100000",
+                  "serialId": "440312402457100",
+                  "bloodId": "D8201000",
+                  "bloodType": "红细胞类",
+                  "bloodSubtype": "洗涤红细胞(MAP)",
+                  "bloodName": "洗涤红细胞(MAP)",
+                  "bloodGroup": "O",
+                  "rhBloodGroup": 1,
+                  "capacity": 2.0,
+                  "unit": "U",
+                  "conversion": 2.0,
+                  "expireDate": "2024-12-17 13:43:18",
+                  "produceDate": null,
+                  "updateDate": null,
+                  "handoverId": "BA20240627-001"
+                }
+              ]
+            },
+            "deviceStremDataMap": {
+              "temp": [24]
+            }
+          },
+          {
+            "code": "Y0002",
+            "packageType": 2,
+            "productType": null,
+            "productSubtype": null,
+            "weight": 0,
+            "energy": 59,
+            "signal": 18,
+            "insideTemp": null,
+            "updateTime": "2024-09-12T14:44:43",
+            "bloodBagList": null,
+            "bloodBagGroupMap": {
+              "血浆类": [
+                {
+                  "id": 42658,
+                  "bloodBagId": "020242010367400D6100000",
+                  "serialId": "440312401788900",
+                  "bloodId": "D6807000",
+                  "bloodType": "血浆类",
+                  "bloodSubtype": "病毒灭活新鲜冰冻血浆",
+                  "bloodName": "病毒灭活新鲜冰冻血浆",
+                  "bloodGroup": "B",
+                  "rhBloodGroup": 1,
+                  "capacity": 150.0,
+                  "unit": "ml",
+                  "conversion": 1.5,
+                  "expireDate": "2024-12-17 13:43:18",
+                  "produceDate": null,
+                  "updateDate": null,
+                  "handoverId": "BA20240627-001"
+                },
+                {
+                  "id": 45317,
+                  "bloodBagId": "020242020490000D6100000",
+                  "serialId": "440312300033400",
+                  "bloodId": "D6100000",
+                  "bloodType": "血浆类",
+                  "bloodSubtype": "冰冻血浆",
+                  "bloodName": "冰浆|CPD/150ml",
+                  "bloodGroup": "O",
+                  "rhBloodGroup": 1,
+                  "capacity": 150.0,
+                  "unit": "ml",
+                  "conversion": 1.5,
+                  "expireDate": "2027-11-20 15:20:00",
+                  "produceDate": null,
+                  "updateDate": "2024-03-18 14:12:20",
+                  "handoverId": "BA20240627-001"
+                }
+              ],
+              "红细胞类": [
+                {
+                  "id": 42661,
+                  "bloodBagId": "020242010286900D6100000",
+                  "serialId": "440312402457100",
+                  "bloodId": "D8201000",
+                  "bloodType": "红细胞类",
+                  "bloodSubtype": "洗涤红细胞(MAP)",
+                  "bloodName": "洗涤红细胞(MAP)",
+                  "bloodGroup": "O",
+                  "rhBloodGroup": 1,
+                  "capacity": 2.0,
+                  "unit": "U",
+                  "conversion": 2.0,
+                  "expireDate": "2024-12-17 13:43:18",
+                  "produceDate": null,
+                  "updateDate": null,
+                  "handoverId": "BA20240627-001"
+                }
+              ]
+            },
+            "deviceStremDataMap": {
+              "temp": [24]
+            }
+          }
+        ],
+        "packStatus": null
+      }
     ]
   }
 }

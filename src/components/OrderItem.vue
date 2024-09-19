@@ -32,22 +32,37 @@
     </div>
   </div>
   <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
-    <BoxWeigh :weighBoxList="weighBoxList" @closeWeighBox="closeWeighBox" />
+    <BoxWeigh
+      v-if="showWeighBox"
+      lock-scroll
+      :safe-area-inset-bottom="true"
+      :weighBoxList="weighBoxList"
+      @closeWeighBox="closeWeighBox"
+    />
   </wd-popup>
   <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
-    <BoxTemp @closeTempBox="closeTempBox" />
+    <BoxTemp
+      v-if="showTempBox"
+      lock-scroll
+      :safe-area-inset-bottom="true"
+      :tempBoxList="tempBoxList"
+      @closeTempBox="closeTempBox"
+    />
   </wd-popup>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 import { transStatusMap } from '@/constant/index'
-import BoxListInfo from '@/components/BoxListInfo.vue'
-import BoxWeigh from '@/components/BoxWeigh.vue'
-import BoxTemp from '@/components/BoxTemp.vue'
+import BoxListInfo from './BoxListInfo.vue'
+import BoxWeigh from './BoxWeigh.vue'
+import BoxTemp from './BoxTemp.vue'
+import PLATFORM from '@/utils/platform'
+const instance = getCurrentInstance()
 defineOptions({
   name: 'OrderItem',
 })
+const isMp = ref(PLATFORM.isMp)
 const props = defineProps({
   orderItem: {
     type: Object,
@@ -56,6 +71,7 @@ const props = defineProps({
     },
   },
 })
+const emit = defineEmits(['handleScroll'])
 const showWeighBox = ref(false) // 展示称重弹窗
 const showTempBox = ref(false) // 展示温度曲线弹窗
 const weighBoxList = ref([]) // 称重数据
@@ -67,16 +83,27 @@ const tempBoxList = ref([]) // 温度曲线数据
 const setWeigh = () => {
   weighBoxList.value = props.orderItem.bloodPackages || []
   showWeighBox.value = true // 打开称重弹窗
+
+  if (isMp.value) {
+    emit('handleScroll', true)
+  }
 }
 // 关闭称重弹窗
 const closeWeighBox = () => {
   showWeighBox.value = false
   weighBoxList.value = []
+
+  if (isMp.value) {
+    emit('handleScroll', false)
+  }
 }
 /**
  * 温度曲线
  * */
 const setTemp = () => {
+  if (isMp.value) {
+    emit('handleScroll', true)
+  }
   tempBoxList.value = props.orderItem.bloodPackages || []
   showTempBox.value = true // 打开温度曲线弹窗
 }
@@ -87,6 +114,9 @@ const setTemp = () => {
 const closeTempBox = () => {
   showTempBox.value = false
   tempBoxList.value = []
+  if (isMp.value) {
+    emit('handleScroll', false)
+  }
 }
 /**
  * 跳转详情

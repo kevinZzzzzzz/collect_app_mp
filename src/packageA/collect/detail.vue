@@ -1,7 +1,7 @@
 <template>
   <div class="CollectDetail">
     <div class="CollectDetail_header">
-      <MapComp />
+      <MapComp :bloodInfo="orderDetail" />
     </div>
     <div class="CollectDetail_detail">
       <div class="CollectDetail_detail_block">
@@ -101,14 +101,14 @@ page {
   &_header {
     position: absolute;
     top: 0;
-    z-index: -1;
+    z-index: 1;
     width: 100%;
     height: 142px;
   }
   &_detail {
     position: absolute;
     top: 114px;
-    // z-index: 0;
+    z-index: 2;
     width: 100%;
     padding: 0px 16px 60px;
     &_block {

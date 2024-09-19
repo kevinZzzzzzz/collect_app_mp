@@ -6,6 +6,7 @@
 }
 </route>
 <template>
+  <!-- <page-meta :page-style="'overflow:' + (noScroll ? 'hidden' : 'visible')"></page-meta> -->
   <div class="collect pageCenter">
     <BloodPageSearch style="width: 100%" />
     <DateSelect style="width: 100%" />
@@ -38,7 +39,11 @@
                   </template>
                   <div class="collect_item_order" v-for="(i, d) in item.data" :key="d">
                     <!-- 交接单组件 -->
-                    <OrderItem ref="OrderItemRef" :orderItem="i"></OrderItem>
+                    <OrderItem
+                      ref="OrderItemRef"
+                      :orderItem="i"
+                      @handleScroll="handleScroll($event)"
+                    ></OrderItem>
                   </div>
                 </wd-collapse-item>
               </wd-collapse>
@@ -60,7 +65,7 @@ defineOptions({
 })
 const tabs = ['待揽收', '已揽收', '异常件']
 const tab = ref(0)
-
+const noScroll = ref(false) // 是否禁止滚动
 const collectData = ref<
   {
     hosName?: string
@@ -89,7 +94,11 @@ const getData = () => {
     }
   })
 }
-
+// 滚动事件
+const handleScroll = (flag) => {
+  console.log(flag, 123123123)
+  noScroll.value = flag
+}
 /**
  * 跳转消息通知
  */

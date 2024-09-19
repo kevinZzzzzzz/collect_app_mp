@@ -34,8 +34,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { transStatusMap } from '@/constant/index'
-import BoxListInfo from '@/components/BoxListInfo.vue'
-import BoxWeigh from '@/components/BoxWeigh.vue'
+import BoxListInfo from './BoxListInfo.vue'
+import BoxWeigh from './BoxWeigh.vue'
 defineOptions({
   name: 'Waybill', // 运输编号单
 })
