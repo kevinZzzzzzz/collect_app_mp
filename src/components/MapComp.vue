@@ -31,6 +31,7 @@
 import { ref } from 'vue'
 import mapBoxIconSel from '@img/mapBoxIconSel.png'
 import mapBoxIcon from '@img/mapBoxIcon.png'
+import { getDrivingPath } from '@/service/index/map'
 defineOptions({
   name: 'MapComp',
 })
@@ -66,6 +67,10 @@ const getLocation = () => {
     fail: (err) => {
       console.error('无法获取地理位置:', err)
     },
+  })
+  getDrivingPath({
+    from: '39.894772,116.321668',
+    to: '39.902781,116.427171',
   })
 }
 const bloodPackages = computed(() => {

@@ -90,7 +90,7 @@ const tempData = computed(() => {
   let tempR = null
   if (
     props?.boxItem.deviceStremDataMap.temp &&
-    Array.isArray(props?.boxItem.deviceStremDataMap.temp)
+    Array.isArray(props?.boxItem.deviceStremDataMap?.temp)
   ) {
     tempL = props?.boxItem.deviceStremDataMap.temp[0]
     tempR = props?.boxItem.deviceStremDataMap.temp[1]

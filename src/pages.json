@@ -40,56 +40,6 @@
       }
     ]
   },
-  "subPackages": [
-    {
-      "root": "packageA",
-      "pages": [
-        {
-          "path": "collect/index",
-          "type": "page",
-          "style": {
-            "navigationBarTitleText": "血液揽收",
-            "app-plus": {
-              "bounce": "none"
-            }
-          }
-        },
-        {
-          "path": "collect/detail",
-          "type": "page",
-          "style": {
-            "navigationBarTitleText": ""
-          }
-        },
-        {
-          "path": "collect/result",
-          "type": "page",
-          "style": {
-            "navigationBarTitleText": "血液揽收"
-          }
-        },
-        {
-          "path": "collect/error",
-          "type": "page",
-          "style": {
-            "navigationBarTitleText": "揽收异常"
-          }
-        }
-      ]
-    },
-    {
-      "root": "packageB",
-      "pages": [
-        {
-          "path": "notified/index",
-          "type": "page",
-          "style": {
-            "navigationBarTitleText": "消息通知"
-          }
-        }
-      ]
-    }
-  ],
   "pages": [
     {
       "path": "pages/index/index",
@@ -126,6 +76,47 @@
       "style": {
         "navigationBarTitleText": "登录"
       }
+    }
+  ],
+  "subPackages": [
+    {
+      "root": "packageA",
+      "pages": [
+        {
+          "path": "collect/detail",
+          "type": "page"
+        },
+        {
+          "path": "collect/error",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "揽收异常"
+          }
+        },
+        {
+          "path": "collect/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "血液揽收"
+          }
+        },
+        {
+          "path": "collect/result",
+          "type": "page"
+        }
+      ]
+    },
+    {
+      "root": "packageB",
+      "pages": [
+        {
+          "path": "notified/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "消息通知"
+          }
+        }
+      ]
     }
   ]
 }

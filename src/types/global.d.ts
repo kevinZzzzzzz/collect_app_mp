@@ -14,3 +14,4 @@ declare const __UNI_PLATFORM__:
   | 'quickapp-webview-union'
 
 declare const __VITE_APP_PROXY__: 'true' | 'false'
+declare const __VITE_APP_MAP_PROXY__: 'true' | 'false'

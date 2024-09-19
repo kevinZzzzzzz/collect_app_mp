@@ -9,10 +9,10 @@ interface NavigateToOptions {
        "/pages/login/identity" |
        "/pages/login/index" |
        "/pages/login/loginByWx" |
-       "/packageA/collect/index" |
        "/packageA/collect/detail" |
-       "/packageA/collect/result" |
        "/packageA/collect/error" |
+       "/packageA/collect/index" |
+       "/packageA/collect/result" |
        "/packageB/notified/index";
 }
 interface RedirectToOptions extends NavigateToOptions {}

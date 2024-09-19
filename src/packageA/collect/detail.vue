@@ -1,4 +1,5 @@
 <template>
+  <page-meta :page-style="'overflow:' + (pageScroll ? 'hidden' : 'visible')"></page-meta>
   <div class="CollectDetail">
     <div class="CollectDetail_header">
       <MapComp :bloodInfo="orderDetail" />
@@ -13,10 +14,10 @@
       </div>
 
       <div class="CollectDetail_detail_block">
-        <BoxList needHandleWeightBtn :bloodInfo="orderDetail" @weighBox="weighBox($event)" />
+        <BoxList :bloodInfo="orderDetail" @weighBox="weighBox($event)" />
       </div>
     </div>
-    <div class="CollectDetail_bottom">
+    <div class="CollectDetail_bottom" :style="{ zIndex: pageScroll ? 0 : 3 }">
       <div class="CollectDetail_bottom_left" @click="gotoError()">
         <wd-icon name="warning" color="#B7B7B8" size="22px"></wd-icon>
         <p class="CollectDetail_bottom_left_text">异常</p>
@@ -35,9 +36,14 @@ import BloodInfo from './components/BloodInfo.vue'
 import ExpressInfo from './components/ExpressInfo.vue'
 import BoxList from './components/BoxList.vue'
 import { getNavigateOptions } from '@/utils/index'
+import { globalSettingStore } from '@/store/global'
+import { storeToRefs } from 'pinia'
+import { getCollectItemDetail } from '@/service/index/collect'
 defineOptions({
   name: 'CollectDetail',
 })
+const store = globalSettingStore() // 全局设置
+const { pageScroll } = storeToRefs(store)
 const outboundOrderNo = ref({}) // 交接单号
 const orderDetail = ref({}) // 交接单详情
 
@@ -77,6 +83,7 @@ const gotoError = () => {
     url: '/packageA/collect/error',
   })
 }
+
 onMounted(() => {
   const options: any = getCurrentInstance()
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
@@ -84,7 +91,9 @@ onMounted(() => {
   uni.setNavigationBarTitle({
     title: titleName,
   })
-  import('./detail.json').then(({ default: res }) => {
+  getCollectItemDetail({
+    outboundOrderNo: outboundOrderNo.value,
+  }).then((res: any) => {
     const { data } = res
     orderDetail.value = data
   })
@@ -122,7 +131,6 @@ page {
   &_bottom {
     position: fixed;
     bottom: 0px;
-    // z-index: 1;
     display: grid;
     grid-template-columns: 0.15fr 1fr;
     grid-gap: 16px;

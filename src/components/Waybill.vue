@@ -34,11 +34,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { transStatusMap } from '@/constant/index'
+import { globalSettingStore } from '@/store/global'
 import BoxListInfo from './BoxListInfo.vue'
+import PLATFORM from '@/utils/platform'
 import BoxWeigh from './BoxWeigh.vue'
 defineOptions({
   name: 'Waybill', // 运输编号单
 })
+const isMp = ref(PLATFORM.isMp)
+const store = globalSettingStore()
 const props = defineProps({
   orderItem: {
     type: Object,
@@ -57,11 +61,17 @@ const weighBoxList = ref([]) // 称重数据
 const setWeigh = (obj) => {
   weighBoxList.value = (obj && [obj]) || []
   showWeighBox.value = true // 打开称重弹窗
+  if (isMp.value) {
+    store.changePageScroll(true)
+  }
 }
 // 关闭称重弹窗
 const closeWeighBox = () => {
   showWeighBox.value = false
   weighBoxList.value = []
+  if (isMp.value) {
+    store.changePageScroll(false)
+  }
 }
 </script>
 

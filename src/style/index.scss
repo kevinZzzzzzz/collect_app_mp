@@ -33,7 +33,21 @@ div,
 view {
   box-sizing: border-box;
 }
-
+:deep(.wd-tabs__line) {
+  background: #1890ff;
+}
+:deep(.wd-month__day.is-start .wd-month__day-container) {
+  background: #1890ff !important;
+}
+:deep(.wd-month__day.is-end .wd-month__day-container) {
+  background: #1890ff !important;
+}
+:deep(.wd-month__day.is-same .wd-month__day-container) {
+  background: #1890ff !important;
+}
+:deep(.wd-button.is-primary) {
+  background: #1890ff !important;
+}
 @mixin CenterHorVertical() {
   display: flex;
   align-items: center;

@@ -4,7 +4,7 @@
       <p class="BoxList_header_title">揽件信息</p>
       <p class="BoxList_header_right">{{ boxAmount }}箱</p>
     </div>
-    <Waybill :needHandleWeightBtn="needHandleWeightBtn" :orderItem="bloodInfo"></Waybill>
+    <Waybill :orderItem="bloodInfo"></Waybill>
   </div>
 </template>
 
@@ -20,11 +20,6 @@ const props = defineProps({
     default: () => {
       return {}
     },
-  },
-  // 是否需要处理称重按钮
-  needHandleWeightBtn: {
-    type: Boolean,
-    default: false,
   },
 })
 const emit = defineEmits(['weighBox'])

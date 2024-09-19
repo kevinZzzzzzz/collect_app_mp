@@ -4,34 +4,34 @@
       <div class="ExpressInfo_header_receive">
         <p class="ExpressInfo_header_receive_text">收</p>
       </div>
-      <p class="ExpressInfo_header_info">沈锦艺</p>
-      <p class="ExpressInfo_header_info">15788755934</p>
+      <p class="ExpressInfo_header_info">{{ bloodInfo.consigneePerson || '--' }}</p>
+      <p class="ExpressInfo_header_info">{{ bloodInfo.consigneeTelephone || '--' }}</p>
     </div>
     <ul class="ExpressInfo_precess">
       <li
-        :class="['ExpressInfo_precess_item', !item.stepFinish && 'ExpressInfo_precess_item-finish']"
+        :class="['ExpressInfo_precess_item', !idx && 'ExpressInfo_precess_item-first']"
         v-for="(item, idx) in precessList"
         :key="idx"
       >
         <div
           :class="[
             'ExpressInfo_precess_item_circle',
-            !item.stepFinish && 'ExpressInfo_precess_item_circle-finish',
+            !idx && 'ExpressInfo_precess_item_circle-first',
           ]"
         >
           <div class="ExpressInfo_precess_item_circle_inner"></div>
         </div>
         <p
           :style="{
-            color: !item.stepFinish && '#1890ff',
+            color: !idx && '#1890ff',
           }"
           class="ExpressInfo_precess_item_step"
         >
-          {{ item.stepName }}
+          {{ item.status }}
         </p>
         <div class="ExpressInfo_precess_item_info">
-          {{ item.stepLabel }}: {{ item.stepPerson }}
-          <span class="ExpressInfo_precess_item_info_time">{{ item.stepTime }}</span>
+          {{ item.operateType }}: {{ item.operator }}
+          <span class="ExpressInfo_precess_item_info_time">{{ item.time }}</span>
         </div>
       </li>
     </ul>
@@ -52,24 +52,7 @@ const props = defineProps({
   },
 })
 const precessList = computed(() => {
-  return [
-    {
-      step: 1,
-      stepName: '已发血',
-      stepTime: '2022-10-10 10:10:10',
-      stepLabel: '发血人',
-      stepPerson: '郭xx',
-      stepFinish: false,
-    },
-    {
-      step: 2,
-      stepName: '已装箱',
-      stepTime: '2022-10-10 10:10:10',
-      stepLabel: '装箱人',
-      stepPerson: '陈xx',
-      stepFinish: true,
-    },
-  ]
+  return props.bloodInfo.orderOperationRecordVoList?.reverse() || []
 })
 </script>
 
@@ -105,16 +88,16 @@ const precessList = computed(() => {
       align-items: center;
       margin-top: 22px;
       opacity: 0.5;
-      &-finish {
+      &-first {
         opacity: 1;
       }
       &_circle {
         position: relative;
         z-index: 2;
-        &-finish {
+        &-first {
           background: #1890ff;
         }
-        &-finish::after {
+        &-first::after {
           position: absolute;
           top: 14px;
           z-index: 0;

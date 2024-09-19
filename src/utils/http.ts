@@ -1,4 +1,10 @@
 import { CustomRequestOptions } from '@/interceptors/request'
+import PLATFORM from '@/utils/platform'
+
+const appProxy = import.meta.env.VITE_APP_PROXY
+const appMapProxy = import.meta.env.VITE_APP_MAP_PROXY
+const appProxyPrefix = import.meta.env.VITE_APP_PROXY_PREFIX
+const appMapProxyPrefix = import.meta.env.VITE_APP_MAP_PROXY_PREFIX
 
 export const http = <T>(options: CustomRequestOptions) => {
   // 1. 返回 Promise 对象
@@ -48,11 +54,17 @@ export const http = <T>(options: CustomRequestOptions) => {
  * @param query 请求query参数
  * @returns
  */
-export const httpGet = <T>(url: string, query?: Record<string, any>) => {
+export const httpGet = <T>(url: string, query?: Record<string, any>, isMap?: boolean) => {
+  if (!isMap) {
+    url = PLATFORM.isMp ? url : appProxy ? `${appProxyPrefix}${url}` : url
+  } else {
+    url = PLATFORM.isMp ? url : appMapProxy ? `${appMapProxyPrefix}${url}` : url
+  }
   return http<T>({
     url,
     query,
     method: 'GET',
+    isMap,
   })
 }
 
@@ -68,6 +80,7 @@ export const httpPost = <T>(
   data?: Record<string, any>,
   query?: Record<string, any>,
 ) => {
+  url = PLATFORM.isMp ? url : appProxy ? `${appProxyPrefix}${url}` : url
   return http<T>({
     url,
     query,

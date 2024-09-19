@@ -6,8 +6,11 @@
         <wd-tag custom-class="space" color="#EE0A24" bg-color="#EFDFE8">紧急</wd-tag>
       </div>
       <div class="OrderItem_header_right">
-        <p class="OrderItem_header_right_text" :style="{ color: transStatusMap[0].color }">
-          {{ transStatusMap[0].text }}
+        <p
+          class="OrderItem_header_right_text"
+          :style="{ color: transStatusMap[props.transportStatus].color }"
+        >
+          {{ transStatusMap[props.transportStatus].text }}
         </p>
       </div>
     </div>
@@ -58,11 +61,14 @@ import BoxListInfo from './BoxListInfo.vue'
 import BoxWeigh from './BoxWeigh.vue'
 import BoxTemp from './BoxTemp.vue'
 import PLATFORM from '@/utils/platform'
-const instance = getCurrentInstance()
+import { globalSettingStore } from '@/store/global'
+import { transStatusValueMap } from '@/constant'
 defineOptions({
   name: 'OrderItem',
 })
 const isMp = ref(PLATFORM.isMp)
+const store = globalSettingStore()
+
 const props = defineProps({
   orderItem: {
     type: Object,
@@ -70,42 +76,48 @@ const props = defineProps({
       return {}
     },
   },
+  transportStatus: {
+    type: Number,
+    default: () => {
+      return 0
+    },
+  },
 })
-const emit = defineEmits(['handleScroll'])
 const showWeighBox = ref(false) // 展示称重弹窗
 const showTempBox = ref(false) // 展示温度曲线弹窗
 const weighBoxList = ref([]) // 称重数据
 const tempBoxList = ref([]) // 温度曲线数据
 
+// const transStatusValue = computed(() => {
+//   return transStatusValueMap[props.transportStatus] || ''
+// })
 /**
  * 称重
  */
 const setWeigh = () => {
   weighBoxList.value = props.orderItem.bloodPackages || []
   showWeighBox.value = true // 打开称重弹窗
-
   if (isMp.value) {
-    emit('handleScroll', true)
+    store.changePageScroll(true)
   }
 }
 // 关闭称重弹窗
 const closeWeighBox = () => {
   showWeighBox.value = false
   weighBoxList.value = []
-
   if (isMp.value) {
-    emit('handleScroll', false)
+    store.changePageScroll(false)
   }
 }
 /**
  * 温度曲线
  * */
 const setTemp = () => {
-  if (isMp.value) {
-    emit('handleScroll', true)
-  }
   tempBoxList.value = props.orderItem.bloodPackages || []
   showTempBox.value = true // 打开温度曲线弹窗
+  if (isMp.value) {
+    store.changePageScroll(true)
+  }
 }
 
 /**
@@ -115,7 +127,7 @@ const closeTempBox = () => {
   showTempBox.value = false
   tempBoxList.value = []
   if (isMp.value) {
-    emit('handleScroll', false)
+    store.changePageScroll(false)
   }
 }
 /**

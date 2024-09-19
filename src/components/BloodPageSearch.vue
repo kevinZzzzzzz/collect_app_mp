@@ -14,18 +14,15 @@
           <wd-icon name="search" color="#1890ff" size="14px"></wd-icon>
         </template>
         <template #suffix>
-          <wd-button size="small" hairline>查询</wd-button>
+          <wd-button custom-class="btn" size="small" hairline @click="searchKeyword">
+            查询
+          </wd-button>
         </template>
       </wd-input>
     </div>
     <div class="BloodPageSearch_icon">
       <image class="BloodPageSearch_icon_img" src="@img/taskIcon.png" mode="scaleToFill" />
     </div>
-    <!-- <wd-badge modelValue="12">
-      <div class="BloodPageSearch_icon">
-        <image class="BloodPageSearch_icon_img" src="@img/alertIcon.png" mode="scaleToFill" />
-      </div>
-    </wd-badge> -->
   </div>
 </template>
 
@@ -34,7 +31,11 @@ import { ref } from 'vue'
 defineOptions({
   name: 'BloodPageSearch',
 })
+const emit = defineEmits(['searchKeyword'])
 const searchValue = ref('')
+const searchKeyword = () => {
+  emit('searchKeyword', searchValue.value)
+}
 </script>
 
 <style scoped lang="scss">

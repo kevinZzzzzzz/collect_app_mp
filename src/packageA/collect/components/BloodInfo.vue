@@ -18,11 +18,11 @@
     <div class="BloodInfo_address">
       <div class="BloodInfo_address_item">
         <p class="BloodInfo_address_item_icon start">始</p>
-        <p class="BloodInfo_address_item_addr">{{ bloodInfo.outboundApplicant }}</p>
+        <p class="BloodInfo_address_item_addr">{{ bloodInfo.outboundApplicant || '--' }}</p>
       </div>
       <div class="BloodInfo_address_item">
         <p class="BloodInfo_address_item_icon end">终</p>
-        <p class="BloodInfo_address_item_addr">{{ bloodInfo.outboundReceiver }}</p>
+        <p class="BloodInfo_address_item_addr">{{ bloodInfo.outboundReceiver || '--' }}</p>
       </div>
     </div>
   </div>

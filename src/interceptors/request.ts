@@ -7,10 +7,12 @@ export type CustomRequestOptions = UniApp.RequestOptions & {
   query?: Record<string, any>
   /** 出错时是否隐藏错误提示 */
   hideErrorToast?: boolean
+  isMap?: boolean
 } & IUniUploadFileOptions // 添加uni.uploadFile参数类型
 
 // 请求基准地址
 const baseUrl = import.meta.env.VITE_SERVER_BASEURL
+const mapUrl = import.meta.env.VITE_MAP_SERVER_BASEURL
 
 // 拦截器配置
 const httpInterceptor = {
@@ -25,17 +27,23 @@ const httpInterceptor = {
         options.url += `?${queryStr}`
       }
     }
+
     // 非 http 开头需拼接地址
     if (!options.url.startsWith('http')) {
       // #ifdef H5
       // console.log(__VITE_APP_PROXY__)
-      if (JSON.parse(__VITE_APP_PROXY__)) {
+      if (JSON.parse(__VITE_APP_PROXY__) || JSON.parse(__VITE_APP_MAP_PROXY__)) {
         // 啥都不需要做
       } else {
         options.url = baseUrl + options.url
       }
+
       // #endif
       // 非H5正常拼接
+      if (options.isMap && !import.meta.env.VITE_APP_MAP_PROXY) {
+        // 地图接口
+        options.url = mapUrl + options.url
+      }
       // #ifndef H5
       options.url = baseUrl + options.url
       // #endif
@@ -44,16 +52,19 @@ const httpInterceptor = {
     // 1. 请求超时
     options.timeout = 10000 // 10s
     // 2. （可选）添加小程序端请求头标识
-    options.header = {
-      platform, // 可选，与 uniapp 定义的平台一致，告诉后台来源
-      ...options.header,
+    if (!options.isMap) {
+      options.header = {
+        platform, // 可选，与 uniapp 定义的平台一致，告诉后台来源
+        ...options.header,
+        token: import.meta.env.VITE_SERVER_TOKEN,
+      }
     }
     // 3. 添加 token 请求头标识
-    const userStore = useUserStore()
-    const { token } = userStore.userInfo as unknown as IUserInfo
-    if (token) {
-      options.header.Authorization = `Bearer ${token}`
-    }
+    // const userStore = useUserStore()
+    // const { token } = userStore.userInfo as unknown as IUserInfo
+    // if (token) {
+    //   options.header.Authorization = `Bearer ${token}`
+    // }
   },
 }
 

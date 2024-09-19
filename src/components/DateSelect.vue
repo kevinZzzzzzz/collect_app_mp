@@ -34,7 +34,9 @@ import { dayjs } from 'wot-design-uni'
 defineOptions({
   name: 'DateSelect',
 })
+const emit = defineEmits(['searchByTime'])
 const dataFormat = 'YYYY年MM月DD日'
+const dataFormat1 = 'YYYY-MM-DD'
 const dateVal = ref<any>([new Date().getTime(), new Date().getTime()])
 const dateValFormat = ref<any>([
   dayjs(new Date().getTime()).format(dataFormat),
@@ -71,6 +73,11 @@ const formatter = (day) => {
 const handleConfirm = ({ value }) => {
   dateValFormat.value[0] = dayjs(value[0]).format(dataFormat)
   dateValFormat.value[1] = dayjs(value[1]).format(dataFormat)
+
+  emit('searchByTime', {
+    startTime: dayjs(value[0]).format(dataFormat1),
+    endTime: dayjs(value[1]).format(dataFormat1),
+  })
 }
 </script>
 

@@ -6,18 +6,21 @@
 }
 </route>
 <template>
-  <!-- <page-meta :page-style="'overflow:' + (noScroll ? 'hidden' : 'visible')"></page-meta> -->
+  <page-meta :page-style="'overflow:' + (pageScroll ? 'hidden' : 'visible')"></page-meta>
   <div class="collect pageCenter">
-    <BloodPageSearch style="width: 100%" />
-    <DateSelect style="width: 100%" />
+    <BloodPageSearch style="width: 100%" @searchKeyword="searchKeyword($event)" />
+    <DateSelect style="width: 100%" @searchByTime="searchByTime($event)" />
     <div class="collect_alert" @click="goNotified">
       <wd-badge :top="10" modelValue="12" bg-color="red">
         <image class="collect_alert_img" src="@img/bellIcon.png" mode="scaleToFill" />
       </wd-badge>
     </div>
-    <wd-tabs v-model="tab" inactiveColor="#CDCDCD">
+    <wd-tabs v-model="tab" inactiveColor="#CDCDCD" @click="handleChangTab">
       <block v-for="(item, index) in tabs" :key="index">
-        <wd-tab :title="`${item}`">
+        <wd-tab :title="`${item}`" :name="item">
+          <div class="loadingPage" v-if="isLoading">
+            <wd-loading :size="30" />
+          </div>
           <view class="content">
             <div class="collect_item" v-for="(item, idx) in collectData" :key="idx">
               <wd-collapse v-model="collapseOpen">
@@ -30,19 +33,18 @@
                       </div>
                       <div class="collect_item_header_right">
                         {{ (item?.data && item?.data?.length) || 0 }}条
-                        <wd-icon
+                        <!-- <wd-icon
                           :name="expanded ? 'caret-down-small' : 'caret-right-small'"
                           size="16px"
-                        ></wd-icon>
+                        ></wd-icon> -->
                       </div>
                     </div>
                   </template>
                   <div class="collect_item_order" v-for="(i, d) in item.data" :key="d">
-                    <!-- 交接单组件 -->
                     <OrderItem
                       ref="OrderItemRef"
                       :orderItem="i"
-                      @handleScroll="handleScroll($event)"
+                      :transportStatus="transStatusValueMap[tab]"
                     ></OrderItem>
                   </div>
                 </wd-collapse-item>
@@ -57,47 +59,95 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { dayjs } from 'wot-design-uni'
 import BloodPageSearch from '@/components/BloodPageSearch.vue'
 import DateSelect from '@/components/DateSelect.vue'
 import OrderItem from '@/components/OrderItem.vue'
+import { globalSettingStore } from '@/store/global'
+import { storeToRefs } from 'pinia'
+import { getCollectList } from '@/service/index/collect'
+import { transStatusValueMap } from '@/constant'
+
+const dataFormat1 = 'YYYY-MM-DD'
 defineOptions({
   name: 'Collect',
 })
-const tabs = ['待揽收', '已揽收', '异常件']
-const tab = ref(0)
-const noScroll = ref(false) // 是否禁止滚动
+const store = globalSettingStore() // 全局设置
+const { pageScroll } = storeToRefs(store)
+const tabs = ['待揽收', '已揽收', '异常']
+const tab = ref('待揽收')
+const isLoading = ref(false) // 加载中
+const keyword = ref('') // 搜索关键字
+const startTime = ref(dayjs(new Date().getTime()).format(dataFormat1)) // 开始时间
+const endTime = ref(dayjs(new Date().getTime()).format(dataFormat1)) // 结束时间
+
 const collectData = ref<
   {
     hosName?: string
     data?: any
   }[]
 >([]) // 揽收数据
-const OrderItemRef = ref(null) // 运单组件实例
 const collapseOpen = ref<string[]>([])
 
+/**
+ * 获取数据
+ */
 const getData = () => {
-  import('./data.json').then(({ default: res }) => {
-    const { data } = res
-    if (data) {
-      const arrTemp: Array<{
-        hosName?: string
-        data?: any
-      }> = []
-      Object.keys(data).forEach((d) => {
-        const obj = {
-          hosName: d,
-          data: data[d],
-        }
-        arrTemp.push(obj)
-      })
-      collectData.value = arrTemp
-    }
+  isLoading.value = true
+  getCollectList({
+    transportStatus: transStatusValueMap[tab.value],
+    keyword: keyword.value || '',
+    startTime: startTime.value || '',
+    endTime: endTime.value || '',
   })
+    .then((res: any) => {
+      const { data } = res
+      if (data) {
+        const arrTemp: Array<{
+          hosName?: string
+          data?: any
+        }> = []
+        Object.keys(data).forEach((d) => {
+          const obj = {
+            hosName: d,
+            data: data[d],
+          }
+          arrTemp.push(obj)
+        })
+        collectData.value = arrTemp
+      }
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
 }
-// 滚动事件
-const handleScroll = (flag) => {
-  console.log(flag, 123123123)
-  noScroll.value = flag
+/**
+ * 切换tab
+ * @param {*} name tab名称
+ */
+const handleChangTab = ({ name }) => {
+  collectData.value = []
+  tab.value = name
+  getData()
+}
+/**
+ * 关键字查询
+ * @param {*} data
+ */
+const searchKeyword = (data) => {
+  collectData.value = []
+  keyword.value = data
+  getData()
+}
+/**
+ * 时间查询
+ * @param {*} data
+ */
+const searchByTime = (data) => {
+  collectData.value = []
+  startTime.value = data.startTime
+  endTime.value = data.endTime
+  getData()
 }
 /**
  * 跳转消息通知
@@ -121,7 +171,7 @@ onMounted(() => {
   &_alert {
     z-index: 1;
     position: fixed;
-    top: 18%;
+    top: 25%;
     right: 6px;
     transform: translateY(-50%);
     width: 80px;
@@ -200,6 +250,11 @@ onMounted(() => {
       }
     }
   }
+}
+.loadingPage {
+  width: 100%;
+  height: 50vh;
+  @include CenterHorVertical();
 }
 .content {
   display: grid;
