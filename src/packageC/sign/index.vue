@@ -1,7 +1,7 @@
 <route lang="json5">
 {
   style: {
-    navigationBarTitleText: '血液揽收',
+    navigationBarTitleText: '血液签收',
   },
 }
 </route>
@@ -82,8 +82,8 @@ defineOptions({
 })
 const store = globalSettingStore() // 全局设置
 const { pageScroll } = storeToRefs(store)
-const tabs = ['待揽收', '已揽收', '异常']
-const tab = ref('待揽收')
+const tabs = ['待签收', '已签收']
+const tab = ref('待签收')
 const isLoading = ref(false) // 加载中
 const keyword = ref('') // 搜索关键字
 const startTime = ref(dayjs(new Date().getTime()).format(dataFormat1)) // 开始时间

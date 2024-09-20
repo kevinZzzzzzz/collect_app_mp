@@ -2,6 +2,7 @@
 import qs from 'qs'
 import { useUserStore } from '@/store'
 import { platform } from '@/utils/platform'
+const isDev = import.meta.env.DEV
 
 export type CustomRequestOptions = UniApp.RequestOptions & {
   query?: Record<string, any>
@@ -40,12 +41,16 @@ const httpInterceptor = {
 
       // #endif
       // 非H5正常拼接
-      if (options.isMap && !import.meta.env.VITE_APP_MAP_PROXY) {
+      if (isDev && options.isMap && !import.meta.env.VITE_APP_MAP_PROXY) {
         // 地图接口
         options.url = mapUrl + options.url
       }
       // #ifndef H5
-      options.url = baseUrl + options.url
+      if (options.isMap) {
+        options.url = mapUrl + options.url
+      } else {
+        options.url = baseUrl + options.url
+      }
       // #endif
       // TIPS: 如果需要对接多个后端服务，也可以在这里处理，拼接成所需要的地址
     }

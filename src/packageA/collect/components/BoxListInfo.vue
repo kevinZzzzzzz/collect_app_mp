@@ -18,14 +18,10 @@
           />
         </div>
       </div>
-      <div
-        v-show="boxItem.weight"
-        class="BoxListInfo_header_editWeight"
-        @click="setWeight(boxItem)"
-      >
+      <div v-if="boxItem.weight" class="BoxListInfo_header_editWeight" @click="setWeight(boxItem)">
         <p class="BoxListInfo_header_editWeight_text">{{ boxItem.weight }}KG</p>
         <image
-          v-show="!noEditWeight"
+          v-if="!noEditWeight"
           class="BoxListInfo_header_editWeight_img"
           src="@img/editIcon.png"
           mode="scaleToFill"
@@ -52,7 +48,8 @@
       </li>
     </ul>
     <div class="BoxListInfo_time">
-      <p class="BoxListInfo_time_text">{{ transOrderTimeTextMap[0] }}: 2024-08-20 12:00</p>
+      <p class="BoxListInfo_time_text">更新时间: {{ boxItem.updateTime }}</p>
+      <div v-if="boxItem.weight" class="BoxListInfo_time_btn disabled">温度曲线</div>
     </div>
   </div>
 </template>
@@ -89,13 +86,13 @@ const tempData = computed(() => {
   let tempL = null
   let tempR = null
   if (
-    props?.boxItem.deviceStremDataMap.temp &&
+    props?.boxItem.deviceStremDataMap?.temp &&
     Array.isArray(props?.boxItem.deviceStremDataMap?.temp)
   ) {
-    tempL = props?.boxItem.deviceStremDataMap.temp[0]
-    tempR = props?.boxItem.deviceStremDataMap.temp[1]
+    tempL = props?.boxItem.deviceStremDataMap?.temp[0]
+    tempR = props?.boxItem.deviceStremDataMap?.temp[1]
   }
-  return tempL && tempR ? `${tempL}~${tempR}°C` : tempL ? `${tempL}°C` : tempR ? `${tempR}°C` : ''
+  return tempL && tempR ? `${tempL}~${tempR}°C` : tempL ? `${tempL}°C` : tempR ? `${tempR}°C` : '--'
 })
 
 // 单个称重
@@ -219,11 +216,22 @@ const setWeight = (data) => {
   }
   &_time {
     width: 100%;
-    margin-bottom: 5px;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     &_text {
       font-weight: 400;
       font-size: 12px;
       color: #999393;
+    }
+    &_btn {
+      padding: 5px 22px;
+      font-weight: 400;
+      font-size: 12px;
+      color: #1890ff;
+      border-radius: 4px 4px 4px 4px;
+      border: 1px solid #1890ff;
     }
   }
 }

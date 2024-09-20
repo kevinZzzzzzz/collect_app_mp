@@ -58,7 +58,7 @@ export default ({ command, mode }) => {
         routeBlockLang: 'json5', // 虽然设了默认值，但是vue文件还是要加上 lang="json5", 这样才能很好地格式化
         // homePage 通过 vue 文件的 route-block 的type="home"来设定
         // pages 目录为 src/pages，分包目录不能配置在pages目录下
-        subPackages: ['src/packageA', 'src/packageB'], // 是个数组，可以配置多个，但是不能为pages里面的目录
+        subPackages: ['src/packageA', 'src/packageB', 'src/packageC'], // 是个数组，可以配置多个，但是不能为pages里面的目录
         dts: 'src/types/uni-pages.d.ts',
       }),
       // UniLayouts(),
@@ -172,7 +172,6 @@ export default ({ command, mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id: string) {
-            console.log(id, 123123)
             if (id.includes('node_modules')) {
               if (id.includes('wot-design-uni')) {
                 return 'wot-design-uni'

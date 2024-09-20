@@ -8,11 +8,11 @@
       <image class="BoxWeigh_item_img" src="@img/transBoxIcon.png" mode="scaleToFill" />
       <p class="BoxWeigh_item_text">{{ item.code }}</p>
       <div class="BoxWeigh_item_ipt">
-        <wd-input type="number" no-border v-model="item.weight" placeholder="请输入" />
+        <wd-input type="number" no-border v-model="weight" placeholder="请输入" />
       </div>
       <p class="BoxWeigh_item_text">KG</p>
     </div>
-    <div class="BoxWeigh_btn">
+    <div class="BoxWeigh_btn" @click="save">
       <p class="BoxWeigh_btn_text">确认</p>
     </div>
   </div>
@@ -32,13 +32,17 @@ const props = defineProps({
     },
   },
 })
-
-const closeWeigh = () => {
-  emit('closeWeighBox')
+const weight = ref(props.weighBoxList[0]?.weight || null)
+const save = () => {
+  if (weight.value) {
+    weight.value = Number(weight.value).toFixed(1) || 0
+  }
+  closeWeigh()
 }
-onMounted(() => {
-  console.log(2222)
-})
+const closeWeigh = () => {
+  emit('closeWeighBox', weight.value)
+}
+// onMounted(() => {})
 </script>
 
 <style scoped lang="scss">

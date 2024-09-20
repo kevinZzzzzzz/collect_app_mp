@@ -4,21 +4,21 @@
     <div class="Waybill_main">
       <div
         class="Waybill_main_boxItem"
-        v-for="(item, idx) in props.orderItem.bloodPackages"
-        :key="idx"
+        v-for="(item, idx) in orderItem.eventNoPackageArr"
+        :key="`${idx}${updateFlag}`"
       >
         <!-- 运输编号单组件 -->
-        <div class="Waybill_main_boxItem_header">
+        <!-- <div class="Waybill_main_boxItem_header">
           <image
             class="Waybill_main_boxItem_header_img"
             src="@img/uavUnSel.png"
             mode="scaleToFill"
           />
           <div class="Waybill_main_boxItem_header_text">粤B XY008</div>
-        </div>
+        </div> -->
         <BoxListInfo :boxItem="item" @setWeight="setWeigh(item)" />
-        <div class="Waybill_main_btm">
-          <div class="Waybill_main_btm_btn Waybill_main_btm_btn-left">温度曲线</div>
+        <div class="Waybill_main_btm" v-if="!item.weight">
+          <div class="Waybill_main_btm_btn Waybill_main_btm_btn-left disabled">温度曲线</div>
           <div class="Waybill_main_btm_btn Waybill_main_btm_btn-right" @click="setWeigh(item)">
             称重
           </div>
@@ -53,25 +53,30 @@ const props = defineProps({
 })
 const showWeighBox = ref(false) // 展示称重弹窗
 const weighBoxList = ref([]) // 称重数据
+const updateFlag = ref(0)
 
 /**
  * 称重
  * @param obj 单例对象
  */
 const setWeigh = (obj) => {
+  if (!obj.hasOwnProperty('weight')) {
+    obj.weight = null
+  }
   weighBoxList.value = (obj && [obj]) || []
   showWeighBox.value = true // 打开称重弹窗
-  if (isMp.value) {
-    store.changePageScroll(true)
-  }
+  store.changePageScroll(true)
 }
 // 关闭称重弹窗
-const closeWeighBox = () => {
+const closeWeighBox = (data) => {
   showWeighBox.value = false
-  weighBoxList.value = []
-  if (isMp.value) {
-    store.changePageScroll(false)
+  store.changePageScroll(false)
+  if (data || +data === 0) {
+    weighBoxList.value[0].weight = data
   }
+  // 强制刷新组件(优化点！！！！组件设计复杂了，后期修复)
+  updateFlag.value += 1
+  weighBoxList.value = []
 }
 </script>
 

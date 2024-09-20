@@ -4,14 +4,12 @@ import store from './store'
 import { routeInterceptor, requestInterceptor, prototypeInterceptor } from './interceptors'
 import 'virtual:uno.css'
 // import '@/style/index.scss'
-
 export function createApp() {
   const app = createSSRApp(App)
   app.use(store)
   app.use(routeInterceptor)
   app.use(requestInterceptor)
   app.use(prototypeInterceptor)
-
   // 全局隐藏tabbar
   uni.hideTabBar({
     success: () => {},

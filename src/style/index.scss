@@ -33,6 +33,12 @@ div,
 view {
   box-sizing: border-box;
 }
+.disabled {
+  opacity: 0.5;
+}
+.disabled:active {
+  opacity: 0.5 !important;
+}
 :deep(.wd-tabs__line) {
   background: #1890ff;
 }

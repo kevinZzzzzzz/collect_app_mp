@@ -33,9 +33,7 @@
     </div>
     <div class="CollectResult_btm">
       <div class="CollectResult_btm_item CollectResult_btm_item-left">
-        <div class="CollectResult_btm_item_text CollectResult_btm_item_text-left" @click="backHome">
-          返回首页
-        </div>
+        <div class="CollectResult_btm_item_text CollectResult_btm_item_text-left">返回首页</div>
       </div>
       <div class="CollectResult_btm_item CollectResult_btm_item-right">
         <div
@@ -184,12 +182,6 @@ const closeUAVSelPopup = () => {
 const makeSureUAV = () => {
   orderPackageList.value[UAVSelectPopupIdx.value].droneCode = UAVSelectPopupValue.value
   closeUAVSelPopup()
-}
-/**
- * 返回首页
- */
-const backHome = () => {
-  uni.navigateTo({ url: '/' })
 }
 onMounted(() => {
   const options: any = getCurrentInstance()

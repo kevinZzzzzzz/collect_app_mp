@@ -1,5 +1,6 @@
 import { CustomRequestOptions } from '@/interceptors/request'
 import PLATFORM from '@/utils/platform'
+const isDev = import.meta.env.DEV
 
 const appProxy = import.meta.env.VITE_APP_PROXY
 const appMapProxy = import.meta.env.VITE_APP_MAP_PROXY

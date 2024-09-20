@@ -45,7 +45,7 @@ const routerList = ref([
   {
     name: '血液签收',
     bgImgUrl: pathBg2,
-    route: '',
+    route: '/packageC/sign/index',
   },
   {
     name: '我的任务',

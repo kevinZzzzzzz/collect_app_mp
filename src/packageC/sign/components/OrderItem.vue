@@ -29,7 +29,7 @@
           温度曲线
         </div>
         <div class="OrderItem_main_btm_btn OrderItem_main_btm_btn-right" @click="setWeigh">
-          称重
+          物流跟踪
         </div>
       </div>
     </div>
@@ -97,17 +97,13 @@ const tempBoxList = ref([]) // 温度曲线数据
 const setWeigh = () => {
   weighBoxList.value = props.orderItem.bloodPackages || []
   showWeighBox.value = true // 打开称重弹窗
-  if (isMp.value) {
-    store.changePageScroll(true)
-  }
+  store.changePageScroll(true)
 }
 // 关闭称重弹窗
 const closeWeighBox = () => {
   showWeighBox.value = false
   weighBoxList.value = []
-  if (isMp.value) {
-    store.changePageScroll(false)
-  }
+  store.changePageScroll(false)
 }
 /**
  * 温度曲线
@@ -115,9 +111,7 @@ const closeWeighBox = () => {
 const setTemp = () => {
   tempBoxList.value = props.orderItem.bloodPackages || []
   showTempBox.value = true // 打开温度曲线弹窗
-  if (isMp.value) {
-    store.changePageScroll(true)
-  }
+  store.changePageScroll(true)
 }
 
 /**
@@ -126,16 +120,14 @@ const setTemp = () => {
 const closeTempBox = () => {
   showTempBox.value = false
   tempBoxList.value = []
-  if (isMp.value) {
-    store.changePageScroll(false)
-  }
+  store.changePageScroll(false)
 }
 /**
  * 跳转详情
  */
 const goDetail = () => {
   uni.navigateTo({
-    url: `/packageA/collect/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tabs=待揽收`,
+    url: `/packageC/sign/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tabs=待揽收`,
   })
 }
 </script>

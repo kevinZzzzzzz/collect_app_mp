@@ -106,7 +106,7 @@ const sureCollect = () => {
   addTransOrder(params).then((res: any) => {
     console.log(res, 'res')
     // uni.navigateTo({
-    //   url: `/packageA/collect/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}&weightMap=${JSON.stringify(weightMap)}`,
+    //   url: `/packageC/sign/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}&weightMap=${JSON.stringify(weightMap)}`,
     // })
   })
 }
@@ -115,7 +115,7 @@ const sureCollect = () => {
  */
 const gotoError = () => {
   uni.navigateTo({
-    url: '/packageA/collect/error',
+    url: '/packageC/sign/error',
   })
 }
 // 是否可揽收
