@@ -150,7 +150,7 @@ onMounted(() => {
       data.eventNoPackageArr = arr // 箱子信息列表
     }
     orderDetail.value = data
-    console.log(orderDetail.value)
+    console.log(orderDetail.value, 'orderDetail0000000')
   })
 })
 </script>
