@@ -34,12 +34,12 @@ export default defineUniPages({
     spacing: '3px',
     list: [
       {
-        pagePath: 'pages/index/index',
-        text: '首页',
+        pagePath: 'pages/example/index',
+        text: '页面1',
       },
       {
-        pagePath: 'pages/login/index',
-        text: '登录',
+        pagePath: 'pages/example2/index',
+        text: '页面2',
       },
     ],
   },

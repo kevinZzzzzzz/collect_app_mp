@@ -31,12 +31,12 @@
     "spacing": "3px",
     "list": [
       {
-        "pagePath": "pages/index/index",
-        "text": "首页"
+        "pagePath": "pages/example/index",
+        "text": "页面1"
       },
       {
-        "pagePath": "pages/login/index",
-        "text": "登录"
+        "pagePath": "pages/example2/index",
+        "text": "页面2"
       }
     ]
   },
@@ -48,6 +48,14 @@
         "navigationStyle": "default",
         "navigationBarTitleText": ""
       }
+    },
+    {
+      "path": "pages/example/index",
+      "type": "page"
+    },
+    {
+      "path": "pages/example2/index",
+      "type": "page"
     },
     {
       "path": "pages/login/face",
@@ -101,20 +109,12 @@
           }
         },
         {
+          "path": "collect/notified",
+          "type": "page"
+        },
+        {
           "path": "collect/result",
           "type": "page"
-        }
-      ]
-    },
-    {
-      "root": "packageB",
-      "pages": [
-        {
-          "path": "notified/index",
-          "type": "page",
-          "style": {
-            "navigationBarTitleText": "消息通知"
-          }
         }
       ]
     },
@@ -129,7 +129,7 @@
           "path": "sign/error",
           "type": "page",
           "style": {
-            "navigationBarTitleText": "签收异常"
+            "navigationBarTitleText": "揽收异常"
           }
         },
         {
@@ -138,6 +138,10 @@
           "style": {
             "navigationBarTitleText": "血液签收"
           }
+        },
+        {
+          "path": "sign/notified",
+          "type": "page"
         },
         {
           "path": "sign/result",
