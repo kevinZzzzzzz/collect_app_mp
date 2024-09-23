@@ -60,9 +60,6 @@ const updateFlag = ref(0)
  * @param obj 单例对象
  */
 const setWeigh = (obj) => {
-  if (!obj.hasOwnProperty('weight')) {
-    obj.weight = null
-  }
   weighBoxList.value = (obj && [obj]) || []
   showWeighBox.value = true // 打开称重弹窗
   store.changePageScroll(true)

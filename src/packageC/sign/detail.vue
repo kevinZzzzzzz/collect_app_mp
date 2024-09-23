@@ -39,9 +39,8 @@ import { getNavigateOptions } from '@/utils/index'
 import { globalSettingStore } from '@/store/global'
 import { storeToRefs } from 'pinia'
 import { addTransOrder, getCollectItemDetail } from '@/service/index/collect'
-import PLATFORM from '@/utils/platform'
+import { isMp } from '@/utils/platform'
 
-const isMp = ref(PLATFORM.isMp)
 defineOptions({
   name: 'CollectDetail',
 })
@@ -80,13 +79,13 @@ const sureCollect = () => {
   // orderDetail.value.eventNoPackageArr.forEach((e) => {
   //   weightMap[e.code] = e.weight
   // })
-  let params = {
+  const params = {
     outboundOrderNo: orderDetail.value.outboundOrderNo,
     OrderType: 2,
     transportPackages: [],
   }
   orderDetail.value.eventNoPackageArr.forEach((e) => {
-    let obj = {
+    const obj = {
       packageRelationNo: e.code,
       weight: e.weight,
       cargoList: [],

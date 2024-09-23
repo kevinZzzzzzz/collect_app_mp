@@ -13,7 +13,6 @@ interface NavigateToOptions {
        "/packageA/collect/error" |
        "/packageA/collect/index" |
        "/packageA/collect/result" |
-       "/packageB/notified/index" |
        "/packageC/sign/detail" |
        "/packageC/sign/error" |
        "/packageC/sign/index" |
@@ -22,7 +21,7 @@ interface NavigateToOptions {
 interface RedirectToOptions extends NavigateToOptions {}
 
 interface SwitchTabOptions {
-  url: "/pages/index/index" | "/pages/login/index"
+  url: "/pages/example/index" | "/pages/example2/index"
 }
 
 type ReLaunchOptions = NavigateToOptions | SwitchTabOptions;
