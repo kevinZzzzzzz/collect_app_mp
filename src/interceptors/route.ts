@@ -38,8 +38,13 @@ const navigateToInterceptor = {
     if (hasLogin) {
       return true
     }
-    const redirectRoute = `${loginRoute}?redirect=${encodeURIComponent(url)}`
-    uni.navigateTo({ url: redirectRoute })
+    // const redirectRoute = `${loginRoute}?redirect=${encodeURIComponent(url)}`
+    // const redirectRoute = `${loginRoute}?isRedirect=1`
+    uni.showToast({
+      icon: 'none',
+      title: '请登录',
+    })
+    uni.navigateTo({ url: loginRoute })
     return false
   },
 }

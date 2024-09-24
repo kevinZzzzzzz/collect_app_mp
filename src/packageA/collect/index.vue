@@ -3,6 +3,7 @@
   style: {
     navigationBarTitleText: '血液揽收',
   },
+  needLogin: true,
 }
 </route>
 <template>
@@ -71,7 +72,7 @@ import DateSelect from '@/components/DateSelect.vue'
 import OrderItem from './components/OrderItem.vue'
 import { globalSettingStore } from '@/store/global'
 import { storeToRefs } from 'pinia'
-import { getCollectList } from '@/service/index/collect'
+import { $apiGetCollectList } from '@/service/index/collect'
 import { transStatusValueMap } from '@/constant'
 import { isMp } from '@/utils/platform'
 
@@ -101,7 +102,7 @@ const collapseOpen = ref<string[]>([])
  */
 const getData = () => {
   isLoading.value = true
-  getCollectList({
+  $apiGetCollectList({
     transportStatus: transStatusValueMap[tab.value],
     keyword: keyword.value || '',
     startTime: startTime.value || '',

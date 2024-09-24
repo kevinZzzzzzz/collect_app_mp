@@ -1,5 +1,7 @@
 import { pages, subPackages, tabBar } from '@/pages.json'
 import PLATFORM from './platform'
+import JSEncrypt from 'jsencrypt/bin/jsencrypt.min'
+
 const getLastPage = () => {
   // getCurrentPages() 至少有1个元素，所以不再额外判断
   // const lastPage = getCurrentPages().at(-1)
@@ -165,4 +167,34 @@ export function hasOneDecimalPlace(num) {
   }
   // 如果没有小数点，则返回false
   return false
+}
+/**
+ * @method {*} encrypt 密码加密
+ * @param {*} pwd 密码
+ * @param {*} key 公钥
+ * @return secretPwd 加密后的密码
+ */
+export const encrypt = (pwd: string, key: string) => {
+  const encrypt = new JSEncrypt()
+  const priviteKey = '-----BEGIN RSA PUBLIC KEY-----\n' + key + '\n-----END PUBLIC KEY-----'
+  encrypt.setPublicKey(priviteKey)
+  const secretPwd = encrypt.encrypt(pwd)
+  return secretPwd
+}
+/**
+ *
+ * @method {*} getUserInfoByToken 解析token获取用户信息
+ * @param {*} token token
+ * @return userInfo 用户信息
+ */
+export const getUserInfoByToken = (token: string) => {
+  const tokenString = token?.split('.')[1]
+  let userInfo = ''
+  if (tokenString) {
+    const { data } = JSON.parse(
+      decodeURIComponent(escape(window.atob(tokenString.replace(/-/g, '+').replace(/_/g, '/')))),
+    )
+    userInfo = data ? JSON.parse(data) : {}
+  }
+  return userInfo
 }

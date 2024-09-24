@@ -134,7 +134,7 @@
 </template>
 
 <script setup lang="ts">
-import { getCollectItemDetail } from '@/service/index/collect'
+import { $apiGetCollectItemDetail } from '@/service/index/collect'
 import { getNavigateOptions } from '@/utils'
 import { getCurrentInstance, onMounted, ref } from 'vue'
 import { globalSettingStore } from '@/store/global'
@@ -229,7 +229,7 @@ onMounted(() => {
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
   weightMap.value = getNavigateOptions(options, 'weightMap') || ''
 
-  getCollectItemDetail({
+  $apiGetCollectItemDetail({
     outboundOrderNo: outboundOrderNo.value,
   }).then((res: any) => {
     const { data } = res

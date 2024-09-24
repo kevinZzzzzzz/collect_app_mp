@@ -10,7 +10,7 @@
     <image class="login_logo" src="@img/logo.png" mode="scaleToFill" />
     <h1 class="login_title">穿越血液服务</h1>
     <div class="login_form">
-      <div class="login_form_input">
+      <!-- <div class="login_form_input">
         <wd-input
           center
           clearable
@@ -63,12 +63,44 @@
         >
           获取验证码
         </wd-button>
+      </div> -->
+      <div class="login_form_input">
+        <wd-input
+          center
+          clearable
+          use-prefix-slot
+          no-border
+          v-model="loginInfo.username"
+          size="midium"
+          placeholder="请输入账号"
+        >
+          <template #prefix>
+            <image class="inputIcon" src="@img/telIcon.png" mode="scaleToFill" />
+          </template>
+        </wd-input>
+      </div>
+      <div class="login_form_input">
+        <wd-input
+          center
+          clearable
+          use-prefix-slot
+          no-border
+          show-password
+          v-model="loginInfo.password"
+          size="midium"
+          placeholder="请输入密码"
+        >
+          <template #prefix>
+            <image class="inputIcon2" src="@img/authIcon.png" mode="scaleToFill" />
+          </template>
+        </wd-input>
       </div>
     </div>
     <div
+      @click="login()"
       :class="[
         'login_form_submit',
-        !loginInfo.agreeProtocol ? 'login_form_submit-disable' : 'login_form_submit-able',
+        !canLogin ? 'login_form_submit-disable' : 'login_form_submit-able',
       ]"
     >
       <span class="login_form_submit_text">确认登录</span>
@@ -83,23 +115,36 @@
       </div>
     </div>
   </div>
+  <wd-toast />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { $apiGetPublicKey, $apiLogin } from '@/service/index/common'
+import { encrypt, getNavigateOptions, getUserInfoByToken } from '@/utils'
+import { ref, getCurrentInstance } from 'vue'
+
 defineOptions({
   name: 'Login',
 })
 let waitTimer = null
-const sendMinute = 10
+const sendMinute = 60
 const loginInfo = ref({
   telephone: '',
   authCode: '',
+  username: '',
+  password: '',
   agreeProtocol: false,
 })
+const publicKey = ref('')
 const waitAuthCode = ref(false) // 等待验证码
 const waitAuthTime = ref(sendMinute) // 等待倒计时
 
+/**
+ * 是否可以登录
+ */
+const canLogin = computed(() => {
+  return loginInfo.value.agreeProtocol && loginInfo.value.username && loginInfo.value.password
+})
 /**
  * 获取验证码
  */
@@ -120,6 +165,32 @@ const resendCode = () => {
   waitAuthTime.value = sendMinute
   getAuthCode()
 }
+
+const login = () => {
+  if (!canLogin.value) return false
+  const obj = {
+    account: loginInfo.value.username,
+    password: encrypt(loginInfo.value.password, publicKey.value),
+  }
+  $apiLogin(obj).then((res: any) => {
+    console.log(res, 'res')
+    const userInfo = getUserInfoByToken(res.data) // 解析token 获取保存个人信息
+    console.log(userInfo)
+  })
+}
+// 获取公钥
+const getPublicKeys = () => {
+  $apiGetPublicKey().then((res: any) => {
+    publicKey.value = res.data
+    uni.setStorage({
+      key: 'publicKey',
+      data: res.data,
+    })
+  })
+}
+onMounted(() => {
+  getPublicKeys()
+})
 </script>
 
 <style scoped lang="scss">
@@ -199,8 +270,17 @@ const resendCode = () => {
   display: flex;
   align-items: center;
   height: 44px;
-  padding-left: 15px;
+  padding: 0 15px;
   background: #f2f3f5;
+}
+:deep(.wd-input__icon) {
+  background: #f2f3f5;
+}
+:deep(.wd-button.is-plain.is-primary) {
+  background: #fff !important;
+  color: #1890ff !important;
+  border-radius: 4px 4px 4px 4px;
+  border: 1px solid #1890ff;
 }
 .sendCode {
   width: 98%;

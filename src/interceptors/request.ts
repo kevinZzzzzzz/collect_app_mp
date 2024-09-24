@@ -13,6 +13,7 @@ export type CustomRequestOptions = UniApp.RequestOptions & {
 
 // 请求基准地址
 const baseUrl = import.meta.env.VITE_SERVER_BASEURL
+const uaaUrl = import.meta.env.VITE_SERVER_UAAURL
 const mapUrl = import.meta.env.VITE_MAP_SERVER_BASEURL
 
 // 拦截器配置
@@ -28,32 +29,31 @@ const httpInterceptor = {
         options.url += `?${queryStr}`
       }
     }
-
     // 非 http 开头需拼接地址
-    if (!options.url.startsWith('http')) {
-      // #ifdef H5
-      // console.log(__VITE_APP_PROXY__)
-      if (JSON.parse(__VITE_APP_PROXY__) || JSON.parse(__VITE_APP_MAP_PROXY__)) {
-        // 啥都不需要做
-      } else {
-        options.url = baseUrl + options.url
-      }
+    // if (!options.url.startsWith('http')) {
+    //   // #ifdef H5
+    //   // console.log(__VITE_APP_PROXY__)
+    //   if (JSON.parse(__VITE_APP_PROXY__) || JSON.parse(__VITE_APP_MAP_PROXY__)) {
+    //     // 啥都不需要做
+    //   } else {
+    //     options.url = baseUrl + options.url
+    //   }
 
-      // #endif
-      // 非H5正常拼接
-      if (isDev && options.isMap && !import.meta.env.VITE_APP_MAP_PROXY) {
-        // 地图接口
-        options.url = mapUrl + options.url
-      }
-      // #ifndef H5
-      if (options.isMap) {
-        options.url = mapUrl + options.url
-      } else {
-        options.url = baseUrl + options.url
-      }
-      // #endif
-      // TIPS: 如果需要对接多个后端服务，也可以在这里处理，拼接成所需要的地址
-    }
+    //   // #endif
+    //   // 非H5正常拼接
+    //   if (isDev && options.isMap && !import.meta.env.VITE_APP_MAP_PROXY) {
+    //     // 地图接口
+    //     options.url = mapUrl + options.url
+    //   }
+    //   // #ifndef H5
+    //   if (options.isMap) {
+    //     options.url = mapUrl + options.url
+    //   } else {
+    //     options.url = baseUrl + options.url
+    //   }
+    //   // #endif
+    //   // TIPS: 如果需要对接多个后端服务，也可以在这里处理，拼接成所需要的地址
+    // }
     // 1. 请求超时
     options.timeout = 10000 // 10s
     // 2. （可选）添加小程序端请求头标识

@@ -47,7 +47,8 @@
       "style": {
         "navigationStyle": "default",
         "navigationBarTitleText": ""
-      }
+      },
+      "needLogin": true
     },
     {
       "path": "pages/example/index",
@@ -92,7 +93,8 @@
       "pages": [
         {
           "path": "collect/detail",
-          "type": "page"
+          "type": "page",
+          "needLogin": true
         },
         {
           "path": "collect/error",
@@ -106,7 +108,8 @@
           "type": "page",
           "style": {
             "navigationBarTitleText": "血液揽收"
-          }
+          },
+          "needLogin": true
         },
         {
           "path": "collect/result",

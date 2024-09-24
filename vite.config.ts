@@ -39,6 +39,7 @@ export default ({ command, mode }) => {
   const {
     VITE_APP_PORT,
     VITE_SERVER_BASEURL,
+    VITE_SERVER_UAAURL,
     VITE_DELETE_CONSOLE,
     VITE_SHOW_SOURCEMAP,
     VITE_APP_PROXY,
@@ -140,21 +141,24 @@ export default ({ command, mode }) => {
       hmr: true,
       port: Number.parseInt(VITE_APP_PORT, 10),
       // 仅 H5 端生效，其他端不生效（其他端走build，不走devServer)
-      proxy:
-        JSON.parse(VITE_APP_PROXY) || JSON.parse(VITE_APP_MAP_PROXY)
-          ? {
-              [VITE_APP_PROXY_PREFIX]: {
-                target: VITE_SERVER_BASEURL,
-                changeOrigin: true,
-                rewrite: (path) => path.replace(new RegExp(`^${VITE_APP_PROXY_PREFIX}`), ''),
-              },
-              [VITE_APP_MAP_PROXY_PREFIX]: {
-                target: VITE_MAP_SERVER_BASEURL,
-                changeOrigin: true,
-                rewrite: (path) => path.replace(new RegExp(`^${VITE_APP_MAP_PROXY_PREFIX}`), ''),
-              },
-            }
-          : undefined,
+      proxy: {
+        '/api': {
+          target: VITE_SERVER_BASEURL,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+        '/uaaApi': {
+          target: VITE_SERVER_UAAURL,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/uaaApi/, '/uaaApi'),
+        },
+
+        '/mapApi': {
+          target: VITE_MAP_SERVER_BASEURL,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/mapApi/, ''),
+        },
+      },
     },
     build: {
       // 方便非h5端调试

@@ -1,3 +1,8 @@
+<route lang="json5">
+{
+  needLogin: true,
+}
+</route>
 <template>
   <page-meta :page-style="'overflow:' + (pageScroll && isMp ? 'hidden' : 'visible')"></page-meta>
   <div class="CollectDetail">
@@ -66,7 +71,7 @@ import BoxList from './components/BoxList.vue'
 import { getNavigateOptions } from '@/utils/index'
 import { globalSettingStore } from '@/store/global'
 import { storeToRefs } from 'pinia'
-import { addTransOrder, getCollectItemDetail } from '@/service/index/collect'
+import { $apiAddTransOrder, $apiGetCollectItemDetail } from '@/service/index/collect'
 import { isMp } from '@/utils/platform'
 import BoxWeigh from './components/BoxWeigh.vue'
 import BoxTemp from './components/BoxTemp.vue'
@@ -164,7 +169,7 @@ const sureCollect = () => {
     }
     params.transportPackages.push(obj)
   })
-  addTransOrder(params).then((res: any) => {
+  $apiAddTransOrder(params).then((res: any) => {
     console.log(res, 'res')
     // uni.navigateTo({
     //   url: `/packageA/collect/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}&weightMap=${JSON.stringify(weightMap)}`,
@@ -200,7 +205,7 @@ onMounted(() => {
   uni.setNavigationBarTitle({
     title: transStatusMap[tranStatus.value].text,
   })
-  getCollectItemDetail({
+  $apiGetCollectItemDetail({
     outboundOrderNo: outboundOrderNo.value,
   }).then((res: any) => {
     const { data } = res

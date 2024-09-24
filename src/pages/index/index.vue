@@ -5,6 +5,7 @@
     navigationStyle: 'default',
     navigationBarTitleText: '',
   },
+  needLogin: true,
 }
 </route>
 <template>
