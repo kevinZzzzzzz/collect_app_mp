@@ -1,8 +1,16 @@
+<route lang="json5">
+{
+  style: {
+    navigationBarTitleText: '血液签收',
+  },
+}
+</route>
 <template>
+  <page-meta :page-style="'overflow:' + (pageScroll && isMp ? 'hidden' : 'visible')"></page-meta>
   <div class="CollectResult">
     <div class="CollectResult_header">
       <image class="CollectResult_header_img" src="@img/succResultIcon.png" mode="scaleToFill" />
-      <p class="CollectResult_header_text">揽收成功</p>
+      <p class="CollectResult_header_text">签收成功</p>
     </div>
     <div class="CollectResult_block">
       <div class="CollectResult_block_item">
@@ -29,23 +37,25 @@
       </div>
     </div>
     <div class="CollectResult_block">
-      <BoxList :bloodInfo="orderDetail" />
+      <BoxList
+        :bloodInfo="orderDetail"
+        noEditWeight
+        showTempAndTime
+        @tempBox="openTempBox($event)"
+      />
     </div>
     <div class="CollectResult_btm">
-      <div class="CollectResult_btm_item CollectResult_btm_item-left">
-        <div class="CollectResult_btm_item_text CollectResult_btm_item_text-left">返回首页</div>
-      </div>
       <div class="CollectResult_btm_item CollectResult_btm_item-right">
         <div
           class="CollectResult_btm_item_text CollectResult_btm_item_text-right"
-          @click="startTrans"
+          @click="backHome"
         >
-          开始启运
+          返回首页
         </div>
       </div>
     </div>
   </div>
-  <wd-popup
+  <!-- <wd-popup
     v-model="startTransConfirm"
     position="center"
     custom-style="border-radius: 10px"
@@ -94,10 +104,9 @@
         </div>
       </div>
     </div>
-  </wd-popup>
+  </wd-popup> -->
   <!-- 无人机选择弹窗 -->
-  <!-- <teleport to="body"> -->
-  <wd-popup
+  <!-- <wd-popup
     v-model="showUAVSelectPopup"
     position="bottom"
     custom-style="padding: 30px 40px;"
@@ -111,19 +120,34 @@
       </div>
       <wd-picker-view :columns="columns" v-model="UAVSelectPopupValue" />
     </div>
+  </wd-popup> -->
+
+  <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
+    <BoxTemp
+      v-if="showTempBox"
+      lock-scroll
+      :safe-area-inset-bottom="true"
+      :tempBoxList="tempBoxList"
+      @closeTempBox="closeTempBox"
+    />
   </wd-popup>
-  <!-- </teleport> -->
 </template>
 
 <script setup lang="ts">
 import { getCollectItemDetail } from '@/service/index/collect'
 import { getNavigateOptions } from '@/utils'
-import { ref } from 'vue'
+import { getCurrentInstance, onMounted, ref } from 'vue'
+import { globalSettingStore } from '@/store/global'
+import { storeToRefs } from 'pinia'
+import { isMp } from '@/utils/platform'
 import BoxList from './components/BoxList.vue'
+import BoxTemp from './components/BoxTemp.vue'
 
 defineOptions({
   name: 'CollectResult',
 })
+const store = globalSettingStore() // 全局设置
+const { pageScroll } = storeToRefs(store)
 const outboundOrderNo = ref('') // 交接单号
 const weightMap = ref('') // 重量映射表
 const orderDetail = ref<any>({}) // 交接单详情
@@ -133,79 +157,105 @@ const UAVSelectPopupValue = ref('') // 选择弹窗选中值
 const UAVSelectPopupIdx = ref(null) // 选择无人机操作索引
 const columns = ref(['选项1', '选项2', '选项3', '选项4', '选项5', '选项6', '选项7'])
 const startTransConfirm = ref(false) // 启运确认()
-const orderPackageList = computed(() => {
-  // 揽件信息
-  return (
-    orderDetail.value?.bloodPackages.map((d) => {
-      return {
-        ...d,
-        droneCode: '',
-      }
-    }) || []
-  )
-})
+const orderPackageList = ref([]) // 揽件信息
+const showTempBox = ref(false) // 展示温度曲线弹窗
+const tempBoxList = ref([]) // 温度曲线数据
+
 /**
  * 确认是否启运
  * @param flag
  */
-const handleStartTransConfirm = (flag) => {
-  startTransConfirm.value = flag
-}
+// const handleStartTransConfirm = (flag) => {
+//   startTransConfirm.value = flag
+// }
 /**
  * 开始启运
  *
  */
-const startTrans = () => {
-  handleStartTransConfirm(true)
-}
+// const startTrans = () => {
+//   handleStartTransConfirm(true)
+// }
 /**
  * 打开选择无人机编号弹窗
  * @param code 无人机编号
  * @param idx 操作索引
  */
-const openUAVSelPopup = (code, idx) => {
-  showUAVSelectPopup.value = true
-  UAVSelectPopupValue.value = code || columns.value[0] || ''
-  UAVSelectPopupIdx.value = idx
-}
+// const openUAVSelPopup = (code, idx) => {
+//   showUAVSelectPopup.value = true
+//   UAVSelectPopupValue.value = code || columns.value[0] || ''
+//   UAVSelectPopupIdx.value = idx
+// }
 /**
  * 关闭选择无人机编号弹窗
  */
-const closeUAVSelPopup = () => {
-  showUAVSelectPopup.value = false
-  UAVSelectPopupValue.value = ''
-}
+// const closeUAVSelPopup = () => {
+//   showUAVSelectPopup.value = false
+//   UAVSelectPopupValue.value = ''
+// }
 
 /**
  * 确认选择无人机编号
  */
-const makeSureUAV = () => {
-  orderPackageList.value[UAVSelectPopupIdx.value].droneCode = UAVSelectPopupValue.value
-  closeUAVSelPopup()
+// const makeSureUAV = () => {
+//   orderPackageList.value[UAVSelectPopupIdx.value].droneCode = UAVSelectPopupValue.value
+//   closeUAVSelPopup()
+// }
+
+/**
+ * 温度曲线
+ * */
+const openTempBox = (obj) => {
+  // tempBoxList.value = props.orderItem.bloodPackages || []
+  showTempBox.value = true // 打开温度曲线弹窗
+  store.changePageScroll(true)
+}
+
+/**
+ * 关闭温度曲线弹窗
+ * */
+const closeTempBox = () => {
+  showTempBox.value = false
+  tempBoxList.value = []
+  store.changePageScroll(false)
+}
+/**
+ * 返回首页
+ */
+const backHome = () => {
+  uni.navigateTo({ url: '/' })
 }
 onMounted(() => {
   const options: any = getCurrentInstance()
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
   weightMap.value = getNavigateOptions(options, 'weightMap') || ''
+
   getCollectItemDetail({
     outboundOrderNo: outboundOrderNo.value,
   }).then((res: any) => {
     const { data } = res
     if (data) {
-      const arr = []
+      const arr: any = []
       if (data.eventNoPackageMap) {
-        Object.keys(data.eventNoPackageMap).forEach((item: any, idx) => {
-          arr.push({
-            weight: weightMap.value[item.code],
-            eventNo: item,
-            ...data.eventNoPackageMap[item][0],
+        Object.keys(data.eventNoPackageMap).forEach((item, idx) => {
+          data.eventNoPackageMap[item].forEach((d) => {
+            arr.push({
+              weight: null,
+              eventNo: item,
+              ...d,
+            })
           })
         })
       }
       data.eventNoPackageArr = arr // 箱子信息列表
     }
     orderDetail.value = data
-    console.log(orderDetail.value)
+    orderPackageList.value =
+      orderDetail.value?.eventNoPackageArr.map((d) => {
+        return {
+          ...d,
+          droneCode: '',
+        }
+      }) || []
   })
 })
 </script>
@@ -263,7 +313,7 @@ page {
     width: 100%;
     padding: 10px 16px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     grid-gap: 20px;
     background: #fff;
     position: fixed;

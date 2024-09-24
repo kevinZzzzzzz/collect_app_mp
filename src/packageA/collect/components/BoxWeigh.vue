@@ -70,7 +70,6 @@ const closeWeigh = (type: 1 | 0) => {
     emit('closeWeighBox')
   }
 }
-// onMounted(() => {})
 </script>
 
 <style scoped lang="scss">

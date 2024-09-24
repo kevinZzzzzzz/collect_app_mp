@@ -17,12 +17,12 @@
           <div class="Waybill_main_boxItem_header_text">粤B XY008</div>
         </div> -->
         <BoxListInfo :boxItem="item" @setWeight="setWeigh(item)" />
-        <!-- <div class="Waybill_main_btm" v-if="!item.weight">
+        <div class="Waybill_main_btm" v-if="!item.weight">
           <div class="Waybill_main_btm_btn Waybill_main_btm_btn-left disabled">温度曲线</div>
           <div class="Waybill_main_btm_btn Waybill_main_btm_btn-right" @click="setWeigh(item)">
-            物流跟踪
+            称重
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -60,6 +60,9 @@ const updateFlag = ref(0)
  * @param obj 单例对象
  */
 const setWeigh = (obj) => {
+  if (!obj.hasOwnProperty('weight')) {
+    obj.weight = null
+  }
   weighBoxList.value = (obj && [obj]) || []
   showWeighBox.value = true // 打开称重弹窗
   store.changePageScroll(true)

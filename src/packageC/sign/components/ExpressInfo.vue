@@ -17,6 +17,7 @@
           :class="[
             'ExpressInfo_precess_item_circle',
             !item.index && 'ExpressInfo_precess_item_circle-first',
+            +tranStatus === 7 && !item.index && 'ExpressInfo_precess_item_circle-firstError',
             precessList.length &&
               item.index == precessList.length - 1 &&
               'ExpressInfo_precess_item_circle-last',
@@ -26,13 +27,18 @@
         </div>
         <p
           :style="{
-            color: !item.index && '#1890ff',
+            color: !item.index ? (+tranStatus === 7 ? '#EE0A24' : '#1890ff') : 'none',
           }"
           class="ExpressInfo_precess_item_step"
         >
           {{ item.status }}
         </p>
-        <div class="ExpressInfo_precess_item_info">
+        <div
+          class="ExpressInfo_precess_item_info"
+          :style="{
+            color: !item.index && +tranStatus === 7 ? '#EE0A24' : 'none',
+          }"
+        >
           {{ item.operateType }}: {{ item.operator }}
           <span class="ExpressInfo_precess_item_info_time">{{ item.time }}</span>
         </div>
@@ -51,6 +57,12 @@ const props = defineProps({
     type: Object,
     default: () => {
       return {}
+    },
+  },
+  tranStatus: {
+    type: Number,
+    default: () => {
+      return null
     },
   },
 })
@@ -106,6 +118,9 @@ const precessList = computed(() => {
         &-first {
           background: #1890ff;
         }
+        &-firstError {
+          background: #ee0a24;
+        }
         &-first::after {
           position: absolute;
           top: 14px;
@@ -114,6 +129,15 @@ const precessList = computed(() => {
           height: 24px;
           content: '';
           border: 1px solid #1890ff !important;
+        }
+        &-firstError::after {
+          position: absolute;
+          top: 14px;
+          z-index: 0;
+          width: 0px;
+          height: 24px;
+          content: '';
+          border: 1px solid #ee0a24 !important;
         }
         &-last::after {
           position: absolute;

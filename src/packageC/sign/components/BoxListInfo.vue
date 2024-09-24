@@ -3,7 +3,7 @@
     <div class="BoxListInfo_header">
       <image class="BoxListInfo_header_img" src="@img/transBoxIcon.png" mode="scaleToFill" />
       <div class="BoxListInfo_header_info">
-        <div class="BoxListInfo_header_info_id">{{ boxItem.code }}</div>
+        <div class="BoxListInfo_header_info_id">{{ boxItemRef.code }}</div>
         <div class="BoxListInfo_header_info_detail">
           <span class="BoxListInfo_header_info_detail_num">86%</span>
           <image
@@ -18,14 +18,8 @@
           />
         </div>
       </div>
-      <div v-if="boxItem.weight" class="BoxListInfo_header_editWeight" @click="setWeight(boxItem)">
-        <p class="BoxListInfo_header_editWeight_text">{{ boxItem.weight }}KG</p>
-        <image
-          v-if="!noEditWeight"
-          class="BoxListInfo_header_editWeight_img"
-          src="@img/editIcon.png"
-          mode="scaleToFill"
-        />
+      <div v-if="boxItemRef.weight" class="BoxListInfo_header_editWeight">
+        <p class="BoxListInfo_header_editWeight_text">{{ boxItemRef.weight }}KG</p>
       </div>
     </div>
     <ul class="BoxListInfo_list">
@@ -48,15 +42,16 @@
       </li>
     </ul>
     <div class="BoxListInfo_time">
-      <p class="BoxListInfo_time_text">更新时间: {{ boxItem.updateTime }}</p>
-      <div v-if="boxItem.weight" class="BoxListInfo_time_btn disabled">温度曲线</div>
+      <p class="BoxListInfo_time_text">更新时间: {{ boxItemRef.updateTime }}</p>
+      <div v-if="showTempAndTime" class="BoxListInfo_time_btn" @click="setTemps(boxItemRef)">
+        温度曲线
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { transOrderTimeTextMap } from '@/constant/index'
+import { ref, watch, computed } from 'vue'
 defineOptions({
   name: 'BoxListInfo', // 箱子信息组件
 })
@@ -68,15 +63,29 @@ const props = defineProps({
     },
   },
   noEditWeight: {
+    // 是否禁止编辑重量
+    type: Boolean,
+    default: false,
+  },
+  showTempAndTime: {
+    // 展示温度曲线在时间同行
     type: Boolean,
     default: false,
   },
 })
-const emit = defineEmits(['setWeight'])
+const emit = defineEmits(['setTemps'])
+
+const boxItemRef = ref<any>(props.boxItem)
+watch(
+  () => props.boxItem,
+  (n) => {
+    boxItemRef.value = n
+  },
+)
 const bloodBagGroupList = computed(() => {
-  const arr = []
-  if (props.boxItem.bloodBagGroupMap) {
-    Object.values(props.boxItem.bloodBagGroupMap).forEach((item: Array<any>) => {
+  const arr: any = []
+  if (boxItemRef.value.bloodBagGroupMap) {
+    Object.values(boxItemRef.value.bloodBagGroupMap).forEach((item: any) => {
       arr.push(...item)
     })
   }
@@ -86,19 +95,18 @@ const tempData = computed(() => {
   let tempL = null
   let tempR = null
   if (
-    props?.boxItem.deviceStremDataMap?.temp &&
-    Array.isArray(props?.boxItem.deviceStremDataMap?.temp)
+    boxItemRef.value.deviceStremDataMap?.temp &&
+    Array.isArray(boxItemRef.value.deviceStremDataMap?.temp)
   ) {
-    tempL = props?.boxItem.deviceStremDataMap?.temp[0]
-    tempR = props?.boxItem.deviceStremDataMap?.temp[1]
+    tempL = boxItemRef.value.deviceStremDataMap?.temp[0]
+    tempR = boxItemRef.value.deviceStremDataMap?.temp[1]
   }
   return tempL && tempR ? `${tempL}~${tempR}°C` : tempL ? `${tempL}°C` : tempR ? `${tempR}°C` : '--'
 })
 
-// 单个称重
-const setWeight = (data) => {
-  if (props.noEditWeight) return false
-  emit('setWeight', data)
+// 查看温度曲线
+const setTemps = (data) => {
+  emit('setTemps', data)
 }
 </script>
 

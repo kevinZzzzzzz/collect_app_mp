@@ -53,7 +53,13 @@
     </ul>
     <div class="BoxListInfo_time">
       <p class="BoxListInfo_time_text">更新时间: {{ boxItemRef.updateTime }}</p>
-      <div v-if="boxItemRef.weight" class="BoxListInfo_time_btn disabled">温度曲线</div>
+      <div
+        v-if="boxItemRef.weight || showTempAndTime"
+        class="BoxListInfo_time_btn"
+        @click="setTemps(boxItemRef)"
+      >
+        温度曲线
+      </div>
     </div>
   </div>
 </template>
@@ -81,7 +87,7 @@ const props = defineProps({
     default: false,
   },
 })
-const emit = defineEmits(['setWeight'])
+const emit = defineEmits(['setWeight', 'setTemps'])
 
 const boxItemRef = ref<any>(props.boxItem)
 watch(
@@ -116,6 +122,10 @@ const tempData = computed(() => {
 const setWeight = (data) => {
   if (props.noEditWeight) return false
   emit('setWeight', data)
+}
+// 单个温度显示
+const setTemps = (data) => {
+  emit('setTemps', data)
 }
 </script>
 

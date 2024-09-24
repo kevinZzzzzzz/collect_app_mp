@@ -147,16 +147,7 @@ const getLocation = () => {
   })
 }
 const bloodPackages = computed(() => {
-  const arr = []
-  if (props.bloodInfo.eventNoPackageMap) {
-    Object.keys(props.bloodInfo.eventNoPackageMap).forEach((item, idx) => {
-      arr.push({
-        ...props.bloodInfo.eventNoPackageMap[item][0],
-        eventNo: item,
-      })
-    })
-  }
-  return arr || []
+  return props.bloodInfo.eventNoPackageArr || []
 })
 // 选择箱子
 const selectBox = (idx) => {

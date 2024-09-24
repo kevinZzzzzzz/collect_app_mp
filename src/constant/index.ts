@@ -2,6 +2,7 @@
 export const transStatusValueMap = {
   已揽收: 0,
   运输中: 1,
+  // 待签收: 1,
   已送达: 2,
   已取消: 3,
   已签收: 4,

@@ -10,11 +10,11 @@
   <div class="collect pageCenter">
     <BloodPageSearch style="width: 100%" @searchKeyword="searchKeyword($event)" />
     <DateSelect style="width: 100%" @searchByTime="searchByTime($event)" />
-    <div class="collect_alert" @click="goNotified">
+    <!-- <div class="collect_alert" @click="goNotified">
       <wd-badge :top="10" modelValue="12" bg-color="red">
         <image class="collect_alert_img" src="@img/bellIcon.png" mode="scaleToFill" />
       </wd-badge>
-    </div>
+    </div> -->
     <wd-tabs v-model="tab" inactiveColor="#CDCDCD" @click="handleChangTab">
       <block v-for="(item, index) in tabs" :key="index">
         <wd-tab :title="`${item}`" :name="item">
@@ -30,7 +30,8 @@
             <div class="collect_item" v-for="(item, idx) in collectData" :key="idx">
               <wd-collapse v-model="collapseOpen">
                 <wd-collapse-item :name="item.hosName">
-                  <template #title="{ expanded }">
+                  <!-- ="{ expanded }" -->
+                  <template #title>
                     <div class="collect_item_header">
                       <div class="collect_item_header_left">
                         发往
@@ -72,9 +73,7 @@ import { globalSettingStore } from '@/store/global'
 import { storeToRefs } from 'pinia'
 import { getCollectList } from '@/service/index/collect'
 import { transStatusValueMap } from '@/constant'
-import PLATFORM from '@/utils/platform'
-
-const isMp = ref(PLATFORM.isMp)
+import { isMp } from '@/utils/platform'
 
 const dataFormat1 = 'YYYY-MM-DD'
 defineOptions({
@@ -225,37 +224,7 @@ onMounted(() => {
     }
     &_order {
       width: 100%;
-      &_time {
-        width: 100%;
-        margin-top: 3px;
-        font-size: 12px;
-        font-weight: 400;
-        color: #999393;
-        text-align: left;
-      }
-      &_btm {
-        width: 100%;
-        margin-top: 9px;
-
-        &_btn {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          grid-gap: 26px;
-          font-size: 14px;
-          font-weight: 400;
-          &_left {
-            color: #1890ff;
-            background: #ffffff;
-            border: 1px solid #1890ff;
-            border-radius: 4px;
-          }
-          &_right {
-            color: #ffffff;
-            background: #1890ff;
-            border-radius: 4px;
-          }
-        }
-      }
+      margin-bottom: 16px;
     }
   }
 }

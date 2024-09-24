@@ -28,13 +28,13 @@
         <div class="OrderItem_main_btm_btn OrderItem_main_btm_btn-left" @click="setTemp">
           温度曲线
         </div>
-        <div class="OrderItem_main_btm_btn OrderItem_main_btm_btn-right" @click="setWeigh">
+        <div class="OrderItem_main_btm_btn OrderItem_main_btm_btn-right" @click="goDetail">
           物流跟踪
         </div>
       </div>
     </div>
   </div>
-  <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
+  <!-- <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
     <BoxWeigh
       v-if="showWeighBox"
       lock-scroll
@@ -42,7 +42,7 @@
       :weighBoxList="weighBoxList"
       @closeWeighBox="closeWeighBox"
     />
-  </wd-popup>
+  </wd-popup> -->
   <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
     <BoxTemp
       v-if="showTempBox"
@@ -56,17 +56,14 @@
 
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
-import { transStatusMap } from '@/constant/index'
+import { transStatusMap, transStatusValueMap } from '@/constant/index'
 import BoxListInfo from './BoxListInfo.vue'
 import BoxWeigh from './BoxWeigh.vue'
 import BoxTemp from './BoxTemp.vue'
-import PLATFORM from '@/utils/platform'
 import { globalSettingStore } from '@/store/global'
-import { transStatusValueMap } from '@/constant'
 defineOptions({
   name: 'OrderItem',
 })
-const isMp = ref(PLATFORM.isMp)
 const store = globalSettingStore()
 
 const props = defineProps({
@@ -84,8 +81,8 @@ const props = defineProps({
   },
 })
 const showWeighBox = ref(false) // 展示称重弹窗
-const showTempBox = ref(false) // 展示温度曲线弹窗
 const weighBoxList = ref([]) // 称重数据
+const showTempBox = ref(false) // 展示温度曲线弹窗
 const tempBoxList = ref([]) // 温度曲线数据
 
 // const transStatusValue = computed(() => {
@@ -95,9 +92,12 @@ const tempBoxList = ref([]) // 温度曲线数据
  * 称重
  */
 const setWeigh = () => {
-  weighBoxList.value = props.orderItem.bloodPackages || []
-  showWeighBox.value = true // 打开称重弹窗
-  store.changePageScroll(true)
+  uni.navigateTo({
+    url: `/packageC/sign/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tranStatus=${props.transportStatus}&showWeight=1`,
+  })
+  // weighBoxList.value = props.orderItem.bloodPackages || []
+  // showWeighBox.value = true // 打开称重弹窗
+  // store.changePageScroll(true)
 }
 // 关闭称重弹窗
 const closeWeighBox = () => {
@@ -127,7 +127,7 @@ const closeTempBox = () => {
  */
 const goDetail = () => {
   uni.navigateTo({
-    url: `/packageC/sign/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tabs=待揽收`,
+    url: `/packageC/sign/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tranStatus=${props.transportStatus}`,
   })
 }
 </script>
@@ -182,6 +182,9 @@ const goDetail = () => {
       }
       &_btn:active {
         opacity: 0.8;
+      }
+      &-1line {
+        grid-template-columns: 1fr;
       }
     }
   }

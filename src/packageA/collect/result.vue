@@ -1,4 +1,12 @@
+<route lang="json5">
+{
+  style: {
+    navigationBarTitleText: '血液揽收',
+  },
+}
+</route>
 <template>
+  <page-meta :page-style="'overflow:' + (pageScroll && isMp ? 'hidden' : 'visible')"></page-meta>
   <div class="CollectResult">
     <div class="CollectResult_header">
       <image class="CollectResult_header_img" src="@img/succResultIcon.png" mode="scaleToFill" />
@@ -29,7 +37,12 @@
       </div>
     </div>
     <div class="CollectResult_block">
-      <BoxList :bloodInfo="orderDetail" noEditWeight />
+      <BoxList
+        :bloodInfo="orderDetail"
+        noEditWeight
+        showTempAndTime
+        @tempBox="openTempBox($event)"
+      />
     </div>
     <div class="CollectResult_btm">
       <div class="CollectResult_btm_item CollectResult_btm_item-left">
@@ -98,7 +111,6 @@
     </div>
   </wd-popup>
   <!-- 无人机选择弹窗 -->
-  <!-- <teleport to="body"> -->
   <wd-popup
     v-model="showUAVSelectPopup"
     position="bottom"
@@ -114,7 +126,15 @@
       <wd-picker-view :columns="columns" v-model="UAVSelectPopupValue" />
     </div>
   </wd-popup>
-  <!-- </teleport> -->
+  <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
+    <BoxTemp
+      v-if="showTempBox"
+      lock-scroll
+      :safe-area-inset-bottom="true"
+      :tempBoxList="tempBoxList"
+      @closeTempBox="closeTempBox"
+    />
+  </wd-popup>
 </template>
 
 <script setup lang="ts">
@@ -122,10 +142,16 @@ import { getCollectItemDetail } from '@/service/index/collect'
 import { getNavigateOptions } from '@/utils'
 import { ref } from 'vue'
 import BoxList from './components/BoxList.vue'
+import { globalSettingStore } from '@/store/global'
+import { storeToRefs } from 'pinia'
+import { isMp } from '@/utils/platform'
+import BoxTemp from './components/BoxTemp.vue'
 
 defineOptions({
   name: 'CollectResult',
 })
+const store = globalSettingStore() // 全局设置
+const { pageScroll } = storeToRefs(store)
 const outboundOrderNo = ref('') // 交接单号
 const weightMap = ref('') // 重量映射表
 const orderDetail = ref<any>({}) // 交接单详情
@@ -135,17 +161,10 @@ const UAVSelectPopupValue = ref('') // 选择弹窗选中值
 const UAVSelectPopupIdx = ref(null) // 选择无人机操作索引
 const columns = ref(['选项1', '选项2', '选项3', '选项4', '选项5', '选项6', '选项7'])
 const startTransConfirm = ref(false) // 启运确认()
-const orderPackageList = computed(() => {
-  // 揽件信息
-  return (
-    orderDetail.value?.bloodPackages.map((d) => {
-      return {
-        ...d,
-        droneCode: '',
-      }
-    }) || []
-  )
-})
+const orderPackageList = ref([]) // 揽件信息
+const showTempBox = ref(false) // 展示温度曲线弹窗
+const tempBoxList = ref([]) // 温度曲线数据
+
 /**
  * 确认是否启运
  * @param flag
@@ -185,6 +204,24 @@ const makeSureUAV = () => {
   orderPackageList.value[UAVSelectPopupIdx.value].droneCode = UAVSelectPopupValue.value
   closeUAVSelPopup()
 }
+
+/**
+ * 温度曲线
+ * */
+const openTempBox = (obj) => {
+  // tempBoxList.value = props.orderItem.bloodPackages || []
+  showTempBox.value = true // 打开温度曲线弹窗
+  store.changePageScroll(true)
+}
+
+/**
+ * 关闭温度曲线弹窗
+ * */
+const closeTempBox = () => {
+  showTempBox.value = false
+  tempBoxList.value = []
+  store.changePageScroll(false)
+}
 /**
  * 返回首页
  */
@@ -216,6 +253,13 @@ onMounted(() => {
       data.eventNoPackageArr = arr // 箱子信息列表
     }
     orderDetail.value = data
+    orderPackageList.value =
+      orderDetail.value?.eventNoPackageArr.map((d) => {
+        return {
+          ...d,
+          droneCode: '',
+        }
+      }) || []
   })
 })
 </script>

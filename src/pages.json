@@ -110,7 +110,10 @@
         },
         {
           "path": "collect/result",
-          "type": "page"
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "血液揽收"
+          }
         }
       ]
     },
@@ -125,7 +128,7 @@
           "path": "sign/error",
           "type": "page",
           "style": {
-            "navigationBarTitleText": "签收异常"
+            "navigationBarTitleText": "揽收异常"
           }
         },
         {
@@ -137,7 +140,10 @@
         },
         {
           "path": "sign/result",
-          "type": "page"
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "血液签收"
+          }
         }
       ]
     }

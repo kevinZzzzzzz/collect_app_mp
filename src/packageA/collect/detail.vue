@@ -10,25 +10,50 @@
       </div>
 
       <div class="CollectDetail_detail_block">
-        <ExpressInfo :bloodInfo="orderDetail" />
+        <ExpressInfo :tranStatus="tranStatus" :bloodInfo="orderDetail" />
       </div>
 
       <div class="CollectDetail_detail_block">
-        <BoxList :bloodInfo="orderDetail" @weighBox="weighBox($event)" />
+        <BoxList
+          :bloodInfo="orderDetail"
+          :noEditWeight="+tranStatus !== 6"
+          :showTempAndTime="+tranStatus !== 6"
+          @weighBox="weighBox($event)"
+          @tempBox="openTempBox($event)"
+        />
       </div>
     </div>
     <div class="CollectDetail_bottom" :style="{ zIndex: pageScroll ? 0 : 3 }">
-      <div class="CollectDetail_bottom_left" @click="gotoError()">
-        <wd-icon name="warning" color="#B7B7B8" size="22px"></wd-icon>
-        <p class="CollectDetail_bottom_left_text">异常</p>
+      <div class="CollectDetail_bottom_ctx" v-if="+tranStatus === 6">
+        <div class="CollectDetail_bottom_ctx_left" @click="gotoError()">
+          <wd-icon name="warning" color="#B7B7B8" size="22px"></wd-icon>
+          <p class="CollectDetail_bottom_ctx_left_text">异常</p>
+        </div>
+        <div
+          :class="['CollectDetail_bottom_ctx_right', notCollect && 'disabled']"
+          @click="sureCollect()"
+        >
+          <p class="CollectDetail_bottom_ctx_right_text">确定揽收</p>
+        </div>
       </div>
-      <div :class="['CollectDetail_bottom_right', notCollect && 'disabled']" @click="sureCollect()">
-        <p class="CollectDetail_bottom_right_text">确定揽收</p>
+      <div class="CollectDetail_bottom_ctx1" v-else>
+        <div class="CollectDetail_bottom_ctx1_btn" @click="backHome">
+          <p class="CollectDetail_bottom_ctx1_btn_text">返回首页</p>
+        </div>
       </div>
     </div>
   </div>
   <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
     <BoxWeigh :weighBoxList="weighBoxInfo" @closeWeighBox="closeWeighBox" />
+  </wd-popup>
+  <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
+    <BoxTemp
+      v-if="showTempBox"
+      lock-scroll
+      :safe-area-inset-bottom="true"
+      :tempBoxList="tempBoxList"
+      @closeTempBox="closeTempBox"
+    />
   </wd-popup>
 </template>
 
@@ -44,6 +69,8 @@ import { storeToRefs } from 'pinia'
 import { addTransOrder, getCollectItemDetail } from '@/service/index/collect'
 import { isMp } from '@/utils/platform'
 import BoxWeigh from './components/BoxWeigh.vue'
+import BoxTemp from './components/BoxTemp.vue'
+import { transStatusMap } from '@/constant'
 
 defineOptions({
   name: 'CollectDetail',
@@ -52,9 +79,12 @@ const store = globalSettingStore() // 全局设置
 const { pageScroll } = storeToRefs(store)
 const outboundOrderNo = ref({}) // 交接单号
 const orderDetail = ref<any>({}) // 交接单详情
+const tranStatus = ref(null) // 交接单状态
 
 const showWeighBox = ref(false) // 展示称重弹窗
 const weighBoxInfo = ref([]) // 称重数据
+const showTempBox = ref(false) // 展示温度曲线弹窗
+const tempBoxList = ref([]) // 温度曲线数据
 /**
  * 打开称重弹窗
  */
@@ -64,7 +94,7 @@ const weighBox = (data) => {
   store.changePageScroll(true)
 }
 /**
- * 关闭称重弹窗
+ * 关闭称重弹窗，并且支持保存更新数据
  */
 const closeWeighBox = (data) => {
   showWeighBox.value = false
@@ -80,8 +110,26 @@ const closeWeighBox = (data) => {
         }
       })
     })
-    console.log(orderDetail.value.eventNoPackageArr, 'orderDetail.value00000')
+    // console.log(orderDetail.value.eventNoPackageArr, 'orderDetail.value00000')
   }
+}
+
+/**
+ * 温度曲线
+ * */
+const openTempBox = (obj) => {
+  // tempBoxList.value = props.orderItem.bloodPackages || []
+  showTempBox.value = true // 打开温度曲线弹窗
+  store.changePageScroll(true)
+}
+
+/**
+ * 关闭温度曲线弹窗
+ * */
+const closeTempBox = () => {
+  showTempBox.value = false
+  tempBoxList.value = []
+  store.changePageScroll(false)
 }
 /**
  * 确定揽收
@@ -138,13 +186,19 @@ const notCollect = computed(() => {
     orderDetail.value?.eventNoPackageArr.some((e) => !e.weight)
   )
 })
+/**
+ * 返回首页
+ */
+const backHome = () => {
+  uni.navigateTo({ url: '/' })
+}
 onMounted(() => {
   const options: any = getCurrentInstance()
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
-  const titleName: string = getNavigateOptions(options, 'tabs') || ''
+  tranStatus.value = getNavigateOptions(options, 'tranStatus') || ''
   const showWeight = getNavigateOptions(options, 'showWeight')
   uni.setNavigationBarTitle({
-    title: titleName,
+    title: transStatusMap[tranStatus.value].text,
   })
   getCollectItemDetail({
     outboundOrderNo: outboundOrderNo.value,
@@ -206,34 +260,55 @@ page {
   &_bottom {
     position: fixed;
     bottom: 0px;
-    display: grid;
-    grid-template-columns: 0.15fr 1fr;
-    grid-gap: 16px;
     width: 100%;
-    padding: 10px 16px;
-    background: #fff;
-    &_left {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    &_ctx {
       width: 100%;
-      height: 40px;
+      display: grid;
+      grid-template-columns: 0.15fr 1fr;
+      grid-gap: 16px;
+      padding: 10px 16px;
       background: #fff;
-      border-radius: 4px;
-      &_text {
-        font-size: 14px;
-        color: #999999;
+      &_left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 40px;
+        background: #fff;
+        border-radius: 4px;
+        &_text {
+          font-size: 14px;
+          color: #999999;
+        }
+      }
+      &_right {
+        @include CenterHorVertical();
+        background: #1890ff;
+        border-radius: 4px 4px 4px 4px;
+        &_text {
+          font-size: 16px;
+          font-weight: 400;
+          color: #ffffff;
+        }
       }
     }
-    &_right {
-      @include CenterHorVertical();
-      background: #1890ff;
-      border-radius: 4px 4px 4px 4px;
-      &_text {
-        font-size: 16px;
-        font-weight: 400;
-        color: #ffffff;
+    &_ctx1 {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      padding: 10px 16px;
+      background: #fff;
+      &_btn {
+        height: 40px;
+        @include CenterHorVertical();
+        background: #1890ff;
+        border-radius: 4px 4px 4px 4px;
+        &_text {
+          font-size: 16px;
+          font-weight: 400;
+          color: #ffffff;
+        }
       }
     }
   }

@@ -20,9 +20,17 @@
           />
           <div class="Waybill_main_boxItem_header_text">粤B XY008</div>
         </div> -->
-          <BoxListInfo noEditWeight :boxItem="item" @setWeight="setWeigh($event)" />
-          <div class="Waybill_main_btm" v-if="!item.weight">
-            <div class="Waybill_main_btm_btn Waybill_main_btm_btn-left disabled">温度曲线</div>
+          <BoxListInfo
+            :noEditWeight="noEditWeight"
+            :showTempAndTime="showTempAndTime"
+            :boxItem="item"
+            @setWeight="setWeigh($event)"
+            @setTemps="setTemp($event)"
+          />
+          <div class="Waybill_main_btm" v-if="!item.weight && !showTempAndTime">
+            <div class="Waybill_main_btm_btn Waybill_main_btm_btn-left" @click="setTemp(item)">
+              温度曲线
+            </div>
             <div class="Waybill_main_btm_btn Waybill_main_btm_btn-right" @click="setWeigh(item)">
               称重
             </div>
@@ -52,9 +60,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  showTempAndTime: {
+    // 展示温度曲线在时间同行
+    type: Boolean,
+    default: false,
+  },
 })
 const bloodInfoRef = ref<any>(props.bloodInfo)
-console.log(props.bloodInfo, 'props.bloodInfo----2----')
 watch(
   () => props.bloodInfo,
   (n) => {
@@ -64,7 +76,7 @@ watch(
     deep: true,
   },
 )
-const emit = defineEmits(['weighBox'])
+const emit = defineEmits(['weighBox', 'tempBox'])
 const boxAmount = computed(() => {
   return (
     (bloodInfoRef.value.eventNoPackageArr &&
@@ -78,6 +90,13 @@ const boxAmount = computed(() => {
  */
 const setWeigh = (obj) => {
   emit('weighBox', JSON.parse(JSON.stringify(obj)))
+}
+/**
+ * 温度曲线
+ * @param obj 单例对象
+ */
+const setTemp = (obj) => {
+  emit('tempBox', JSON.parse(JSON.stringify(obj)))
 }
 </script>
 
