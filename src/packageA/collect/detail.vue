@@ -27,6 +27,9 @@
       </div>
     </div>
   </div>
+  <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
+    <BoxWeigh :weighBoxList="weighBoxInfo" @closeWeighBox="closeWeighBox" />
+  </wd-popup>
 </template>
 
 <script setup lang="ts">
@@ -39,9 +42,9 @@ import { getNavigateOptions } from '@/utils/index'
 import { globalSettingStore } from '@/store/global'
 import { storeToRefs } from 'pinia'
 import { addTransOrder, getCollectItemDetail } from '@/service/index/collect'
-import PLATFORM from '@/utils/platform'
+import { isMp } from '@/utils/platform'
+import BoxWeigh from './components/BoxWeigh.vue'
 
-const isMp = ref(PLATFORM.isMp)
 defineOptions({
   name: 'CollectDetail',
 })
@@ -56,19 +59,29 @@ const weighBoxInfo = ref([]) // 称重数据
  * 打开称重弹窗
  */
 const weighBox = (data) => {
-  if (!data) {
-    closeWeighBox()
-    return false
-  }
-  showWeighBox.value = true
-  weighBoxInfo.value = data
+  weighBoxInfo.value = (data && [data]) || []
+  showWeighBox.value = true // 打开称重弹窗
+  store.changePageScroll(true)
 }
 /**
  * 关闭称重弹窗
  */
-const closeWeighBox = () => {
+const closeWeighBox = (data) => {
   showWeighBox.value = false
   weighBoxInfo.value = []
+  store.changePageScroll(false)
+
+  if (data) {
+    const temp = orderDetail.value.eventNoPackageArr
+    temp.forEach((e, idx) => {
+      data.forEach((d) => {
+        if (d.code == e.code) {
+          orderDetail.value.eventNoPackageArr[idx] = d
+        }
+      })
+    })
+    console.log(orderDetail.value.eventNoPackageArr, 'orderDetail.value00000')
+  }
 }
 /**
  * 确定揽收
@@ -129,6 +142,7 @@ onMounted(() => {
   const options: any = getCurrentInstance()
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
   const titleName: string = getNavigateOptions(options, 'tabs') || ''
+  const showWeight = getNavigateOptions(options, 'showWeight')
   uni.setNavigationBarTitle({
     title: titleName,
   })
@@ -140,17 +154,23 @@ onMounted(() => {
       const arr = []
       if (data.eventNoPackageMap) {
         Object.keys(data.eventNoPackageMap).forEach((item, idx) => {
-          arr.push({
-            weight: 0,
-            eventNo: item,
-            ...data.eventNoPackageMap[item][0],
+          data.eventNoPackageMap[item].forEach((d) => {
+            arr.push({
+              weight: null,
+              eventNo: item,
+              ...d,
+            })
           })
         })
       }
       data.eventNoPackageArr = arr // 箱子信息列表
     }
     orderDetail.value = data
-    console.log(orderDetail.value, 'orderDetail0000000')
+    // console.log(orderDetail.value, 'orderDetail0000000')
+    if (+showWeight) {
+      showWeighBox.value = true
+      weighBoxInfo.value = [orderDetail.value.eventNoPackageArr[0]] || []
+    }
   })
 })
 </script>

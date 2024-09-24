@@ -43,7 +43,7 @@
       @closeWeighBox="closeWeighBox"
     />
   </wd-popup>
-  <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
+  <!-- <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
     <BoxTemp
       v-if="showTempBox"
       lock-scroll
@@ -51,22 +51,19 @@
       :tempBoxList="tempBoxList"
       @closeTempBox="closeTempBox"
     />
-  </wd-popup>
+  </wd-popup> -->
 </template>
 
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
-import { transStatusMap } from '@/constant/index'
+import { transStatusMap, transStatusValueMap } from '@/constant/index'
 import BoxListInfo from './BoxListInfo.vue'
 import BoxWeigh from './BoxWeigh.vue'
 import BoxTemp from './BoxTemp.vue'
-import PLATFORM from '@/utils/platform'
 import { globalSettingStore } from '@/store/global'
-import { transStatusValueMap } from '@/constant'
 defineOptions({
   name: 'OrderItem',
 })
-const isMp = ref(PLATFORM.isMp)
 const store = globalSettingStore()
 
 const props = defineProps({
@@ -95,9 +92,13 @@ const tempBoxList = ref([]) // 温度曲线数据
  * 称重
  */
 const setWeigh = () => {
-  weighBoxList.value = props.orderItem.bloodPackages || []
-  showWeighBox.value = true // 打开称重弹窗
-  store.changePageScroll(true)
+  const tabName = transStatusMap[props.transportStatus].text
+  uni.navigateTo({
+    url: `/packageA/collect/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tabs=${tabName}&showWeight=1`,
+  })
+  // weighBoxList.value = props.orderItem.bloodPackages || []
+  // showWeighBox.value = true // 打开称重弹窗
+  // store.changePageScroll(true)
 }
 // 关闭称重弹窗
 const closeWeighBox = () => {

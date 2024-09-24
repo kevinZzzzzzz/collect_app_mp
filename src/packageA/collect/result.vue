@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="CollectResult_block">
-      <BoxList :bloodInfo="orderDetail" />
+      <BoxList :bloodInfo="orderDetail" noEditWeight />
     </div>
     <div class="CollectResult_btm">
       <div class="CollectResult_btm_item CollectResult_btm_item-left">
@@ -195,6 +195,7 @@ onMounted(() => {
   const options: any = getCurrentInstance()
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
   weightMap.value = getNavigateOptions(options, 'weightMap') || ''
+
   getCollectItemDetail({
     outboundOrderNo: outboundOrderNo.value,
   }).then((res: any) => {
@@ -202,18 +203,19 @@ onMounted(() => {
     if (data) {
       const arr = []
       if (data.eventNoPackageMap) {
-        Object.keys(data.eventNoPackageMap).forEach((item: any, idx) => {
-          arr.push({
-            weight: weightMap.value[item.code],
-            eventNo: item,
-            ...data.eventNoPackageMap[item][0],
+        Object.keys(data.eventNoPackageMap).forEach((item, idx) => {
+          data.eventNoPackageMap[item].forEach((d) => {
+            arr.push({
+              weight: null,
+              eventNo: item,
+              ...d,
+            })
           })
         })
       }
       data.eventNoPackageArr = arr // 箱子信息列表
     }
     orderDetail.value = data
-    console.log(orderDetail.value)
   })
 })
 </script>

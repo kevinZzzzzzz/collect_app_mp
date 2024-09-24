@@ -9,7 +9,7 @@
         <div
           class="Waybill_main_boxItem"
           v-for="(item, idx) in bloodInfoRef.eventNoPackageArr"
-          :key="`${idx}${updateFlag}`"
+          :key="idx"
         >
           <!-- 运输编号单组件 -->
           <!-- <div class="Waybill_main_boxItem_header">
@@ -20,7 +20,7 @@
           />
           <div class="Waybill_main_boxItem_header_text">粤B XY008</div>
         </div> -->
-          <BoxListInfo :boxItem="item" @setWeight="setWeigh(item)" />
+          <BoxListInfo noEditWeight :boxItem="item" @setWeight="setWeigh($event)" />
           <div class="Waybill_main_btm" v-if="!item.weight">
             <div class="Waybill_main_btm_btn Waybill_main_btm_btn-left disabled">温度曲线</div>
             <div class="Waybill_main_btm_btn Waybill_main_btm_btn-right" @click="setWeigh(item)">
@@ -30,23 +30,16 @@
         </div>
       </div>
     </div>
-    <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
-      <BoxWeigh :weighBoxList="weighBoxList" @closeWeighBox="closeWeighBox" />
-    </wd-popup>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { transStatusMap } from '@/constant/index'
-import { globalSettingStore } from '@/store/global'
 import BoxListInfo from './BoxListInfo.vue'
-import BoxWeigh from './BoxWeigh.vue'
 defineOptions({
   name: 'BoxList', // 揽件信息
 })
 
-const store = globalSettingStore()
 const props = defineProps({
   bloodInfo: {
     type: Object,
@@ -54,26 +47,28 @@ const props = defineProps({
       return {}
     },
   },
+  noEditWeight: {
+    // 是否禁止编辑重量
+    type: Boolean,
+    default: false,
+  },
 })
-const bloodInfoRef = ref<any>({})
+const bloodInfoRef = ref<any>(props.bloodInfo)
+console.log(props.bloodInfo, 'props.bloodInfo----2----')
 watch(
   () => props.bloodInfo,
-  (n, o) => {
+  (n) => {
     bloodInfoRef.value = n
   },
   {
     deep: true,
   },
 )
-
-const showWeighBox = ref(false) // 展示称重弹窗
-const weighBoxList = ref([]) // 称重数据
-const updateFlag = ref(0)
 const emit = defineEmits(['weighBox'])
 const boxAmount = computed(() => {
   return (
-    (bloodInfoRef.value.eventNoPackageMap &&
-      Object.keys(bloodInfoRef.value.eventNoPackageMap).length) ||
+    (bloodInfoRef.value.eventNoPackageArr &&
+      Object.keys(bloodInfoRef.value.eventNoPackageArr).length) ||
     0
   )
 })
@@ -82,23 +77,7 @@ const boxAmount = computed(() => {
  * @param obj 单例对象
  */
 const setWeigh = (obj) => {
-  if (!obj.hasOwnProperty('weight')) {
-    obj.weight = null
-  }
-  weighBoxList.value = (obj && [obj]) || []
-  showWeighBox.value = true // 打开称重弹窗
-  store.changePageScroll(true)
-}
-// 关闭称重弹窗
-const closeWeighBox = (data) => {
-  showWeighBox.value = false
-  store.changePageScroll(false)
-  if (data || +data === 0) {
-    weighBoxList.value[0].weight = data
-  }
-  // 强制刷新组件(优化点！！！！组件设计复杂了，后期修复)
-  updateFlag.value += 1
-  weighBoxList.value = []
+  emit('weighBox', JSON.parse(JSON.stringify(obj)))
 }
 </script>
 

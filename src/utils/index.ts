@@ -147,3 +147,22 @@ export function getNavigateOptions(options: any, key: string) {
   }
   return result
 }
+
+/**
+ * 检查数字是否只有一位小数
+ * @param num 要检查的数字
+ * @returns 如果数字只有一位小数，则返回true，否则返回false
+ */
+export function hasOneDecimalPlace(num) {
+  // 将数字转换为字符串
+  const numStr = num.toString()
+  // 检查是否有小数点
+  if (numStr.includes('.')) {
+    // 分割整数部分和小数部分
+    const parts = numStr.split('.')
+    // 检查小数点后是否只有一位数字
+    return parts[1].length === 1
+  }
+  // 如果没有小数点，则返回false
+  return false
+}

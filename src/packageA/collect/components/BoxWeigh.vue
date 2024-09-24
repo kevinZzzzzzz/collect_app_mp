@@ -2,13 +2,13 @@
   <div class="BoxWeigh">
     <div class="BoxWeigh_header">
       <p class="BoxWeigh_header_title">运输箱称重</p>
-      <h6 class="BoxWeigh_header_cancel" @click="closeWeigh()">取消</h6>
+      <h6 class="BoxWeigh_header_cancel" @click="closeWeigh(0)">取消</h6>
     </div>
-    <div class="BoxWeigh_item" v-for="(item, idx) in props.weighBoxList" :key="idx">
+    <div class="BoxWeigh_item" v-for="(item, idx) in weighBoxRef" :key="idx">
       <image class="BoxWeigh_item_img" src="@img/transBoxIcon.png" mode="scaleToFill" />
       <p class="BoxWeigh_item_text">{{ item.code }}</p>
       <div class="BoxWeigh_item_ipt">
-        <wd-input type="number" no-border v-model="weight" placeholder="请输入" />
+        <wd-input type="number" no-border v-model="item.weight" placeholder="请输入" />
       </div>
       <p class="BoxWeigh_item_text">KG</p>
     </div>
@@ -16,10 +16,14 @@
       <p class="BoxWeigh_btn_text">确认</p>
     </div>
   </div>
+  <wd-message-box />
 </template>
 
 <script setup lang="ts">
+import { hasOneDecimalPlace } from '@/utils'
 import { ref } from 'vue'
+import { useMessage } from 'wot-design-uni'
+const message = useMessage()
 defineOptions({
   name: 'BoxWeigh',
 })
@@ -32,15 +36,39 @@ const props = defineProps({
     },
   },
 })
-const weight = ref(props.weighBoxList[0]?.weight || null)
+
+const weighBoxRef = ref(props.weighBoxList || [])
+
+watch(
+  () => props.weighBoxList,
+  (n) => {
+    weighBoxRef.value = n
+  },
+)
 const save = () => {
-  if (weight.value) {
-    weight.value = Number(weight.value).toFixed(1) || 0
+  // 校验 保留一位小数
+  const flag = weighBoxRef.value.every((item) => {
+    return item.weight > 0 && hasOneDecimalPlace(item.weight)
+  })
+  if (!flag) {
+    message.alert({
+      msg: '保留一位小数',
+      title: '温馨提醒',
+    })
+  } else {
+    closeWeigh(1)
   }
-  closeWeigh()
 }
-const closeWeigh = () => {
-  emit('closeWeighBox', weight.value)
+/**
+ * 关闭称重弹窗
+ * @param type 1 保存 | 0 取消
+ */
+const closeWeigh = (type: 1 | 0) => {
+  if (type) {
+    emit('closeWeighBox', weighBoxRef.value)
+  } else {
+    emit('closeWeighBox')
+  }
 }
 // onMounted(() => {})
 </script>
