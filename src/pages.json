@@ -121,6 +121,22 @@
       ]
     },
     {
+      "root": "packageB",
+      "pages": [
+        {
+          "path": "notified/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "消息通知"
+          }
+        },
+        {
+          "path": "protocol/index",
+          "type": "page"
+        }
+      ]
+    },
+    {
       "root": "packageC",
       "pages": [
         {

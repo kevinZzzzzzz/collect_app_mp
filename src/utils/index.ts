@@ -181,6 +181,32 @@ export const encrypt = (pwd: string, key: string) => {
   const secretPwd = encrypt.encrypt(pwd)
   return secretPwd
 }
+export const windowAtob = (encodedString) => {
+  let base64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+  let decodedString = ''
+  let currentChar, charCode1, charCode2, charCode3, encIndex1, encIndex2, encIndex3, encIndex4
+
+  for (let i = 0; i < encodedString.length; i += 4) {
+    encIndex1 = base64Chars.indexOf(encodedString[i])
+    encIndex2 = base64Chars.indexOf(encodedString[i + 1])
+    encIndex3 = base64Chars.indexOf(encodedString[i + 2])
+    encIndex4 = base64Chars.indexOf(encodedString[i + 3])
+
+    charCode1 = (encIndex1 << 2) | (encIndex2 >> 4)
+    charCode2 = ((encIndex2 & 15) << 4) | (encIndex3 >> 2)
+    charCode3 = ((encIndex3 & 3) << 6) | encIndex4
+
+    decodedString += String.fromCharCode(charCode1)
+
+    if (encIndex3 !== 64) {
+      decodedString += String.fromCharCode(charCode2)
+    }
+    if (encIndex4 !== 64) {
+      decodedString += String.fromCharCode(charCode3)
+    }
+  }
+  return decodedString
+}
 /**
  *
  * @method {*} getUserInfoByToken 解析token获取用户信息
@@ -191,10 +217,9 @@ export const getUserInfoByToken = (token: string) => {
   const tokenString = token?.split('.')[1]
   let userInfo = ''
   if (tokenString) {
-    const { data } = JSON.parse(
-      decodeURIComponent(escape(window.atob(tokenString.replace(/-/g, '+').replace(/_/g, '/')))),
-    )
+    const { data } = windowAtob(tokenString.replace(/-/g, '+').replace(/_/g, '/')) as any
     userInfo = data ? JSON.parse(data) : {}
   }
+  console.log(userInfo, 'userInfo-')
   return userInfo
 }

@@ -109,9 +109,9 @@
       <wd-checkbox v-model="loginInfo.agreeProtocol"></wd-checkbox>
       <div class="login_form_tips_text">
         我已阅读并同意
-        <wd-button type="text">《用户协议》</wd-button>
+        <wd-button type="text" @click="gotoPDF('用户协议')">《用户协议》</wd-button>
         与
-        <wd-button type="text">《隐私政策》</wd-button>
+        <wd-button type="text" @click="gotoPDF('隐私政策')">《隐私政策》</wd-button>
       </div>
     </div>
   </div>
@@ -121,11 +121,14 @@
 <script setup lang="ts">
 import { $apiGetPublicKey, $apiLogin } from '@/service/index/common'
 import { encrypt, getNavigateOptions, getUserInfoByToken } from '@/utils'
+import { useUserStore } from '@/store'
 import { ref, getCurrentInstance } from 'vue'
 
 defineOptions({
   name: 'Login',
 })
+const userStore = useUserStore()
+
 let waitTimer = null
 const sendMinute = 60
 const loginInfo = ref({
@@ -173,9 +176,18 @@ const login = () => {
     password: encrypt(loginInfo.value.password, publicKey.value),
   }
   $apiLogin(obj).then((res: any) => {
-    console.log(res, 'res')
     const userInfo = getUserInfoByToken(res.data) // 解析token 获取保存个人信息
-    console.log(userInfo)
+    userStore.setUserInfo(userInfo)
+    userStore.setUserToken(res.data)
+    uni.showToast({
+      icon: 'success',
+      title: '登录成功',
+    })
+    setTimeout(() => {
+      uni.reLaunch({
+        url: '/pages/index/index',
+      })
+    }, 500)
   })
 }
 // 获取公钥
@@ -187,6 +199,33 @@ const getPublicKeys = () => {
       data: res.data,
     })
   })
+}
+/**
+ * 跳转协议
+ * @param name
+ */
+const gotoPDF = (name) => {
+  //  是区分运行的环境，在小程序中可使用如下方法
+  /* #ifdef MP */
+  uni.downloadFile({
+    url: `./static/docs/${name}.pdf`, //文件地址
+    success: function (res) {
+      var filePath = res.tempFilePath
+      uni.openDocument({
+        filePath: filePath,
+        showMenu: false, //这个参数可设置你预览的文件能否被直接转发，此次是设置是否展示分享菜单
+        success: function (res) {
+          console.log('打开文档成功', res)
+        },
+      })
+    },
+  })
+  /* #endif */
+  /* #ifdef H5 */ //这里是H5中的写法
+  uni.navigateTo({
+    url: `/packageB/protocol/index?protocolName=${name}`,
+  })
+  /* #endif */
 }
 onMounted(() => {
   getPublicKeys()
@@ -281,6 +320,14 @@ onMounted(() => {
   color: #1890ff !important;
   border-radius: 4px 4px 4px 4px;
   border: 1px solid #1890ff;
+}
+:deep(.wd-button.is-text) {
+  color: #1890ff !important;
+  font-weight: 400;
+  font-size: 14px;
+}
+:deep(.wd-checkbox.is-checked .wd-checkbox__shape) {
+  color: #1890ff !important;
 }
 .sendCode {
   width: 98%;

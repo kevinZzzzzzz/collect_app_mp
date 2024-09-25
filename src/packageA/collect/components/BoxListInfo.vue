@@ -5,15 +5,43 @@
       <div class="BoxListInfo_header_info">
         <div class="BoxListInfo_header_info_id">{{ boxItemRef.code }}</div>
         <div class="BoxListInfo_header_info_detail">
-          <span class="BoxListInfo_header_info_detail_num">86%</span>
+          <span class="BoxListInfo_header_info_detail_num">
+            {{ boxItemRef.energy ? boxItemRef.energy + '%' : '' }}
+          </span>
           <image
+            v-if="boxItemRef.energy >= 90"
             class="BoxListInfo_header_info_detail_img"
-            src="@img/electricIcon.png"
+            src="@img/powerH.png"
             mode="scaleToFill"
           />
           <image
+            v-else-if="boxItemRef.energy < 90 && boxItemRef.energy > 20"
             class="BoxListInfo_header_info_detail_img"
-            src="@img/wifiIcon.png"
+            src="@img/powerM.png"
+            mode="scaleToFill"
+          />
+          <image
+            v-else
+            class="BoxListInfo_header_info_detail_img"
+            src="@img/powerL.png"
+            mode="scaleToFill"
+          />
+          <image
+            v-if="boxItemRef.signal && boxItemRef.signal >= -35"
+            class="BoxListInfo_header_info_detail_img"
+            src="@img/wifiH.png"
+            mode="scaleToFill"
+          />
+          <image
+            v-if="!boxItemRef.signal || boxItemRef.signal < -90"
+            class="BoxListInfo_header_info_detail_img"
+            src="@img/wifiL.png"
+            mode="scaleToFill"
+          />
+          <image
+            v-else-if="boxItemRef.signal && boxItemRef.signal < -35 && boxItemRef.signal >= -90"
+            class="BoxListInfo_header_info_detail_img"
+            src="@img/wifiM.png"
             mode="scaleToFill"
           />
         </div>
@@ -161,8 +189,8 @@ const setTemps = (data) => {
           margin: 0 3px;
         }
         &_img {
-          width: 12px;
-          height: 7px;
+          width: 14px;
+          height: 8px;
           margin: 0 3px;
         }
       }

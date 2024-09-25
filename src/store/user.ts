@@ -1,29 +1,35 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-const initState = { nickname: '', avatar: '' }
-
 export const useUserStore = defineStore(
   'user',
   () => {
-    const userInfo = ref<IUserInfo>({ ...initState })
+    const userInfo = ref<any>({})
+    const userToken = ref(null)
 
-    const setUserInfo = (val: IUserInfo) => {
+    const setUserInfo = (val: any) => {
       userInfo.value = val
+    }
+    const setUserToken = (val: any) => {
+      userToken.value = val
     }
 
     const clearUserInfo = () => {
-      userInfo.value = { ...initState }
+      userToken.value = null
+      userInfo.value = {}
     }
     // 一般没有reset需求，不需要的可以删除
     const reset = () => {
-      userInfo.value = { ...initState }
+      userInfo.value = {}
+      userToken.value = null
     }
-    const isLogined = computed(() => !!userInfo.value.token)
+    const isLogined = computed(() => !!userToken.value)
 
     return {
       userInfo,
+      userToken,
       setUserInfo,
+      setUserToken,
       clearUserInfo,
       isLogined,
       reset,

@@ -3,7 +3,7 @@
     <div class="OrderItem_header">
       <div class="OrderItem_header_left">
         <p class="OrderItem_header_left_text">交接单号：{{ orderItem.outboundOrderNo }}</p>
-        <wd-tag custom-class="space" color="#EE0A24" bg-color="#EFDFE8">紧急</wd-tag>
+        <!-- <wd-tag custom-class="space" color="#EE0A24" bg-color="#EFDFE8">紧急</wd-tag> -->
       </div>
       <div class="OrderItem_header_right">
         <p
@@ -24,19 +24,19 @@
         <!-- 箱子信息组件 -->
         <BoxListInfo :boxItem="item" noEditWeight />
       </div>
-      <div :class="['OrderItem_main_btm', +transportStatus === 7 && 'OrderItem_main_btm-1line']">
+      <div :class="['OrderItem_main_btm', +transportStatus === 9 && 'OrderItem_main_btm-1line']">
         <div class="OrderItem_main_btm_btn OrderItem_main_btm_btn-left" @click="setTemp">
           温度曲线
         </div>
         <div
-          v-if="+transportStatus === 6"
+          v-if="+transportStatus === 2"
           class="OrderItem_main_btm_btn OrderItem_main_btm_btn-right"
           @click="setWeigh"
         >
           称重
         </div>
         <div
-          v-if="+transportStatus === 0"
+          v-if="+transportStatus === 3"
           class="OrderItem_main_btm_btn OrderItem_main_btm_btn-right"
           @click="goDetail"
         >

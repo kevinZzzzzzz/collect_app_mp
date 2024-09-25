@@ -1,7 +1,7 @@
 <route lang="json5">
 {
   style: {
-    navigationBarTitleText: '血液签收',
+    navigationBarTitleText: '血液揽收',
   },
 }
 </route>
@@ -30,8 +30,7 @@
             <div class="collect_item" v-for="(item, idx) in collectData" :key="idx">
               <wd-collapse v-model="collapseOpen">
                 <wd-collapse-item :name="item.hosName">
-                  <!-- ="{ expanded }" -->
-                  <template #title>
+                  <template #title="{ expanded }">
                     <div class="collect_item_header">
                       <div class="collect_item_header_left">
                         发往
@@ -48,6 +47,7 @@
                   </template>
                   <div class="collect_item_order" v-for="(i, d) in item.data" :key="d">
                     <OrderItem
+                      isHome
                       ref="OrderItemRef"
                       :orderItem="i"
                       :transportStatus="transStatusValueMap[tab]"
@@ -71,9 +71,11 @@ import DateSelect from '@/components/DateSelect.vue'
 import OrderItem from './components/OrderItem.vue'
 import { globalSettingStore } from '@/store/global'
 import { storeToRefs } from 'pinia'
-import { $apiGetCollectList } from '@/service/index/collect'
+import { getCollectList } from '@/service/index/collect'
 import { transStatusValueMap } from '@/constant'
-import { isMp } from '@/utils/platform'
+import PLATFORM from '@/utils/platform'
+
+const isMp = ref(PLATFORM.isMp)
 
 const dataFormat1 = 'YYYY-MM-DD'
 defineOptions({
@@ -81,8 +83,8 @@ defineOptions({
 })
 const store = globalSettingStore() // 全局设置
 const { pageScroll } = storeToRefs(store)
-const tabs = ['待签收', '已签收']
-const tab = ref('待签收')
+const tabs = ['待揽收', '已揽收', '异常']
+const tab = ref('待揽收')
 const isLoading = ref(false) // 加载中
 const keyword = ref('') // 搜索关键字
 const startTime = ref(dayjs(new Date().getTime()).format(dataFormat1)) // 开始时间
@@ -101,11 +103,11 @@ const collapseOpen = ref<string[]>([])
  */
 const getData = () => {
   isLoading.value = true
-  $apiGetCollectList({
-    outboundStatus: transStatusValueMap[tab.value],
+  getCollectList({
+    transportStatus: transStatusValueMap[tab.value],
     keyword: keyword.value || '',
-    outboundApplyDateStart: startTime.value || '',
-    outboundApplyDateEnd: endTime.value || '',
+    startTime: startTime.value || '',
+    endTime: endTime.value || '',
   })
     .then((res: any) => {
       const { data } = res
@@ -161,7 +163,7 @@ const searchByTime = (data) => {
  */
 const goNotified = (data: any) => {
   uni.navigateTo({
-    url: `/packageB/notified/index?notifiedType=揽收`,
+    url: `/packageA/collect/notified?notifiedType=揽收`,
   })
 }
 onMounted(() => {
@@ -224,13 +226,43 @@ onMounted(() => {
     }
     &_order {
       width: 100%;
-      margin-bottom: 16px;
+      &_time {
+        width: 100%;
+        margin-top: 3px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #999393;
+        text-align: left;
+      }
+      &_btm {
+        width: 100%;
+        margin-top: 9px;
+
+        &_btn {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 26px;
+          font-size: 14px;
+          font-weight: 400;
+          &_left {
+            color: #1890ff;
+            background: #ffffff;
+            border: 1px solid #1890ff;
+            border-radius: 4px;
+          }
+          &_right {
+            color: #ffffff;
+            background: #1890ff;
+            border-radius: 4px;
+          }
+        }
+      }
     }
   }
 }
 .loadingPage {
   width: 100%;
-  height: 50vh;
+  height: 10vh;
   @include CenterHorVertical();
 }
 .content {

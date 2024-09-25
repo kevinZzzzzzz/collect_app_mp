@@ -103,13 +103,14 @@ const collapseOpen = ref<string[]>([])
 const getData = () => {
   isLoading.value = true
   $apiGetCollectList({
-    transportStatus: transStatusValueMap[tab.value],
+    outboundStatus: transStatusValueMap[tab.value],
     keyword: keyword.value || '',
-    startTime: startTime.value || '',
-    endTime: endTime.value || '',
+    outboundApplyDateStart: startTime.value || '',
+    outboundApplyDateEnd: endTime.value || '',
   })
     .then((res: any) => {
       const { data } = res
+      console.log(data)
       if (data) {
         const arrTemp: Array<{
           hosName?: string
@@ -123,6 +124,7 @@ const getData = () => {
           obj.data.length && arrTemp.push(obj)
         })
         collectData.value = arrTemp
+        console.log(arrTemp, 111)
       }
     })
     .finally(() => {

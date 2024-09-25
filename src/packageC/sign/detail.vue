@@ -195,7 +195,7 @@ const signSuccess = () => {
  * 返回首页
  */
 const backHome = () => {
-  uni.navigateTo({ url: '/' })
+  uni.reLaunch({ url: '/pages/index/index' })
 }
 onMounted(() => {
   const options: any = getCurrentInstance()

@@ -1,13 +1,8 @@
-<route lang="json5">
-{
-  needLogin: true,
-}
-</route>
 <template>
   <page-meta :page-style="'overflow:' + (pageScroll && isMp ? 'hidden' : 'visible')"></page-meta>
   <div class="CollectDetail">
     <div class="CollectDetail_header">
-      <MapComp :bloodInfo="orderDetail" :tranStatus="tranStatus" />
+      <MapComp :bloodInfo="orderDetail" />
     </div>
     <div class="CollectDetail_detail">
       <div class="CollectDetail_detail_block">
@@ -15,50 +10,35 @@
       </div>
 
       <div class="CollectDetail_detail_block">
-        <ExpressInfo :tranStatus="tranStatus" :bloodInfo="orderDetail" />
+        <ExpressInfo :bloodInfo="orderDetail" :transStatus="+transStatus" />
       </div>
 
       <div class="CollectDetail_detail_block">
-        <BoxList
-          :bloodInfo="orderDetail"
-          :noEditWeight="+tranStatus !== 2"
-          :showTempAndTime="+tranStatus !== 2"
-          @weighBox="weighBox($event)"
-          @tempBox="openTempBox($event)"
-        />
+        <BoxList :bloodInfo="orderDetail" @openWeight="openWeightBox($event)" />
       </div>
     </div>
     <div class="CollectDetail_bottom" :style="{ zIndex: pageScroll ? 0 : 3 }">
-      <div class="CollectDetail_bottom_ctx" v-if="+tranStatus === 2">
-        <div class="CollectDetail_bottom_ctx_left" @click="gotoError()">
+      <div class="CollectDetail_bottom_ctx2" v-if="+transStatus === 6">
+        <div class="CollectDetail_bottom_ctx2_left" @click="gotoError()">
           <wd-icon name="warning" color="#B7B7B8" size="22px"></wd-icon>
-          <p class="CollectDetail_bottom_ctx_left_text">异常</p>
+          <p class="CollectDetail_bottom_ctx2_left_text">异常</p>
         </div>
         <div
-          :class="['CollectDetail_bottom_ctx_right', notCollect && 'disabled']"
+          :class="['CollectDetail_bottom_ctx2_right', notCollect && 'disabled']"
           @click="sureCollect()"
         >
-          <p class="CollectDetail_bottom_ctx_right_text">确定揽收</p>
+          <p class="CollectDetail_bottom_ctx2_right_text">确定揽收</p>
         </div>
       </div>
-      <div class="CollectDetail_bottom_ctx1" v-else>
-        <div class="CollectDetail_bottom_ctx1_btn" @click="backHome">
-          <p class="CollectDetail_bottom_ctx1_btn_text">返回首页</p>
+      <div class="CollectDetail_bottom_ctx" v-if="+transStatus === 0">
+        <div class="CollectDetail_bottom_ctx_btn" @click="goBackHome()">
+          <p class="CollectDetail_bottom_ctx_btn_text">返回首页</p>
         </div>
       </div>
     </div>
   </div>
   <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
-    <BoxWeigh :weighBoxList="weighBoxInfo" @closeWeighBox="closeWeighBox" />
-  </wd-popup>
-  <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
-    <BoxTemp
-      v-if="showTempBox"
-      lock-scroll
-      :safe-area-inset-bottom="true"
-      :tempBoxList="tempBoxList"
-      @closeTempBox="closeTempBox"
-    />
+    <BoxWeigh v-if="showWeighBox" :weighBoxList="weighBoxList" @closeWeighBox="closeWeighBox" />
   </wd-popup>
 </template>
 
@@ -71,76 +51,59 @@ import BoxList from './components/BoxList.vue'
 import { getNavigateOptions } from '@/utils/index'
 import { globalSettingStore } from '@/store/global'
 import { storeToRefs } from 'pinia'
-import { $apiAddTransOrder, $apiGetCollectItemDetail } from '@/service/index/collect'
-import { isMp } from '@/utils/platform'
+import { addTransOrder, getCollectItemDetail } from '@/service/index/collect'
 import BoxWeigh from './components/BoxWeigh.vue'
-import BoxTemp from './components/BoxTemp.vue'
+import PLATFORM from '@/utils/platform'
 import { transStatusMap } from '@/constant'
 
+const isMp = ref(PLATFORM.isMp)
 defineOptions({
   name: 'CollectDetail',
 })
 const store = globalSettingStore() // 全局设置
 const { pageScroll } = storeToRefs(store)
 const outboundOrderNo = ref({}) // 交接单号
+const transStatus = ref(0) // 运单状态
 const orderDetail = ref<any>({}) // 交接单详情
-const tranStatus = ref(null) // 交接单状态
 
 const showWeighBox = ref(false) // 展示称重弹窗
-const weighBoxInfo = ref([]) // 称重数据
-const showTempBox = ref(false) // 展示温度曲线弹窗
-const tempBoxList = ref([]) // 温度曲线数据
+const weighBoxList = ref([]) // 称重数据
+
 /**
  * 打开称重弹窗
+ * @param data
  */
-const weighBox = (data) => {
-  weighBoxInfo.value = (data && [data]) || []
-  showWeighBox.value = true // 打开称重弹窗
+const openWeightBox = (data) => {
   store.changePageScroll(true)
+  weighBoxList.value = (data && [data]) || []
+  showWeighBox.value = true // 打开称重弹窗
 }
-/**
- * 关闭称重弹窗，并且支持保存更新数据
- */
+
+// 关闭称重弹窗
 const closeWeighBox = (data) => {
   showWeighBox.value = false
-  weighBoxInfo.value = []
   store.changePageScroll(false)
-
-  if (data) {
-    const temp = orderDetail.value.eventNoPackageArr
-    temp.forEach((e, idx) => {
+  weighBoxList.value = []
+  if (data && data.length) {
+    orderDetail.value.eventNoPackageArr.forEach((item, idx) => {
       data.forEach((d) => {
-        if (d.code == e.code) {
-          orderDetail.value.eventNoPackageArr[idx] = d
+        if (d.code === item.code) {
+          item.weight = d.weight
         }
       })
     })
-    // console.log(orderDetail.value.eventNoPackageArr, 'orderDetail.value00000')
   }
 }
 
-/**
- * 温度曲线
- * */
-const openTempBox = (obj) => {
-  // tempBoxList.value = props.orderItem.bloodPackages || []
-  showTempBox.value = true // 打开温度曲线弹窗
-  store.changePageScroll(true)
-}
-
-/**
- * 关闭温度曲线弹窗
- * */
-const closeTempBox = () => {
-  showTempBox.value = false
-  tempBoxList.value = []
-  store.changePageScroll(false)
-}
 /**
  * 确定揽收
  */
 const sureCollect = () => {
   if (notCollect.value) return
+  // let weightMap = {}
+  // orderDetail.value.eventNoPackageArr.forEach((e) => {
+  //   weightMap[e.code] = e.weight
+  // })
   let params = {
     outboundOrderNo: orderDetail.value.outboundOrderNo,
     OrderType: 2,
@@ -164,10 +127,10 @@ const sureCollect = () => {
     }
     params.transportPackages.push(obj)
   })
-  $apiAddTransOrder(params).then((res: any) => {
+  addTransOrder(params).then((res: any) => {
     console.log(res, 'res')
     uni.navigateTo({
-      url: `/packageA/collect/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}`,
+      url: `/packageA/collect/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}}`,
     })
   })
 }
@@ -189,27 +152,26 @@ const notCollect = computed(() => {
 /**
  * 返回首页
  */
-const backHome = () => {
-  uni.reLaunch({ url: '/pages/index/index' })
+const goBackHome = () => {
+  uni.reLaunch({ url: '/' })
 }
 onMounted(() => {
   const options: any = getCurrentInstance()
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
-  tranStatus.value = getNavigateOptions(options, 'tranStatus') || ''
-  const showWeight = getNavigateOptions(options, 'showWeight')
+  transStatus.value = getNavigateOptions(options, 'transStatus') || ''
+  const showWeight = getNavigateOptions(options, 'showWeight') || ''
   uni.setNavigationBarTitle({
-    title: transStatusMap[tranStatus.value].text,
+    title: transStatusMap[transStatus.value].text,
   })
-  $apiGetCollectItemDetail({
+  getCollectItemDetail({
     outboundOrderNo: outboundOrderNo.value,
-    outboundStatus: tranStatus.value,
   }).then((res: any) => {
     const { data } = res
     if (data) {
       const arr = []
       if (data.eventNoPackageMap) {
-        Object.keys(data.eventNoPackageMap).forEach((item, idx) => {
-          data.eventNoPackageMap[item].forEach((d) => {
+        Object.keys(data.eventNoPackageMap).forEach((item: any, idx) => {
+          data.eventNoPackageMap[item]?.forEach((d, index) => {
             arr.push({
               weight: null,
               eventNo: item,
@@ -221,10 +183,10 @@ onMounted(() => {
       data.eventNoPackageArr = arr // 箱子信息列表
     }
     orderDetail.value = data
-    // console.log(orderDetail.value, 'orderDetail0000000')
-    if (+showWeight) {
-      showWeighBox.value = true
-      weighBoxInfo.value = [orderDetail.value.eventNoPackageArr[0]] || []
+    console.log(orderDetail.value, 'orderDetail0000000')
+
+    if (+showWeight && orderDetail.value.eventNoPackageArr?.length) {
+      openWeightBox(orderDetail.value.eventNoPackageArr[0])
     }
   })
 })
@@ -262,28 +224,14 @@ page {
     position: fixed;
     bottom: 0px;
     width: 100%;
+    padding: 10px 16px;
+    background: #fff;
     &_ctx {
-      width: 100%;
       display: grid;
-      grid-template-columns: 0.15fr 1fr;
-      grid-gap: 16px;
-      padding: 10px 16px;
-      background: #fff;
-      &_left {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 40px;
-        background: #fff;
-        border-radius: 4px;
-        &_text {
-          font-size: 14px;
-          color: #999999;
-        }
-      }
-      &_right {
+      grid-template-columns: 1fr;
+
+      &_btn {
+        padding: 10px 0;
         @include CenterHorVertical();
         background: #1890ff;
         border-radius: 4px 4px 4px 4px;
@@ -294,14 +242,26 @@ page {
         }
       }
     }
-    &_ctx1 {
-      width: 100%;
+    &_ctx2 {
       display: grid;
-      grid-template-columns: 1fr;
-      padding: 10px 16px;
-      background: #fff;
-      &_btn {
-        height: 40px;
+      grid-template-columns: 0.15fr 1fr;
+      grid-gap: 16px;
+      width: 100%;
+      &_left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        background: #fff;
+        border-radius: 4px;
+        &_text {
+          font-size: 14px;
+          color: #999999;
+        }
+      }
+      &_right {
+        padding: 10px 0;
         @include CenterHorVertical();
         background: #1890ff;
         border-radius: 4px 4px 4px 4px;

@@ -1,10 +1,14 @@
 import { CustomRequestOptions } from '@/interceptors/request'
+import { useUserStore } from '@/store/user'
 import PLATFORM from '@/utils/platform'
 
 const successCode = [0, 200] // 成功的返回code
 const failCode = [1, 101, 500] // 失败的返回code
+const loginFailCode = [403] // 登录失效
+
 const loadingMsg = '请稍候...'
 const isDev = import.meta.env.DEV
+const userStore = useUserStore()
 
 const appProxy = import.meta.env.VITE_APP_PROXY
 const appMapProxy = import.meta.env.VITE_APP_MAP_PROXY
@@ -17,6 +21,7 @@ export const http = <T>(options: any) => {
   return new Promise<IResData<T>>((resolve, reject) => {
     uni.request({
       ...options,
+      token: userStore.userToken,
       dataType: 'json',
       // #ifndef MP-WEIXIN
       responseType: 'json',
@@ -36,6 +41,14 @@ export const http = <T>(options: any) => {
                 icon: 'error',
                 title: res.data.msg || '请求失败',
               })
+            reject(res)
+          } else if (loginFailCode.includes(+code)) {
+            uni.showToast({
+              icon: 'error',
+              title: '登录失效',
+            })
+            userStore.clearUserInfo()
+            uni.navigateTo({ url: '/pages/login/index' })
             reject(res)
           }
         } else if (res.statusCode === 401) {

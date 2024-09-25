@@ -104,7 +104,7 @@
         </div>
       </div>
       <div class="startTransBlock_bottom">
-        <div class="startTransBlock_bottom_btn">
+        <div class="startTransBlock_bottom_btn" @click="confirmUAV">
           <div class="startTransBlock_bottom_btn_text">确认启运</div>
         </div>
       </div>
@@ -123,7 +123,7 @@
         <div class="UAVSelectPopup_header_center">无人机编号</div>
         <div class="UAVSelectPopup_header_right" @click="makeSureUAV">确认</div>
       </div>
-      <wd-picker-view :columns="columns" v-model="UAVSelectPopupValue" />
+      <wd-picker-view :columns="UAVColumnsList" v-model="UAVSelectPopupValue" />
     </div>
   </wd-popup>
   <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
@@ -138,7 +138,11 @@
 </template>
 
 <script setup lang="ts">
-import { $apiGetCollectItemDetail } from '@/service/index/collect'
+import {
+  $apiGetCollectItemDetail,
+  $apiGetAssetCode,
+  $apiStartTransOrder,
+} from '@/service/index/collect'
 import { getNavigateOptions } from '@/utils'
 import { ref } from 'vue'
 import BoxList from './components/BoxList.vue'
@@ -153,13 +157,12 @@ defineOptions({
 const store = globalSettingStore() // 全局设置
 const { pageScroll } = storeToRefs(store)
 const outboundOrderNo = ref('') // 交接单号
-const weightMap = ref('') // 重量映射表
 const orderDetail = ref<any>({}) // 交接单详情
 
 const showUAVSelectPopup = ref(false) // 打开选择弹窗
 const UAVSelectPopupValue = ref('') // 选择弹窗选中值
 const UAVSelectPopupIdx = ref(null) // 选择无人机操作索引
-const columns = ref(['选项1', '选项2', '选项3', '选项4', '选项5', '选项6', '选项7'])
+const UAVColumnsList = ref([]) // 无人机编号列表
 const startTransConfirm = ref(false) // 启运确认()
 const orderPackageList = ref([]) // 揽件信息
 const showTempBox = ref(false) // 展示温度曲线弹窗
@@ -186,7 +189,7 @@ const startTrans = () => {
  */
 const openUAVSelPopup = (code, idx) => {
   showUAVSelectPopup.value = true
-  UAVSelectPopupValue.value = code || columns.value[0] || ''
+  UAVSelectPopupValue.value = code || UAVColumnsList.value[0] || ''
   UAVSelectPopupIdx.value = idx
 }
 /**
@@ -203,6 +206,41 @@ const closeUAVSelPopup = () => {
 const makeSureUAV = () => {
   orderPackageList.value[UAVSelectPopupIdx.value].droneCode = UAVSelectPopupValue.value
   closeUAVSelPopup()
+}
+
+/**
+ * 确认启运
+ */
+const confirmUAV = () => {
+  const isOk = orderPackageList.value.every((e) => e.droneCode)
+  if (!isOk) {
+    uni.showToast({
+      title: '请选择无人机编号',
+      icon: 'none',
+    })
+  } else {
+    let params = []
+    orderPackageList.value.forEach((d) => {
+      params.push({
+        transportOrderNo: outboundOrderNo.value,
+        transportMachineType: 'UAV',
+        transportMachineCode: d.droneCode,
+        packageRelationNoSet: [d.code],
+      })
+    })
+    $apiStartTransOrder(params).then((res: any) => {
+      handleStartTransConfirm(false)
+      backHome()
+    })
+  }
+  //
+  // 启运接口
+  // $apiStartTrans({
+  //   outboundOrderNo: outboundOrderNo.value,
+  //   outboundStatus: 3,
+  //   eventNoPackageArr: orderPackageList.value,
+  // }).then((res: any) => {
+  //   const { data } = res
 }
 
 /**
@@ -226,15 +264,24 @@ const closeTempBox = () => {
  * 返回首页
  */
 const backHome = () => {
-  uni.navigateTo({ url: '/' })
+  uni.reLaunch({ url: '/pages/index/index' })
+}
+/**
+ * 获取资产编号
+ */
+const getAssetCode = () => {
+  $apiGetAssetCode().then((res: any) => {
+    const { data } = res
+    UAVColumnsList.value = data || []
+  })
 }
 onMounted(() => {
   const options: any = getCurrentInstance()
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
-  weightMap.value = getNavigateOptions(options, 'weightMap') || ''
 
   $apiGetCollectItemDetail({
     outboundOrderNo: outboundOrderNo.value,
+    outboundStatus: 3,
   }).then((res: any) => {
     const { data } = res
     if (data) {
@@ -261,6 +308,7 @@ onMounted(() => {
         }
       }) || []
   })
+  getAssetCode()
 })
 </script>
 

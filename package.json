@@ -77,13 +77,15 @@
     "@dcloudio/uni-mp-weixin": "3.0.0-alpha-4010520240507001",
     "czg": "^1.9.3",
     "dayjs": "1.11.10",
+    "jsencrypt": "^3.3.2",
+    "pdfjs-dist": "^4.6.82",
     "pinia": "2.0.36",
     "pinia-plugin-persistedstate": "3.2.1",
     "qs": "6.5.3",
+    "vite-plugin-commonjs": "^0.10.3",
     "vue": "3.4.21",
     "wot-design-uni": "^1.2.27",
-    "z-paging": "^2.7.10",
-    "jsencrypt": "^3.3.2"
+    "z-paging": "^2.7.10"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.6.1",

@@ -26,11 +26,13 @@
 </template>
 
 <script lang="ts" setup>
+import { useUserStore } from '@/store'
 import PLATFORM from '@/utils/platform'
 import pathBg1 from '@/static/images/pathBg1.png'
 import pathBg2 from '@/static/images/pathBg2.png'
 import pathBg3 from '@/static/images/pathBg3.png'
 import pathBg4 from '@/static/images/pathBg4.png'
+const userStore = useUserStore()
 defineOptions({
   name: 'Home',
 })
@@ -61,7 +63,19 @@ const routerList = ref([
 ])
 const isMp = ref(PLATFORM.isMp)
 // 测试 uni API 自动引入
-onLoad(() => {})
+onLoad(() => {
+  if (!userStore.isLogined) {
+    uni.showToast({
+      icon: 'none',
+      title: '请登录',
+    })
+    setTimeout(() => {
+      uni.navigateTo({
+        url: '/pages/login/index',
+      })
+    }, 1000)
+  }
+})
 const goUrl = (url) => {
   url && uni.navigateTo({ url, animationType: 'pop-in', animationDuration: 200 })
 }

@@ -41,5 +41,5 @@ export const getZoomLevel = (
   const lngDiff = Math.abs(ne[1] - sw[1])
   const latZoom = Math.log((mapDim[0] * 360) / latDiff / WORLD_DIM) / Math.log(2)
   const lngZoom = Math.log((mapDim[1] * 180) / lngDiff / WORLD_DIM) / Math.log(2)
-  return +Math.min(Math.min(latZoom, lngZoom), ZOOM_MAX).toFixed(0)
+  return +Math.min(Math.min(latZoom, lngZoom), ZOOM_MAX).toFixed(0) - 1
 }

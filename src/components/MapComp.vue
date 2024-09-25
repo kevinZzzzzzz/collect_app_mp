@@ -30,13 +30,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import mapBoxIconSel from '@img/mapBoxIconSel.png'
 import mapBoxIcon from '@img/mapBoxIcon.png'
 import { $apiGetDrivingPath } from '@/service/index/map'
 import { getCenterLonLat, getZoomLevel } from '@/utils/map'
 import staIcon from '@img/stationIcon.png'
 import hosIcon from '@img/hospitalIcon.png'
+import { transStatusMap } from '@/constant'
 
 defineOptions({
   name: 'MapComp',
@@ -48,6 +49,12 @@ const props = defineProps({
       return {}
     },
   },
+  tranStatus: {
+    type: Number,
+    default: () => {
+      return null
+    },
+  },
 })
 const mapCtx = ref(null)
 // 中心坐标
@@ -57,20 +64,25 @@ const scaleVal = ref(16)
 const markers = ref([]) // 标记点
 const polyline = ref([]) // 路线
 const selectBoxIdx = ref(0)
+const bloodInfoRef = ref<any>({})
 
-const getLocation = () => {
+watch(
+  () => props.bloodInfo,
+  (newVal) => {
+    bloodInfoRef.value = newVal
+    handleMap()
+  },
+)
+const getLocation = (from, to) => {
   $apiGetDrivingPath({
-    from: '39.894772,116.321668',
-    to: '39.902781,116.427171',
+    from: from.join(','),
+    to: to.join(','),
   }).then((res: any) => {
     const { result } = res
     // 计算中心点
-    const centerPoint = getCenterLonLat([39.894772, 116.321668], [39.902781, 116.427171])
+    const centerPoint = getCenterLonLat(from, to)
     // 计算缩放级别
-    const zoom = getZoomLevel([
-      [39.894772, 116.321668],
-      [39.902781, 116.427171],
-    ])
+    const zoom = getZoomLevel([from, to])
     latitude.value = centerPoint[0]
     longitude.value = centerPoint[1]
     scaleVal.value = zoom
@@ -80,18 +92,18 @@ const getLocation = () => {
       iconPath: staIcon,
       width: 24,
       height: 24,
-      latitude: 39.894772,
-      longitude: 116.321668,
+      latitude: from[0],
+      longitude: from[1],
       callout: {
-        content: '待揽收',
-        color: '#000',
+        content: transStatusMap[props.tranStatus].text,
+        color: transStatusMap[props.tranStatus].color,
         fontSize: 12,
         borderRadius: 5,
         padding: 5,
         display: 'ALWAYS',
       },
       label: {
-        content: '深圳市宝安区中心血站',
+        content: bloodInfoRef.value.outboundApplicant,
         color: '#323233',
         fontSize: 12,
         textAlign: 'left',
@@ -104,8 +116,8 @@ const getLocation = () => {
       iconPath: hosIcon,
       width: 24,
       height: 24,
-      latitude: 39.902781,
-      longitude: 116.427171,
+      latitude: to[0],
+      longitude: to[1],
       callout: {
         content: '',
         color: '#000',
@@ -115,7 +127,7 @@ const getLocation = () => {
         display: 'ALWAYS',
       },
       label: {
-        content: '中山大学附属第七医院',
+        content: bloodInfoRef.value.outboundReceiver,
         color: '#323233',
         fontSize: 12,
         textAlign: 'left',
@@ -153,9 +165,18 @@ const bloodPackages = computed(() => {
 const selectBox = (idx) => {
   selectBoxIdx.value = idx
 }
+
+const handleMap = () => {
+  const { consigneeLon, consigneeLat, deliverLon, deliverLat } = bloodInfoRef.value
+  if (consigneeLon && consigneeLat && deliverLon && deliverLat) {
+    const startLocal = [deliverLat, deliverLon]
+    const endLocal = [consigneeLat, consigneeLon]
+    getLocation(startLocal, endLocal)
+  }
+}
 onMounted(() => {
   mapCtx.value = wx.createMapContext('myMap')
-  getLocation()
+  handleMap()
 })
 </script>
 
