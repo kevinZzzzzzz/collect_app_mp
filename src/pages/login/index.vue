@@ -184,7 +184,7 @@ const login = () => {
       title: '登录成功',
     })
     setTimeout(() => {
-      uni.reLaunch({
+      uni.navigateTo({
         url: '/pages/index/index',
       })
     }, 500)
@@ -208,7 +208,7 @@ const gotoPDF = (name) => {
   //  是区分运行的环境，在小程序中可使用如下方法
   /* #ifdef MP */
   uni.downloadFile({
-    url: `./static/docs/${name}.pdf`, //文件地址
+    url: `http://192.168.120.178:9000/coldChain/src/static/docs/${name}.pdf`, //文件地址
     success: function (res) {
       var filePath = res.tempFilePath
       uni.openDocument({
