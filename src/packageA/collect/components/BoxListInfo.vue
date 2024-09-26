@@ -1,12 +1,18 @@
 <template>
   <div class="BoxListInfo">
     <div class="BoxListInfo_header">
-      <image class="BoxListInfo_header_img" src="@img/transBoxIcon.png" mode="scaleToFill" />
+      <div class="BoxListInfo_header_img">
+        <image class="BoxListInfo_header_img_ctx" src="@img/transBoxIcon.png" mode="scaleToFill" />
+        <div class="BoxListInfo_header_img_icon">
+          <img src="@img/arriveIcon.png" alt="" v-if="boxItemRef.packageStatus === '04'" />
+          <img src="@img/signIcon.png" alt="" v-else-if="boxItemRef.packageStatus === '06'" />
+        </div>
+      </div>
       <div class="BoxListInfo_header_info">
         <div class="BoxListInfo_header_info_id">{{ boxItemRef.code }}</div>
         <div class="BoxListInfo_header_info_detail">
           <span class="BoxListInfo_header_info_detail_num">
-            {{ boxItemRef.energy ? boxItemRef.energy + '%' : '' }}
+            {{ boxItemRef.energy ? boxItemRef.energy + '%' : '--%' }}
           </span>
           <image
             v-if="boxItemRef.energy >= 90"
@@ -82,7 +88,7 @@
     <div class="BoxListInfo_time">
       <p class="BoxListInfo_time_text">更新时间: {{ boxItemRef.updateTime }}</p>
       <div
-        v-if="boxItemRef.weight || showTempAndTime"
+        v-if="boxItemRef.weight && showTempAndTime"
         class="BoxListInfo_time_btn"
         @click="setTemps(boxItemRef)"
       >
@@ -170,6 +176,18 @@ const setTemps = (data) => {
       width: 27px;
       height: 27px;
       margin-right: 6px;
+      position: relative;
+      &_ctx {
+        width: 100%;
+        height: 100%;
+      }
+      &_icon {
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
     }
     &_info {
       display: flex;

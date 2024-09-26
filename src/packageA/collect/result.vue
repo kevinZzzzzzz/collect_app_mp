@@ -222,7 +222,7 @@ const confirmUAV = () => {
     let params = []
     orderPackageList.value.forEach((d) => {
       params.push({
-        transportOrderNo: outboundOrderNo.value,
+        transportOrderNo: orderDetail.value.transportOrderNo,
         transportMachineType: 'UAV',
         transportMachineCode: d.droneCode,
         packageRelationNoSet: [d.code],
@@ -230,17 +230,14 @@ const confirmUAV = () => {
     })
     $apiStartTransOrder(params).then((res: any) => {
       handleStartTransConfirm(false)
-      backHome()
+      setTimeout(() => {
+        uni.redirectTo({
+          url: `/packageC/sign/detail?outboundOrderNo=${outboundOrderNo.value}&tranStatus=1`,
+        })
+        // backHome()
+      }, 1000)
     })
   }
-  //
-  // 启运接口
-  // $apiStartTrans({
-  //   outboundOrderNo: outboundOrderNo.value,
-  //   outboundStatus: 3,
-  //   eventNoPackageArr: orderPackageList.value,
-  // }).then((res: any) => {
-  //   const { data } = res
 }
 
 /**

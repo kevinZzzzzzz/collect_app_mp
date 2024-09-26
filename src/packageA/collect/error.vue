@@ -33,10 +33,14 @@
     <div class="CollectError_block">
       <div class="CollectError_block_header">
         <p class="CollectError_block_header_text">揽件信息</p>
-        <p class="CollectError_block_header_num">{{ orderPackageList.length }}箱</p>
+        <p class="CollectError_block_header_num">{{ orderDetail.eventNoPackageArr.length }}箱</p>
       </div>
       <div class="CollectError_block_main">
-        <div class="CollectError_block_main_box" v-for="item in orderPackageList" :key="item.code">
+        <div
+          class="CollectError_block_main_box"
+          v-for="item in orderDetail.eventNoPackageArr"
+          :key="item.code"
+        >
           <image
             class="CollectError_block_main_box_img"
             src="@img/transBoxIcon.png"
@@ -100,6 +104,9 @@
 </template>
 
 <script setup lang="ts">
+import { transStatusTextMap } from '@/constant'
+import { $apiGetCollectItemDetail, $apiTransOrderException } from '@/service/index/collect'
+import { getNavigateOptions } from '@/utils'
 import { ref } from 'vue'
 defineOptions({
   name: 'CollectError',
@@ -128,10 +135,9 @@ const errorTypeVal = ref({
   text: '',
 }) // 异常类型
 const errorConfirm = ref(false) // 异常确认()
-const orderPackageList = computed(() => {
-  // 揽件信息
-  return orderDetail.value?.bloodPackages || []
-})
+const outboundOrderNo = ref({}) // 交接单号
+const tranStatus = ref(null) // 交接单状态
+
 /**
  * 选择异常
  * @param e
@@ -148,12 +154,39 @@ const changeRadio = (e) => {
  */
 const confirmError = (flag, isSubmit?: boolean) => {
   errorConfirm.value = flag
+  // if (isSubmit) {
+  //   const params = {
+  //     transportOrderNo: orderDetail.value.transportOrderNo
+  //   }
+  //   $apiTransOrderException
+  // }
 }
 onMounted(() => {
-  import('./detail.json').then(({ default: res }) => {
+  const options: any = getCurrentInstance()
+  outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
+  tranStatus.value = getNavigateOptions(options, 'tranStatus') || ''
+
+  $apiGetCollectItemDetail({
+    outboundOrderNo: outboundOrderNo.value,
+    outboundStatus: tranStatus.value,
+  }).then((res: any) => {
     const { data } = res
+    if (data) {
+      const arr = []
+      if (data.eventNoPackageMap) {
+        Object.keys(data.eventNoPackageMap).forEach((item, idx) => {
+          data.eventNoPackageMap[item].forEach((d) => {
+            arr.push({
+              weight: null,
+              eventNo: item,
+              ...d,
+            })
+          })
+        })
+      }
+      data.eventNoPackageArr = arr // 箱子信息列表
+    }
     orderDetail.value = data
-    console.log(orderDetail.value, 123123)
   })
 })
 </script>

@@ -55,72 +55,6 @@
       </div>
     </div>
   </div>
-  <!-- <wd-popup
-    v-model="startTransConfirm"
-    position="center"
-    custom-style="border-radius: 10px"
-    @close="handleStartTransConfirm(false)"
-  >
-    <div class="startTransBlock">
-      <div class="startTransBlock_header">
-        <div class="startTransBlock_header_text">请选择</div>
-        <div class="startTransBlock_header_cancel" @click="handleStartTransConfirm(false)">
-          取消
-        </div>
-      </div>
-      <div class="startTransBlock_content">
-        <div
-          class="startTransBlock_content_item"
-          v-for="(item, idx) in orderPackageList"
-          :key="item.code"
-        >
-          <div class="startTransBlock_content_item_top">
-            <image
-              class="startTransBlock_content_item_top_img"
-              src="@img/transBoxIcon.png"
-              mode="scaleToFill"
-            />
-            <p class="startTransBlock_content_item_top_text">
-              {{ item.code }}
-            </p>
-          </div>
-          <div class="startTransBlock_content_item_line">
-            <div class="startTransBlock_content_item_line_label">无人机编号:</div>
-            <div
-              class="startTransBlock_content_item_line_value"
-              @click="openUAVSelPopup(item.droneCode, idx)"
-            >
-              <p class="startTransBlock_content_item_line_value_text">
-                {{ item.droneCode || '请选择' }}
-              </p>
-              <wd-icon name="arrow-right" size="16px"></wd-icon>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="startTransBlock_bottom">
-        <div class="startTransBlock_bottom_btn">
-          <div class="startTransBlock_bottom_btn_text">确认启运</div>
-        </div>
-      </div>
-    </div>
-  </wd-popup> -->
-  <!-- 无人机选择弹窗 -->
-  <!-- <wd-popup
-    v-model="showUAVSelectPopup"
-    position="bottom"
-    custom-style="padding: 30px 40px;"
-    @close="closeUAVSelPopup"
-  >
-    <div class="UAVSelectPopup">
-      <div class="UAVSelectPopup_header">
-        <div class="UAVSelectPopup_header_left" @click="closeUAVSelPopup">取消</div>
-        <div class="UAVSelectPopup_header_center">无人机编号</div>
-        <div class="UAVSelectPopup_header_right" @click="makeSureUAV">确认</div>
-      </div>
-      <wd-picker-view :columns="columns" v-model="UAVSelectPopupValue" />
-    </div>
-  </wd-popup> -->
 
   <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
     <BoxTemp
@@ -152,54 +86,9 @@ const outboundOrderNo = ref('') // 交接单号
 const weightMap = ref('') // 重量映射表
 const orderDetail = ref<any>({}) // 交接单详情
 
-const showUAVSelectPopup = ref(false) // 打开选择弹窗
-const UAVSelectPopupValue = ref('') // 选择弹窗选中值
-const UAVSelectPopupIdx = ref(null) // 选择无人机操作索引
-const columns = ref(['选项1', '选项2', '选项3', '选项4', '选项5', '选项6', '选项7'])
-const startTransConfirm = ref(false) // 启运确认()
 const orderPackageList = ref([]) // 揽件信息
 const showTempBox = ref(false) // 展示温度曲线弹窗
 const tempBoxList = ref([]) // 温度曲线数据
-
-/**
- * 确认是否启运
- * @param flag
- */
-// const handleStartTransConfirm = (flag) => {
-//   startTransConfirm.value = flag
-// }
-/**
- * 开始启运
- *
- */
-// const startTrans = () => {
-//   handleStartTransConfirm(true)
-// }
-/**
- * 打开选择无人机编号弹窗
- * @param code 无人机编号
- * @param idx 操作索引
- */
-// const openUAVSelPopup = (code, idx) => {
-//   showUAVSelectPopup.value = true
-//   UAVSelectPopupValue.value = code || columns.value[0] || ''
-//   UAVSelectPopupIdx.value = idx
-// }
-/**
- * 关闭选择无人机编号弹窗
- */
-// const closeUAVSelPopup = () => {
-//   showUAVSelectPopup.value = false
-//   UAVSelectPopupValue.value = ''
-// }
-
-/**
- * 确认选择无人机编号
- */
-// const makeSureUAV = () => {
-//   orderPackageList.value[UAVSelectPopupIdx.value].droneCode = UAVSelectPopupValue.value
-//   closeUAVSelPopup()
-// }
 
 /**
  * 温度曲线

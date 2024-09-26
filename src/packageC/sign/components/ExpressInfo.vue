@@ -17,7 +17,9 @@
           :class="[
             'ExpressInfo_precess_item_circle',
             !item.index && 'ExpressInfo_precess_item_circle-first',
-            +tranStatus === 7 && !item.index && 'ExpressInfo_precess_item_circle-firstError',
+            +bloodInfo.transportStatus === 7 &&
+              !item.index &&
+              'ExpressInfo_precess_item_circle-firstError',
             precessList.length &&
               item.index == precessList.length - 1 &&
               'ExpressInfo_precess_item_circle-last',
@@ -27,7 +29,11 @@
         </div>
         <p
           :style="{
-            color: !item.index ? (+tranStatus === 7 ? '#EE0A24' : '#1890ff') : 'none',
+            color: !item.index
+              ? +bloodInfo.transportStatus === 7
+                ? '#EE0A24'
+                : '#1890ff'
+              : 'none',
           }"
           class="ExpressInfo_precess_item_step"
         >
@@ -36,7 +42,7 @@
         <div
           class="ExpressInfo_precess_item_info"
           :style="{
-            color: !item.index && +tranStatus === 7 ? '#EE0A24' : 'none',
+            color: !item.index && +bloodInfo.transportStatus === 7 ? '#EE0A24' : 'none',
           }"
         >
           {{ item.operateType }}: {{ item.operator }}
@@ -57,12 +63,6 @@ const props = defineProps({
     type: Object,
     default: () => {
       return {}
-    },
-  },
-  tranStatus: {
-    type: Number,
-    default: () => {
-      return null
     },
   },
 })

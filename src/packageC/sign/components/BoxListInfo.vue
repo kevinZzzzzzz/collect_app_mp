@@ -1,25 +1,69 @@
 <template>
   <div class="BoxListInfo">
     <div class="BoxListInfo_header">
-      <image class="BoxListInfo_header_img" src="@img/transBoxIcon.png" mode="scaleToFill" />
+      <div class="BoxListInfo_header_img">
+        <image class="BoxListInfo_header_img_ctx" src="@img/transBoxIcon.png" mode="scaleToFill" />
+        <div class="BoxListInfo_header_img_icon">
+          <img src="@img/arriveIcon.png" alt="" v-if="boxItemRef.packageStatus === '04'" />
+          <img src="@img/signIcon.png" alt="" v-else-if="boxItemRef.packageStatus === '06'" />
+        </div>
+      </div>
       <div class="BoxListInfo_header_info">
         <div class="BoxListInfo_header_info_id">{{ boxItemRef.code }}</div>
         <div class="BoxListInfo_header_info_detail">
-          <span class="BoxListInfo_header_info_detail_num">86%</span>
+          <span class="BoxListInfo_header_info_detail_num">
+            {{ boxItemRef.energy ? boxItemRef.energy + '%' : '--%' }}
+          </span>
           <image
+            v-if="boxItemRef.energy >= 90"
             class="BoxListInfo_header_info_detail_img"
-            src="@img/electricIcon.png"
+            src="@img/powerH.png"
             mode="scaleToFill"
           />
           <image
+            v-else-if="boxItemRef.energy < 90 && boxItemRef.energy > 20"
             class="BoxListInfo_header_info_detail_img"
-            src="@img/wifiIcon.png"
+            src="@img/powerM.png"
+            mode="scaleToFill"
+          />
+          <image
+            v-else
+            class="BoxListInfo_header_info_detail_img"
+            src="@img/powerL.png"
+            mode="scaleToFill"
+          />
+          <image
+            v-if="boxItemRef.signal && boxItemRef.signal >= -35"
+            class="BoxListInfo_header_info_detail_img"
+            src="@img/wifiH.png"
+            mode="scaleToFill"
+          />
+          <image
+            v-if="!boxItemRef.signal || boxItemRef.signal < -90"
+            class="BoxListInfo_header_info_detail_img"
+            src="@img/wifiL.png"
+            mode="scaleToFill"
+          />
+          <image
+            v-else-if="boxItemRef.signal && boxItemRef.signal < -35 && boxItemRef.signal >= -90"
+            class="BoxListInfo_header_info_detail_img"
+            src="@img/wifiM.png"
             mode="scaleToFill"
           />
         </div>
       </div>
-      <div v-if="boxItemRef.weight" class="BoxListInfo_header_editWeight">
+      <div
+        v-if="boxItemRef.weight"
+        class="BoxListInfo_header_editWeight"
+        @click="setWeight(boxItemRef)"
+      >
         <p class="BoxListInfo_header_editWeight_text">{{ boxItemRef.weight }}KG</p>
+        <image
+          v-if="!noEditWeight"
+          class="BoxListInfo_header_editWeight_img"
+          src="@img/editIcon.png"
+          mode="scaleToFill"
+        />
       </div>
     </div>
     <ul class="BoxListInfo_list">
@@ -51,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref } from 'vue'
 defineOptions({
   name: 'BoxListInfo', // 箱子信息组件
 })
@@ -73,7 +117,7 @@ const props = defineProps({
     default: false,
   },
 })
-const emit = defineEmits(['setTemps'])
+const emit = defineEmits(['setWeight', 'setTemps'])
 
 const boxItemRef = ref<any>(props.boxItem)
 watch(
@@ -83,9 +127,9 @@ watch(
   },
 )
 const bloodBagGroupList = computed(() => {
-  const arr: any = []
+  const arr = []
   if (boxItemRef.value.bloodBagGroupMap) {
-    Object.values(boxItemRef.value.bloodBagGroupMap).forEach((item: any) => {
+    Object.values(boxItemRef.value.bloodBagGroupMap).forEach((item: Array<any>) => {
       arr.push(...item)
     })
   }
@@ -104,7 +148,12 @@ const tempData = computed(() => {
   return tempL && tempR ? `${tempL}~${tempR}°C` : tempL ? `${tempL}°C` : tempR ? `${tempR}°C` : '--'
 })
 
-// 查看温度曲线
+// 单个称重
+const setWeight = (data) => {
+  if (props.noEditWeight) return false
+  emit('setWeight', data)
+}
+// 单个温度显示
 const setTemps = (data) => {
   emit('setTemps', data)
 }
@@ -123,6 +172,18 @@ const setTemps = (data) => {
       width: 27px;
       height: 27px;
       margin-right: 6px;
+      position: relative;
+      &_ctx {
+        width: 100%;
+        height: 100%;
+      }
+      &_icon {
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
     }
     &_info {
       display: flex;
@@ -142,8 +203,8 @@ const setTemps = (data) => {
           margin: 0 3px;
         }
         &_img {
-          width: 12px;
-          height: 7px;
+          width: 14px;
+          height: 8px;
           margin: 0 3px;
         }
       }

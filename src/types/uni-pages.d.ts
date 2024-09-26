@@ -16,9 +16,7 @@ interface NavigateToOptions {
        "/packageA/collect/index" |
        "/packageA/collect/result" |
        "/packageB/notified/index" |
-       "/packageB/protocol/index" |
        "/packageC/sign/detail" |
-       "/packageC/sign/error" |
        "/packageC/sign/index" |
        "/packageC/sign/result";
 }

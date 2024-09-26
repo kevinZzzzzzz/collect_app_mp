@@ -10,7 +10,7 @@
       </div>
 
       <div class="CollectDetail_detail_block">
-        <ExpressInfo :tranStatus="tranStatus" :bloodInfo="orderDetail" />
+        <ExpressInfo :bloodInfo="orderDetail" />
       </div>
 
       <div class="CollectDetail_detail_block">
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="CollectDetail_bottom" :style="{ zIndex: pageScroll ? 0 : 3 }">
-      <div class="CollectDetail_bottom_ctx" v-if="+tranStatus === 1">
+      <div class="CollectDetail_bottom_ctx" v-if="[1, 2].includes(orderDetail.transportStatus)">
         <div class="CollectDetail_bottom_ctx_left" @click="signPartOpen()">
           <p class="CollectDetail_bottom_ctx_left_text">部分签收</p>
         </div>
@@ -48,13 +48,13 @@
       <div class="partSignBox_content">
         <div class="partSignBox_content_boxItem" v-for="(item, idx) in partSignList" :key="idx">
           <!-- 运输编号单组件 -->
-          <div class="partSignBox_content_boxItem_header">
+          <div class="partSignBox_content_boxItem_header" v-if="item.transportMachineNo">
             <image
               class="partSignBox_content_boxItem_header_img"
               src="@img/uavUnSel.png"
               mode="scaleToFill"
             />
-            <div class="partSignBox_content_boxItem_header_text">粤B XY008</div>
+            <div class="partSignBox_content_boxItem_header_text">{{ item.transportMachineNo }}</div>
           </div>
           <BoxListInfo noEditWeight :boxItem="item" />
           <div class="partSignBox_content_btm">
@@ -98,10 +98,14 @@ import BoxList from './components/BoxList.vue'
 import { getNavigateOptions } from '@/utils/index'
 import { globalSettingStore } from '@/store/global'
 import { storeToRefs } from 'pinia'
-import { $apiAddTransOrder, $apiGetCollectItemDetail } from '@/service/index/collect'
+import {
+  $apiAddTransOrder,
+  $apiGetCollectItemDetail,
+  $apiSignTransOrder,
+} from '@/service/index/collect'
 import { isMp } from '@/utils/platform'
 import BoxTemp from './components/BoxTemp.vue'
-import { transStatusMap } from '@/constant'
+import { transStatusMap, transStatusTextMap } from '@/constant'
 import { useMessage } from 'wot-design-uni'
 const message = useMessage()
 
@@ -124,7 +128,10 @@ const tempBoxList = ref([]) // 温度曲线数据
  */
 const signPartOpen = () => {
   partSignBox.value = true
-  partSignList.value = orderDetail.value.eventNoPackageArr
+  // 过滤掉已经签收的数据
+  partSignList.value = orderDetail.value.eventNoPackageArr.filter((d) => {
+    return d.packageStatus != '06'
+  })
 }
 /**
  * 全部签收
@@ -136,11 +143,18 @@ const signAll = () => {
       title: '确定签收',
     })
     .then(() => {
-      console.log('点击了确定按钮')
-      signSuccess()
-    })
-    .catch(() => {
-      console.log('点击了取消按钮')
+      const params = {
+        transportOrderNo: orderDetail.value.transportOrderNo,
+        // 先过滤掉已签收的
+        packageRelationNoSet: orderDetail.value.eventNoPackageArr
+          .filter((d) => {
+            return d.packageStatus != '06'
+          })
+          ?.map((e) => e.code),
+      }
+      $apiSignTransOrder(params).then(() => {
+        signSuccess(2)
+      })
     })
 }
 /**
@@ -153,7 +167,6 @@ const closePartSignBox = () => {
  * 部分签收-确定
  */
 const signPart = (obj) => {
-  console.log(obj, '123123')
   message
     .confirm({
       msg: `是否确定签收交接单${orderDetail.value.outboundOrderNo}的${obj.code}号箱子`,
@@ -161,10 +174,19 @@ const signPart = (obj) => {
     })
     .then(() => {
       console.log('点击了确定按钮')
-      signSuccess()
-    })
-    .catch(() => {
-      console.log('点击了取消按钮')
+      const params = {
+        transportOrderNo: orderDetail.value.transportOrderNo,
+        packageRelationNoSet: [obj.code],
+      }
+      $apiSignTransOrder(params).then(() => {
+        partSignBox.value = false
+        if (partSignList.value.length === 1) {
+          // 单剩一单
+          signSuccess(2)
+        } else {
+          signSuccess(1)
+        }
+      })
     })
 }
 /**
@@ -185,11 +207,20 @@ const closeTempBox = () => {
 }
 /**
  * 签收完成
+ * @params type 1 部分 2 全部
  */
-const signSuccess = () => {
-  uni.navigateTo({
-    url: `/packageC/sign/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}`,
-  })
+const signSuccess = (type) => {
+  setTimeout(() => {
+    if (type == 2) {
+      uni.navigateTo({
+        url: `/packageC/sign/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}`,
+      })
+    } else {
+      uni.redirectTo({
+        url: `/packageC/sign/detail?outboundOrderNo=${orderDetail.value.outboundOrderNo}&tranStatus=${tranStatus.value}`,
+      })
+    }
+  }, 1000)
 }
 /**
  * 返回首页
@@ -201,9 +232,8 @@ onMounted(() => {
   const options: any = getCurrentInstance()
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
   tranStatus.value = getNavigateOptions(options, 'tranStatus') || ''
-  const showWeight = getNavigateOptions(options, 'showWeight')
   uni.setNavigationBarTitle({
-    title: transStatusMap[tranStatus.value].text,
+    title: transStatusTextMap[tranStatus.value],
   })
   $apiGetCollectItemDetail({
     outboundOrderNo: outboundOrderNo.value,
@@ -224,98 +254,7 @@ onMounted(() => {
       data.eventNoPackageArr = arr // 箱子信息列表
     }
     orderDetail.value = data
-    // console.log(orderDetail.value, 'orderDetail0000000')
-    if (+showWeight) {
-      showWeighBox.value = true
-      weighBoxInfo.value = [orderDetail.value.eventNoPackageArr[0]] || []
-    }
   })
-})
-
-const showWeighBox = ref(false) // 展示称重弹窗
-const weighBoxInfo = ref([]) // 称重数据
-/**
- * 打开称重弹窗
- */
-const weighBox = (data) => {
-  weighBoxInfo.value = (data && [data]) || []
-  showWeighBox.value = true // 打开称重弹窗
-  store.changePageScroll(true)
-}
-/**
- * 关闭称重弹窗，并且支持保存更新数据
- */
-const closeWeighBox = (data) => {
-  showWeighBox.value = false
-  weighBoxInfo.value = []
-  store.changePageScroll(false)
-
-  if (data) {
-    const temp = orderDetail.value.eventNoPackageArr
-    temp.forEach((e, idx) => {
-      data.forEach((d) => {
-        if (d.code == e.code) {
-          orderDetail.value.eventNoPackageArr[idx] = d
-        }
-      })
-    })
-    // console.log(orderDetail.value.eventNoPackageArr, 'orderDetail.value00000')
-  }
-}
-/**
- * 确定签收
- */
-const sureCollect = () => {
-  if (notCollect.value) return
-  console.log(orderDetail.value)
-  // let weightMap = {}
-  // orderDetail.value.eventNoPackageArr.forEach((e) => {
-  //   weightMap[e.code] = e.weight
-  // })
-  let params = {
-    outboundOrderNo: orderDetail.value.outboundOrderNo,
-    OrderType: 2,
-    transportPackages: [],
-  }
-  orderDetail.value.eventNoPackageArr.forEach((e) => {
-    let obj = {
-      packageRelationNo: e.code,
-      weight: e.weight,
-      cargoList: [],
-    }
-    if (e.bloodBagGroupMap) {
-      Object.values(e.bloodBagGroupMap).forEach((item: Array<any>) => {
-        item.forEach((ele) => {
-          obj.cargoList.push({
-            cargoType: 1,
-            cargoRelationNo: ele.bloodBagId,
-          })
-        })
-      })
-    }
-    params.transportPackages.push(obj)
-  })
-  $apiAddTransOrder(params).then((res: any) => {
-    console.log(res, 'res')
-    // uni.navigateTo({
-    //   url: `/packageA/collect/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}&weightMap=${JSON.stringify(weightMap)}`,
-    // })
-  })
-}
-/**
- * 跳转到异常页面
- */
-const gotoError = () => {
-  uni.navigateTo({
-    url: '/packageA/collect/error',
-  })
-}
-// 是否可签收
-const notCollect = computed(() => {
-  return (
-    orderDetail.value?.eventNoPackageArr &&
-    orderDetail.value?.eventNoPackageArr.some((e) => !e.weight)
-  )
 })
 </script>
 

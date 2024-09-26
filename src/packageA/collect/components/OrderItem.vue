@@ -8,9 +8,9 @@
       <div class="OrderItem_header_right">
         <p
           class="OrderItem_header_right_text"
-          :style="{ color: transStatusMap[props.transportStatus].color }"
+          :style="{ color: transStatusMap[+orderItem.transportStatus].color }"
         >
-          {{ transStatusMap[props.transportStatus].text }}
+          {{ transStatusMap[+orderItem.transportStatus].text }}
         </p>
       </div>
     </div>
@@ -24,19 +24,24 @@
         <!-- 箱子信息组件 -->
         <BoxListInfo :boxItem="item" noEditWeight />
       </div>
-      <div :class="['OrderItem_main_btm', +transportStatus === 9 && 'OrderItem_main_btm-1line']">
+      <div
+        :class="[
+          'OrderItem_main_btm',
+          +orderItem.transportStatus === 7 && 'OrderItem_main_btm-1line',
+        ]"
+      >
         <div class="OrderItem_main_btm_btn OrderItem_main_btm_btn-left" @click="setTemp">
           温度曲线
         </div>
         <div
-          v-if="+transportStatus === 2"
+          v-if="+orderItem.transportStatus === 6"
           class="OrderItem_main_btm_btn OrderItem_main_btm_btn-right"
           @click="setWeigh"
         >
           称重
         </div>
         <div
-          v-if="+transportStatus === 3"
+          v-if="![6, 7].includes(+orderItem.transportStatus)"
           class="OrderItem_main_btm_btn OrderItem_main_btm_btn-right"
           @click="goDetail"
         >
@@ -137,9 +142,16 @@ const closeTempBox = () => {
  * 跳转详情
  */
 const goDetail = () => {
-  uni.navigateTo({
-    url: `/packageA/collect/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tranStatus=${props.transportStatus}`,
-  })
+  // 需要签收
+  if ([1, 2].includes(props.orderItem.transportStatus)) {
+    uni.navigateTo({
+      url: `/packageC/sign/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tranStatus=${props.transportStatus}`,
+    })
+  } else {
+    uni.navigateTo({
+      url: `/packageA/collect/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tranStatus=${props.transportStatus}`,
+    })
+  }
 }
 </script>
 

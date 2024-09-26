@@ -92,7 +92,7 @@ export default ({ command, mode }) => {
 
       ViteRestart({
         // 通过这个插件，在修改vite.config.js文件则不需要重新运行也生效配置
-        restart: ['vite.config.js'],
+        restart: ['vite.config.js', 'src/utils/http.ts'],
       }),
       // h5环境增加 BUILD_TIME 和 BUILD_BRANCH
       UNI_PLATFORM === 'h5' && {

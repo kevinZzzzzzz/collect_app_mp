@@ -3,7 +3,7 @@ import { useUserStore } from '@/store/user'
 import PLATFORM from '@/utils/platform'
 
 const successCode = [0, 200] // 成功的返回code
-const failCode = [1, 101, 500] // 失败的返回code
+const failCode = [1, 101, -100, 500] // 失败的返回code
 const loginFailCode = [403] // 登录失效
 
 const loadingMsg = '请稍候...'
@@ -32,14 +32,15 @@ export const http = <T>(options: any) => {
         // 状态码 2xx，参考 axios 的设计
         if (res.statusCode === 200) {
           // 2.1 提取核心数据 res.data
-          const { code, status } = res.data as any
+          const { code, status, msg } = res.data as any
           if (successCode.includes(+code) || successCode.includes(+status)) {
             resolve(res.data as IResData<T>)
           } else if (failCode.includes(+code) || failCode.includes(+status)) {
             options.showToast &&
+              msg &&
               uni.showToast({
                 icon: 'error',
-                title: res.data.msg || '请求失败',
+                title: msg || '请求失败',
               })
             reject(res)
           } else if (loginFailCode.includes(+code)) {

@@ -8,7 +8,7 @@
       <image class="BoxWeigh_item_img" src="@img/transBoxIcon.png" mode="scaleToFill" />
       <p class="BoxWeigh_item_text">{{ item.code }}</p>
       <div class="BoxWeigh_item_ipt">
-        <wd-input type="number" no-border v-model="item.weight" placeholder="请输入" />
+        <wd-input no-border v-model="item.weight" placeholder="请输入" />
       </div>
       <p class="BoxWeigh_item_text">KG</p>
     </div>

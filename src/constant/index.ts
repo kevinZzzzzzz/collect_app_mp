@@ -1,31 +1,51 @@
 // 运输单状态-值映射
 export const transStatusValueMap = {
-  // 运输中: 1,
+  运输中: 1,
   待揽收: 2,
   已揽收: 3,
   待签收: 4,
   已签收: 5,
   异常: 9,
 }
+export const transStatusTextMap = {
+  1: '运输中',
+  2: '待揽收',
+  3: '已揽收',
+  4: '待签收',
+  5: '已签收',
+  9: '异常',
+}
 // 运输单状态
 export const transStatusMap = {
-  2: {
-    color: '#4BBBA1',
-    text: '待揽收',
-  },
-  3: {
+  0: {
     color: '#809AF9',
-    text: '待启运', // 已揽收
+    text: '待启运',
   },
-  4: {
+  1: {
+    color: '#FAAB0C',
+    text: '运输中',
+  },
+  2: {
     color: '#1890FF',
     text: '待签收',
   },
-  5: {
+  3: {
+    color: '#323233',
+    text: '已取消',
+  },
+  4: {
     color: '#323233',
     text: '已签收',
   },
-  9: {
+  5: {
+    color: '#323233',
+    text: '已拒收',
+  },
+  6: {
+    color: '#4BBBA1',
+    text: '未揽收',
+  },
+  7: {
     color: '#FF0000',
     text: '异常',
   },

@@ -14,7 +14,7 @@ const setProxy = (url: string): string => {
   if (url.includes('/uaa')) {
     return uaaUrl + '/uaaApi' + url
   }
-  return baseUrl + url
+  return uaaUrl + '/api' + url
 }
 /*
   获取公钥

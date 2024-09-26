@@ -8,9 +8,9 @@
       <div class="OrderItem_header_right">
         <p
           class="OrderItem_header_right_text"
-          :style="{ color: transStatusMap[props.transportStatus].color }"
+          :style="{ color: transStatusMap[+orderItem.transportStatus].color }"
         >
-          {{ transStatusMap[props.transportStatus].text }}
+          {{ transStatusMap[+orderItem.transportStatus].text }}
         </p>
       </div>
     </div>
@@ -85,20 +85,6 @@ const weighBoxList = ref([]) // 称重数据
 const showTempBox = ref(false) // 展示温度曲线弹窗
 const tempBoxList = ref([]) // 温度曲线数据
 
-// const transStatusValue = computed(() => {
-//   return transStatusValueMap[props.transportStatus] || ''
-// })
-/**
- * 称重
- */
-const setWeigh = () => {
-  uni.navigateTo({
-    url: `/packageC/sign/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tranStatus=${props.transportStatus}&showWeight=1`,
-  })
-  // weighBoxList.value = props.orderItem.bloodPackages || []
-  // showWeighBox.value = true // 打开称重弹窗
-  // store.changePageScroll(true)
-}
 // 关闭称重弹窗
 const closeWeighBox = () => {
   showWeighBox.value = false
@@ -126,9 +112,15 @@ const closeTempBox = () => {
  * 跳转详情
  */
 const goDetail = () => {
-  uni.navigateTo({
-    url: `/packageC/sign/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tranStatus=${props.transportStatus}`,
-  })
+  if ([1, 2].includes(props.orderItem.transportStatus)) {
+    uni.navigateTo({
+      url: `/packageC/sign/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tranStatus=${props.transportStatus}`,
+    })
+  } else {
+    uni.navigateTo({
+      url: `/packageA/collect/detail?outboundOrderNo=${props.orderItem.outboundOrderNo}&tranStatus=${props.transportStatus}`,
+    })
+  }
 }
 </script>
 

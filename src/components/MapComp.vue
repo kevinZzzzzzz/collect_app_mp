@@ -49,12 +49,6 @@ const props = defineProps({
       return {}
     },
   },
-  tranStatus: {
-    type: Number,
-    default: () => {
-      return null
-    },
-  },
 })
 const mapCtx = ref(null)
 // 中心坐标
@@ -70,6 +64,7 @@ watch(
   () => props.bloodInfo,
   (newVal) => {
     bloodInfoRef.value = newVal
+    console.log(bloodInfoRef.value, newVal, 'newValnewVal00000000000')
     handleMap()
   },
 )
@@ -95,8 +90,8 @@ const getLocation = (from, to) => {
       latitude: from[0],
       longitude: from[1],
       callout: {
-        content: transStatusMap[props.tranStatus].text,
-        color: transStatusMap[props.tranStatus].color,
+        content: transStatusMap[props.bloodInfo.transportStatus].text,
+        color: transStatusMap[props.bloodInfo.transportStatus].color,
         fontSize: 12,
         borderRadius: 5,
         padding: 5,

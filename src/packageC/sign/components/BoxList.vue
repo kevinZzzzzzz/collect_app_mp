@@ -12,15 +12,20 @@
           :key="idx"
         >
           <!-- 运输编号单组件 -->
-          <div class="Waybill_main_boxItem_header">
+          <div class="Waybill_main_boxItem_header" v-if="item.transportMachineNo">
             <image
               class="Waybill_main_boxItem_header_img"
               src="@img/uavUnSel.png"
               mode="scaleToFill"
             />
-            <div class="Waybill_main_boxItem_header_text">粤B XY008</div>
+            <div class="Waybill_main_boxItem_header_text">{{ item.transportMachineNo }}</div>
           </div>
-          <BoxListInfo showTempAndTime :boxItem="item" @setTemps="setTemp($event)" />
+          <BoxListInfo
+            :showTempAndTime="showTempAndTime"
+            :noEditWeight="noEditWeight"
+            :boxItem="item"
+            @setTemps="setTemp($event)"
+          />
         </div>
       </div>
     </div>

@@ -65,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+import { onShow } from '@dcloudio/uni-app'
 import { onMounted, ref } from 'vue'
 import { dayjs } from 'wot-design-uni'
 import BloodPageSearch from '@/components/BloodPageSearch.vue'
@@ -124,7 +125,6 @@ const getData = () => {
           obj.data.length && arrTemp.push(obj)
         })
         collectData.value = arrTemp
-        console.log(arrTemp, 111)
       }
     })
     .finally(() => {
@@ -167,7 +167,7 @@ const goNotified = (data: any) => {
     url: `/packageB/notified/index?notifiedType=揽收`,
   })
 }
-onMounted(() => {
+onShow(() => {
   getData()
 })
 </script>

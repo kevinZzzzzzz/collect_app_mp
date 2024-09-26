@@ -208,7 +208,7 @@ const gotoPDF = (name) => {
   //  是区分运行的环境，在小程序中可使用如下方法
   /* #ifdef MP */
   uni.downloadFile({
-    url: `http://192.168.120.178:9000/coldChain/src/static/docs/${name}.pdf`, //文件地址
+    url: `${import.meta.env.VITE_SERVER_UAAURL}/docs/${name}.pdf`, //文件地址
     success: function (res) {
       var filePath = res.tempFilePath
       uni.openDocument({
@@ -222,9 +222,10 @@ const gotoPDF = (name) => {
   })
   /* #endif */
   /* #ifdef H5 */ //这里是H5中的写法
-  uni.navigateTo({
-    url: `/packageB/protocol/index?protocolName=${name}`,
-  })
+  // uni.navigateTo({
+  //   url: `/packageB/protocol/index?protocolName=${name}`,
+  // })
+  window.open(`${import.meta.env.VITE_SERVER_UAAURL}/docs/${name}.pdf`)
   /* #endif */
 }
 onMounted(() => {

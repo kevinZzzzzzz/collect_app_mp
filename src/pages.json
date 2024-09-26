@@ -129,10 +129,6 @@
           "style": {
             "navigationBarTitleText": "消息通知"
           }
-        },
-        {
-          "path": "protocol/index",
-          "type": "page"
         }
       ]
     },
@@ -142,13 +138,6 @@
         {
           "path": "sign/detail",
           "type": "page"
-        },
-        {
-          "path": "sign/error",
-          "type": "page",
-          "style": {
-            "navigationBarTitleText": "揽收异常"
-          }
         },
         {
           "path": "sign/index",
