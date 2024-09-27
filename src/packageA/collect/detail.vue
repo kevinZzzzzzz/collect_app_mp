@@ -19,10 +19,11 @@
       </div>
 
       <div class="CollectDetail_detail_block">
+        <!-- 详情界面只有在待揽收状态才能修改称重，其余情况仅显示温度曲线 -->
         <BoxList
           :bloodInfo="orderDetail"
           :noEditWeight="+orderDetail.transportStatus !== 6"
-          showTempAndTime
+          :showTempAndTime="+orderDetail.transportStatus !== 6"
           @weighBox="weighBox($event)"
           @tempBox="openTempBox($event)"
         />
@@ -280,6 +281,7 @@ const backHome = () => {
  */
 const handleStartTransConfirm = (flag) => {
   startTransConfirm.value = flag
+  store.changePageScroll(flag)
 }
 /**
  * 开始启运
@@ -295,6 +297,7 @@ const startTrans = () => {
  */
 const openUAVSelPopup = (code, idx) => {
   showUAVSelectPopup.value = true
+  store.changePageScroll(true)
   UAVSelectPopupValue.value = code || UAVColumnsList.value[0] || ''
   UAVSelectPopupIdx.value = idx
 }
@@ -304,6 +307,7 @@ const openUAVSelPopup = (code, idx) => {
 const closeUAVSelPopup = () => {
   showUAVSelectPopup.value = false
   UAVSelectPopupValue.value = ''
+  store.changePageScroll(false)
 }
 
 /**

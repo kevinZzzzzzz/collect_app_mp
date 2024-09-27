@@ -19,6 +19,7 @@ export const http = <T>(options: any) => {
   options.showLoading && uni.showLoading({ title: loadingMsg })
   // 1. 返回 Promise 对象
   return new Promise<IResData<T>>((resolve, reject) => {
+    console.info(options, 'options00000000000')
     uni.request({
       ...options,
       token: userStore.userToken,

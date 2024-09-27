@@ -189,6 +189,7 @@ const startTrans = () => {
  */
 const openUAVSelPopup = (code, idx) => {
   showUAVSelectPopup.value = true
+  store.changePageScroll(true)
   UAVSelectPopupValue.value = code || UAVColumnsList.value[0] || ''
   UAVSelectPopupIdx.value = idx
 }
@@ -197,6 +198,7 @@ const openUAVSelPopup = (code, idx) => {
  */
 const closeUAVSelPopup = () => {
   showUAVSelectPopup.value = false
+  store.changePageScroll(false)
   UAVSelectPopupValue.value = ''
 }
 

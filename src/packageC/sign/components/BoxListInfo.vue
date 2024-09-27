@@ -33,37 +33,34 @@
             mode="scaleToFill"
           />
           <image
-            v-if="boxItemRef.signal && boxItemRef.signal >= -35"
+            v-if="boxItemRef.signal"
             class="BoxListInfo_header_info_detail_img"
             src="@img/wifiH.png"
             mode="scaleToFill"
           />
           <image
-            v-if="!boxItemRef.signal || boxItemRef.signal < -90"
+            v-else
             class="BoxListInfo_header_info_detail_img"
             src="@img/wifiL.png"
             mode="scaleToFill"
           />
-          <image
+          <!-- <image
             v-else-if="boxItemRef.signal && boxItemRef.signal < -35 && boxItemRef.signal >= -90"
             class="BoxListInfo_header_info_detail_img"
             src="@img/wifiM.png"
             mode="scaleToFill"
-          />
+          /> -->
         </div>
       </div>
-      <div
-        v-if="boxItemRef.weight"
-        class="BoxListInfo_header_editWeight"
-        @click="setWeight(boxItemRef)"
-      >
+      <div v-if="boxItemRef.weight" class="BoxListInfo_header_editWeight">
+        <!-- @click="setWeight(boxItemRef)" -->
         <p class="BoxListInfo_header_editWeight_text">{{ boxItemRef.weight }}KG</p>
-        <image
+        <!-- <image
           v-if="!noEditWeight"
           class="BoxListInfo_header_editWeight_img"
           src="@img/editIcon.png"
           mode="scaleToFill"
-        />
+        /> -->
       </div>
     </div>
     <ul class="BoxListInfo_list">
@@ -148,11 +145,11 @@ const tempData = computed(() => {
   return tempL && tempR ? `${tempL}~${tempR}°C` : tempL ? `${tempL}°C` : tempR ? `${tempR}°C` : '--'
 })
 
-// 单个称重
-const setWeight = (data) => {
-  if (props.noEditWeight) return false
-  emit('setWeight', data)
-}
+// // 单个称重
+// const setWeight = (data) => {
+//   if (props.noEditWeight) return false
+//   emit('setWeight', data)
+// }
 // 单个温度显示
 const setTemps = (data) => {
   emit('setTemps', data)

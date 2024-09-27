@@ -8,7 +8,7 @@
         mode="scaleToFill"
         @click="copyVal(bloodInfo.outboundOrderNo)"
       />
-      <wd-tag color="#EE0A24" bg-color="#FEE6E8">紧急</wd-tag>
+      <!-- <wd-tag color="#EE0A24" bg-color="#FEE6E8">紧急</wd-tag> -->
       <div class="BloodInfo_header_type">
         <image class="BloodInfo_header_type_img" src="@img/uavUnSel.png" mode="scaleToFill" />
         <p class="BloodInfo_header_type_text">无人机配送</p>

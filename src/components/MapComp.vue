@@ -118,7 +118,7 @@ const getLocation = (from, to) => {
         color: '#000',
         fontSize: 12,
         borderRadius: 5,
-        padding: 5,
+        // padding: 5,
         display: 'ALWAYS',
       },
       label: {

@@ -87,11 +87,7 @@
     </ul>
     <div class="BoxListInfo_time">
       <p class="BoxListInfo_time_text">更新时间: {{ boxItemRef.updateTime }}</p>
-      <div
-        v-if="boxItemRef.weight && showTempAndTime"
-        class="BoxListInfo_time_btn"
-        @click="setTemps(boxItemRef)"
-      >
+      <div v-if="showTempAndTime" class="BoxListInfo_time_btn" @click="setTemps(boxItemRef)">
         温度曲线
       </div>
     </div>

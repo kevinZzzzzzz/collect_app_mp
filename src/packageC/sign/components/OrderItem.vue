@@ -3,7 +3,7 @@
     <div class="OrderItem_header">
       <div class="OrderItem_header_left">
         <p class="OrderItem_header_left_text">交接单号：{{ orderItem.outboundOrderNo }}</p>
-        <wd-tag custom-class="space" color="#EE0A24" bg-color="#EFDFE8">紧急</wd-tag>
+        <!-- <wd-tag custom-class="space" color="#EE0A24" bg-color="#EFDFE8">紧急</wd-tag> -->
       </div>
       <div class="OrderItem_header_right">
         <p
