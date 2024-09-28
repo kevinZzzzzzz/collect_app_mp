@@ -58,7 +58,7 @@ const routerList = ref([
   {
     name: '血液交接查询',
     bgImgUrl: pathBg4,
-    route: '',
+    route: '/packageD/search/index',
   },
 ])
 const isMp = ref(PLATFORM.isMp)
@@ -77,7 +77,14 @@ onLoad(() => {
   }
 })
 const goUrl = (url) => {
-  url && uni.navigateTo({ url, animationType: 'pop-in', animationDuration: 200 })
+  if (url) {
+    uni.navigateTo({ url, animationType: 'pop-in', animationDuration: 200 })
+  } else {
+    uni.showToast({
+      icon: 'none',
+      title: '暂未开放',
+    })
+  }
 }
 </script>
 

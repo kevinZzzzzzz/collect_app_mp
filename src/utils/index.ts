@@ -151,9 +151,9 @@ export function getNavigateOptions(options: any, key: string) {
 }
 
 /**
- * 检查数字是否只有一位小数
+ * 先检查数字是否有小数点 是则必须只有一位小数 没有的话不限制
  * @param num 要检查的数字
- * @returns 如果数字只有一位小数，则返回true，否则返回false
+ * @returns true or false
  */
 export function hasOneDecimalPlace(num) {
   // 将数字转换为字符串
@@ -165,8 +165,8 @@ export function hasOneDecimalPlace(num) {
     // 检查小数点后是否只有一位数字
     return parts[1].length === 1
   }
-  // 如果没有小数点，则返回false
-  return false
+  // 如果没有小数点，则返回true
+  return true
 }
 /**
  * @method {*} encrypt 密码加密

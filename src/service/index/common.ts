@@ -20,7 +20,7 @@ const setProxy = (url: string): string => {
   获取公钥
 */
 export const $apiGetPublicKey = () => {
-  return http.get(setProxy(`/uaa/coldchain/api/key/getPublicKey`), null)
+  return http.get(setProxy(`/uaa/coldchain/api/key/getPublicKey`), null,null)
 }
 /*
   登录

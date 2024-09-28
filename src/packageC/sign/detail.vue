@@ -1,3 +1,8 @@
+<route lang="json5">
+{
+  needLogin: true,
+}
+</route>
 <template>
   <page-meta :page-style="'overflow:' + (pageScroll && isMp ? 'hidden' : 'visible')"></page-meta>
   <div class="CollectDetail">
@@ -23,7 +28,7 @@
       </div>
     </div>
     <div class="CollectDetail_bottom" :style="{ zIndex: pageScroll ? 0 : 3 }">
-      <div class="CollectDetail_bottom_ctx" v-if="[1, 2].includes(orderDetail.transportStatus)">
+      <div class="CollectDetail_bottom_ctx" v-if="[2].includes(orderDetail.transportStatus)">
         <div class="CollectDetail_bottom_ctx_left" @click="signPartOpen()">
           <p class="CollectDetail_bottom_ctx_left_text">部分签收</p>
         </div>
@@ -193,7 +198,7 @@ const signPart = (obj) => {
  * 打开温度弹窗
  */
 const openTempBox = (obj?: any) => {
-  // tempBoxList.value = props.orderItem.bloodPackages || []
+  tempBoxList.value = [obj] || []
   showTempBox.value = true // 打开温度曲线弹窗
   store.changePageScroll(true)
 }
@@ -232,9 +237,9 @@ onMounted(() => {
   const options: any = getCurrentInstance()
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
   tranStatus.value = getNavigateOptions(options, 'tranStatus') || ''
-  uni.setNavigationBarTitle({
-    title: transStatusTextMap[tranStatus.value],
-  })
+  // uni.setNavigationBarTitle({
+  //   title: transStatusTextMap[tranStatus.value],
+  // })
   $apiGetCollectItemDetail({
     outboundOrderNo: outboundOrderNo.value,
   }).then((res: any) => {
@@ -254,6 +259,9 @@ onMounted(() => {
       data.eventNoPackageArr = arr // 箱子信息列表
     }
     orderDetail.value = data
+    uni.setNavigationBarTitle({
+      title: transStatusMap[orderDetail.value.transportStatus]?.text,
+    })
   })
 })
 </script>

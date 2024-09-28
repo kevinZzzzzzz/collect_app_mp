@@ -20,10 +20,10 @@
 
       <div class="CollectDetail_detail_block">
         <!-- 详情界面只有在待揽收状态才能修改称重，其余情况仅显示温度曲线 -->
+        <!--  :showTempAndTime="+orderDetail.transportStatus !== 6" -->
         <BoxList
           :bloodInfo="orderDetail"
           :noEditWeight="+orderDetail.transportStatus !== 6"
-          :showTempAndTime="+orderDetail.transportStatus !== 6"
           @weighBox="weighBox($event)"
           @tempBox="openTempBox($event)"
         />
@@ -55,9 +55,11 @@
       </div>
     </div>
   </div>
+  <!-- 称重弹窗 -->
   <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
     <BoxWeigh :weighBoxList="weighBoxInfo" @closeWeighBox="closeWeighBox" />
   </wd-popup>
+  <!-- 温度弹窗 -->
   <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
     <BoxTemp
       v-if="showTempBox"
@@ -67,6 +69,7 @@
       @closeTempBox="closeTempBox"
     />
   </wd-popup>
+  <!-- 启运弹窗 -->
   <wd-popup
     v-model="startTransConfirm"
     position="center"
@@ -200,7 +203,6 @@ const closeWeighBox = (data) => {
         }
       })
     })
-    // console.log(orderDetail.value.eventNoPackageArr, 'orderDetail.value00000')
   }
 }
 
@@ -208,7 +210,7 @@ const closeWeighBox = (data) => {
  * 温度曲线
  * */
 const openTempBox = (obj) => {
-  // tempBoxList.value = props.orderItem.bloodPackages || []
+  tempBoxList.value = [obj] || []
   showTempBox.value = true // 打开温度曲线弹窗
   store.changePageScroll(true)
 }
@@ -250,7 +252,9 @@ const sureCollect = () => {
     params.transportPackages.push(obj)
   })
   $apiAddTransOrder(params).then((res: any) => {
-    // gotoStart()
+    uni.navigateTo({
+      url: `/packageA/collect/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}`,
+    })
   })
 }
 /**
@@ -363,9 +367,6 @@ onMounted(() => {
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
   tranStatus.value = getNavigateOptions(options, 'tranStatus') || ''
   const showWeight = getNavigateOptions(options, 'showWeight')
-  uni.setNavigationBarTitle({
-    title: transStatusTextMap[tranStatus.value],
-  })
   $apiGetCollectItemDetail({
     outboundOrderNo: outboundOrderNo.value,
     outboundStatus: tranStatus.value,
@@ -387,6 +388,9 @@ onMounted(() => {
       data.eventNoPackageArr = arr // 箱子信息列表
     }
     orderDetail.value = data
+    uni.setNavigationBarTitle({
+      title: transStatusMap[orderDetail.value.transportStatus]?.text,
+    })
     if (+showWeight) {
       showWeighBox.value = true
       weighBoxInfo.value = [orderDetail.value.eventNoPackageArr[0]] || []

@@ -3,6 +3,7 @@
   style: {
     navigationBarTitleText: '血液签收',
   },
+  needLogin: true,
 }
 </route>
 <template>
@@ -44,14 +45,9 @@
         @tempBox="openTempBox($event)"
       />
     </div>
-    <div class="CollectResult_btm">
+    <div class="CollectResult_btm" @click="backHome">
       <div class="CollectResult_btm_item CollectResult_btm_item-right">
-        <div
-          class="CollectResult_btm_item_text CollectResult_btm_item_text-right"
-          @click="backHome"
-        >
-          返回首页
-        </div>
+        <div class="CollectResult_btm_item_text CollectResult_btm_item_text-right">返回首页</div>
       </div>
     </div>
   </div>
@@ -94,7 +90,7 @@ const tempBoxList = ref([]) // 温度曲线数据
  * 温度曲线
  * */
 const openTempBox = (obj) => {
-  // tempBoxList.value = props.orderItem.bloodPackages || []
+  tempBoxList.value = [obj] || []
   showTempBox.value = true // 打开温度曲线弹窗
   store.changePageScroll(true)
 }

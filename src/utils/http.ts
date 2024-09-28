@@ -91,6 +91,7 @@ export const http = <T>(options: any) => {
  */
 export const httpGet = <T>(
   url: string,
+  data?: Record<string, any>,
   query?: Record<string, any>,
   isMap?: boolean,
   showToast?: boolean,
@@ -99,6 +100,7 @@ export const httpGet = <T>(
   return http<T>({
     url,
     query,
+    data,
     method: 'GET',
     isMap,
     showToast,

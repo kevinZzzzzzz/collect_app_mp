@@ -3,6 +3,7 @@
   style: {
     navigationBarTitleText: '血液签收',
   },
+  needLogin: true,
 }
 </route>
 <template>
@@ -64,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+import { onShow } from '@dcloudio/uni-app'
 import { onMounted, ref } from 'vue'
 import { dayjs } from 'wot-design-uni'
 import BloodPageSearch from '@/components/BloodPageSearch.vue'
@@ -100,6 +102,7 @@ const collapseOpen = ref<string[]>([])
  * 获取数据
  */
 const getData = () => {
+  collectData.value = []
   isLoading.value = true
   $apiGetCollectList({
     outboundStatus: transStatusValueMap[tab.value],
@@ -164,7 +167,7 @@ const goNotified = (data: any) => {
     url: `/packageB/notified/index?notifiedType=揽收`,
   })
 }
-onMounted(() => {
+onShow(() => {
   getData()
 })
 </script>

@@ -102,6 +102,7 @@ const collapseOpen = ref<string[]>([])
  * 获取数据
  */
 const getData = () => {
+  collectData.value = []
   isLoading.value = true
   $apiGetCollectList({
     outboundStatus: transStatusValueMap[tab.value],
@@ -111,7 +112,6 @@ const getData = () => {
   })
     .then((res: any) => {
       const { data } = res
-      console.log(data)
       if (data) {
         const arrTemp: Array<{
           hosName?: string

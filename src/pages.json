@@ -116,7 +116,8 @@
           "type": "page",
           "style": {
             "navigationBarTitleText": "血液揽收"
-          }
+          },
+          "needLogin": true
         }
       ]
     },
@@ -137,21 +138,37 @@
       "pages": [
         {
           "path": "sign/detail",
-          "type": "page"
+          "type": "page",
+          "needLogin": true
         },
         {
           "path": "sign/index",
           "type": "page",
           "style": {
             "navigationBarTitleText": "血液签收"
-          }
+          },
+          "needLogin": true
         },
         {
           "path": "sign/result",
           "type": "page",
           "style": {
             "navigationBarTitleText": "血液签收"
-          }
+          },
+          "needLogin": true
+        }
+      ]
+    },
+    {
+      "root": "packageD",
+      "pages": [
+        {
+          "path": "search/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "血液交接查询"
+          },
+          "needLogin": true
         }
       ]
     }

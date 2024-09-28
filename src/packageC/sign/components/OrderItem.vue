@@ -85,12 +85,12 @@ const weighBoxList = ref([]) // 称重数据
 const showTempBox = ref(false) // 展示温度曲线弹窗
 const tempBoxList = ref([]) // 温度曲线数据
 
-// 关闭称重弹窗
-const closeWeighBox = () => {
-  showWeighBox.value = false
-  weighBoxList.value = []
-  store.changePageScroll(false)
-}
+// // 关闭称重弹窗
+// const closeWeighBox = () => {
+//   showWeighBox.value = false
+//   weighBoxList.value = []
+//   store.changePageScroll(false)
+// }
 /**
  * 温度曲线
  * */

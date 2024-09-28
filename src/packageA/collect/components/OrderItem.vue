@@ -50,6 +50,7 @@
       </div>
     </div>
   </div>
+  <!-- 称重弹窗 -->
   <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
     <BoxWeigh
       v-if="showWeighBox"
@@ -59,6 +60,7 @@
       @closeWeighBox="closeWeighBox"
     />
   </wd-popup>
+  <!-- 温度弹窗 -->
   <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
     <BoxTemp
       v-if="showTempBox"

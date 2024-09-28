@@ -3,6 +3,7 @@
   style: {
     navigationBarTitleText: '血液揽收',
   },
+  needLogin: true,
 }
 </route>
 <template>
@@ -246,7 +247,7 @@ const confirmUAV = () => {
  * 温度曲线
  * */
 const openTempBox = (obj) => {
-  // tempBoxList.value = props.orderItem.bloodPackages || []
+  tempBoxList.value = [obj] || []
   showTempBox.value = true // 打开温度曲线弹窗
   store.changePageScroll(true)
 }

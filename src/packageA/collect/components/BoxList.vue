@@ -22,12 +22,13 @@
         </div> -->
           <BoxListInfo
             :noEditWeight="noEditWeight"
-            :showTempAndTime="showTempAndTime"
+            :showTempAndTime="!!item.weight"
             :boxItem="item"
             @setWeight="setWeigh($event)"
             @setTemps="setTemp($event)"
           />
-          <div class="Waybill_main_btm" v-if="!item.weight && !showTempAndTime">
+          <!-- && !showTempAndTime -->
+          <div class="Waybill_main_btm" v-if="!item.weight">
             <div class="Waybill_main_btm_btn Waybill_main_btm_btn-left" @click="setTemp(item)">
               温度曲线
             </div>

@@ -18,7 +18,8 @@ interface NavigateToOptions {
        "/packageB/notified/index" |
        "/packageC/sign/detail" |
        "/packageC/sign/index" |
-       "/packageC/sign/result";
+       "/packageC/sign/result" |
+       "/packageD/search/index";
 }
 interface RedirectToOptions extends NavigateToOptions {}
 

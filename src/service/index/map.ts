@@ -14,6 +14,7 @@ export const $apiGetDrivingPath = (params: any) => {
   return http.get(
     setProxy('/ws/direction/v1/driving'),
     { key: import.meta.env.VITE_MAP_KEY, ...params },
+    null,
     true,
   )
 }

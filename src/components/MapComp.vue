@@ -64,7 +64,7 @@ watch(
   () => props.bloodInfo,
   (newVal) => {
     bloodInfoRef.value = newVal
-    console.log(bloodInfoRef.value, newVal, 'newValnewVal00000000000')
+    console.log(newVal, 'newVal00000000000')
     handleMap()
   },
 )
@@ -159,6 +159,7 @@ const bloodPackages = computed(() => {
 // 选择箱子
 const selectBox = (idx) => {
   selectBoxIdx.value = idx
+  handleMap()
 }
 
 const handleMap = () => {
