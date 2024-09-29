@@ -22,9 +22,15 @@
         />
       </div>
       <div class="search_block1_main">
-        <div class="search_block1_main_item"></div>
-        <div class="search_block1_main_item"></div>
-        <div class="search_block1_main_item"></div>
+        <div class="search_block1_main_item">
+          <image class="search_block1_main_item_img" :src="sendBloodBg" mode="scaleToFill" />
+        </div>
+        <div class="search_block1_main_item">
+          <image class="search_block1_main_item_img" :src="collectIconBg" mode="scaleToFill" />
+        </div>
+        <div class="search_block1_main_item">
+          <image class="search_block1_main_item_img" :src="signIconBg" mode="scaleToFill" />
+        </div>
       </div>
     </div>
   </div>
@@ -35,6 +41,13 @@ import { onShow } from '@dcloudio/uni-app'
 import { onMounted, ref } from 'vue'
 import { dayjs } from 'wot-design-uni'
 import BloodPageSearch from '@/components/BloodPageSearch.vue'
+
+const imagesUrl = import.meta.env.VITE_SERVER_IMAGEURI
+
+const sendBloodBg = `${imagesUrl}sendBloodBg.png`
+const signIconBg = `${imagesUrl}signIconBg.png`
+const collectIconBg = `${imagesUrl}collectIconBg.png`
+
 defineOptions({
   name: 'BloodHandover',
 })
@@ -104,10 +117,16 @@ page {
       margin-top: 10px;
       width: 100%;
       display: grid;
-      grid-template-columns: 0.6fr 1fr 1fr;
+      grid-template-columns: 0.7fr 1fr 1fr;
       grid-gap: 9px;
       &_item {
+        height: 78px;
         width: 100%;
+        border-radius: 4px 4px 4px 4px;
+        &_img {
+          height: 78px;
+          width: 100%;
+        }
       }
     }
   }

@@ -13,7 +13,10 @@ export const useUserStore = defineStore(
     const setUserToken = (val: any) => {
       userToken.value = val
     }
-
+    // 刷新菜单
+    const setMenu = (val: any) => {
+      userInfo.value.menus = val
+    }
     const clearUserInfo = () => {
       userToken.value = null
       userInfo.value = {}
@@ -33,6 +36,7 @@ export const useUserStore = defineStore(
       clearUserInfo,
       isLogined,
       reset,
+      setMenu
     }
   },
   {

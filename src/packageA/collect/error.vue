@@ -27,7 +27,9 @@
       </div>
       <div class="CollectError_block_item">
         <div class="CollectError_block_item_left">配送方式:</div>
-        <div class="CollectError_block_item_right">无人机配送</div>
+        <div class="CollectError_block_item_right">
+          {{ transportWays[orderDetail.outboundType] || '--' }}
+        </div>
       </div>
     </div>
     <div class="CollectError_block">
@@ -104,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { transStatusTextMap } from '@/constant'
+import { transStatusTextMap, transportWays } from '@/constant'
 import { $apiGetCollectItemDetail, $apiTransOrderException } from '@/service/index/collect'
 import { getNavigateOptions } from '@/utils'
 import { ref } from 'vue'

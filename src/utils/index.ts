@@ -217,9 +217,13 @@ export const getUserInfoByToken = (token: string) => {
   const tokenString = token?.split('.')[1]
   let userInfo = ''
   if (tokenString) {
-    const { data } = windowAtob(tokenString.replace(/-/g, '+').replace(/_/g, '/')) as any
-    userInfo = data ? JSON.parse(data) : {}
+    const str = windowAtob(tokenString.replace(/-/g, '+').replace(/_/g, '/')).replace(
+      /[^\x20-\x7E\u4E00-\u9FFF]+/g,
+      '',
+    )
+    const outerJson = JSON.parse(str)
+    const innerJson = JSON.parse(outerJson.data)
+    userInfo = innerJson ? innerJson : {}
   }
-  console.log(userInfo, 'userInfo-')
   return userInfo
 }

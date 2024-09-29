@@ -12,14 +12,14 @@ const setProxy = (url: string): string => {
 }
 // 获取数据列表
 export const $apiGetCollectList = (params?: any) => {
-  return http.get(setProxy('/data/api/outBoundOrder/list/group'), { ...params })
+  return http.get(setProxy('/data/api/outBoundOrder/list/group'), null, { ...params })
 }
 // 获取数据详情
 export const $apiGetCollectItemDetail = (params?: any) => {
   return http.get(
     setProxy('/data/api/outBoundOrder/list/one'),
-    { ...params },
     null,
+    { ...params },
     false,
     true,
     true,
@@ -42,7 +42,7 @@ export const $apiStartTransOrder = (params?: any) => {
 }
 // 查询无人机编号
 export const $apiGetAssetCode = (params?: any) => {
-  return http.get(setProxy('/data/api/uav/get/assetCode'), { ...params }, null, false, true, true)
+  return http.get(setProxy('/data/api/uav/get/assetCode'), null, { ...params }, false, true, true)
 }
 // 运单签收
 export const $apiSignTransOrder = (params?: any) => {
@@ -54,12 +54,5 @@ export const $apiTransOrderException = (params?: any) => {
 }
 // 查询温度曲线
 export const $apiGetBoxDeviceData = (params?: any) => {
-  return http.get(
-    setProxy('/data/api/asset/box/device/data'),
-    { ...params },
-    null,
-    false,
-    true,
-    true,
-  )
+  return http.post(setProxy('/data/api/asset/box/device/data'), params, null, false, true, true)
 }

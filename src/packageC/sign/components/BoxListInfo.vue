@@ -73,7 +73,7 @@
           </div>
         </div>
         <div class="BoxListInfo_list_item_col-2line">
-          <p class="BoxListInfo_list_item_col_num">{{ item.capacity }}</p>
+          <p class="BoxListInfo_list_item_col_num">{{ item.conversion || '--' }}U</p>
           <p class="BoxListInfo_list_item_col_type">{{ item.bloodType }}</p>
         </div>
         <div class="BoxListInfo_list_item_col-2line">
@@ -127,7 +127,29 @@ const bloodBagGroupList = computed(() => {
   const arr = []
   if (boxItemRef.value.bloodBagGroupMap) {
     Object.values(boxItemRef.value.bloodBagGroupMap).forEach((item: Array<any>) => {
-      arr.push(...item)
+      // arr.push(...item)
+      if (item.length > 1) {
+        const obj = {
+          bloodType: '',
+          conversion: null,
+        }
+        item.forEach((d) => {
+          d.bloodType && (obj.bloodType = d.bloodType)
+          d.conversion && (obj.conversion += Number(d.conversion))
+        })
+        // const tempArr = item?.reduce((prev, next) => {
+        //   return {
+        //     ...next,
+        //     conversion: prev?.conversion ? prev.conversion + next.conversion : next.conversion,
+        //   }
+        // }, [])
+        arr.push(obj)
+      } else {
+        arr.push({
+          bloodType: item[0].bloodType,
+          conversion: item[0].conversion,
+        })
+      }
     })
   }
   return arr

@@ -19,10 +19,12 @@ export const http = <T>(options: any) => {
   options.showLoading && uni.showLoading({ title: loadingMsg })
   // 1. 返回 Promise 对象
   return new Promise<IResData<T>>((resolve, reject) => {
-    console.info(options, 'options00000000000')
     uni.request({
       ...options,
       token: userStore.userToken,
+      data: {
+        ...options.data,
+      },
       dataType: 'json',
       // #ifndef MP-WEIXIN
       responseType: 'json',
@@ -83,6 +85,7 @@ export const http = <T>(options: any) => {
 /**
  * GET 请求
  * @param url 后台地址
+ * @param data 请求body参数
  * @param query 请求query参数
  * @param isMap 是否是地图接口
  * @param showToast 是否显示错误提示
@@ -96,6 +99,7 @@ export const httpGet = <T>(
   isMap?: boolean,
   showToast?: boolean,
   showLoading?: boolean,
+  hasToken = true,
 ) => {
   return http<T>({
     url,
@@ -105,6 +109,7 @@ export const httpGet = <T>(
     isMap,
     showToast,
     showLoading,
+    hasToken,
   })
 }
 
@@ -125,6 +130,7 @@ export const httpPost = <T>(
   isMap?: boolean,
   showToast?: boolean,
   showLoading?: boolean,
+  hasToken = true,
 ) => {
   return http<T>({
     url,
@@ -134,6 +140,7 @@ export const httpPost = <T>(
     isMap,
     showToast,
     showLoading,
+    hasToken,
   })
 }
 

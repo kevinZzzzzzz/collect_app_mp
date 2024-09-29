@@ -1,5 +1,5 @@
 /**
- * by 菲鸽 on 2024-03-06
+ * by kevinzzzzzz on 2024-03-06
  * 路由拦截，通常也是登录拦截
  * 可以设置路由白名单，或者黑名单，看业务需要选哪一个
  * 我这里应为大部分都可以随便进入，所以使用黑名单
@@ -12,6 +12,7 @@ const loginRoute = '/pages/login/index'
 
 const isLogined = () => {
   const userStore = useUserStore()
+  console.log(userStore, ' userStore-----------')
   return userStore.isLogined
 }
 

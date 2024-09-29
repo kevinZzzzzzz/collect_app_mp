@@ -10,7 +10,7 @@
     <image class="login_logo" src="@img/logo.png" mode="scaleToFill" />
     <h1 class="login_title">穿越血液服务</h1>
     <div class="login_form">
-      <!-- <div class="login_form_input">
+      <div class="login_form_input">
         <wd-input
           center
           clearable
@@ -63,8 +63,8 @@
         >
           获取验证码
         </wd-button>
-      </div> -->
-      <div class="login_form_input">
+      </div>
+      <!-- <div class="login_form_input">
         <wd-input
           center
           clearable
@@ -94,7 +94,7 @@
             <image class="inputIcon2" src="@img/authIcon.png" mode="scaleToFill" />
           </template>
         </wd-input>
-      </div>
+      </div> -->
     </div>
     <div
       @click="login()"
@@ -119,10 +119,18 @@
 </template>
 
 <script setup lang="ts">
-import { $apiGetPublicKey, $apiLogin } from '@/service/index/common'
+import {
+  $apiGetPublicKey,
+  $apiLogin,
+  $apiLoginByPhone,
+  $apiGetSendCode,
+} from '@/service/index/common'
 import { encrypt, getNavigateOptions, getUserInfoByToken } from '@/utils'
 import { useUserStore } from '@/store'
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { telReg } from '@/constant/index'
+
+const docsUrl = import.meta.env.VITE_SERVER_DOCSURL
 
 defineOptions({
   name: 'Login',
@@ -134,11 +142,11 @@ const sendMinute = 60
 const loginInfo = ref({
   telephone: '',
   authCode: '',
-  username: '',
-  password: '',
+  // username: '',
+  // password: '',
   agreeProtocol: false,
 })
-const publicKey = ref('')
+// const publicKey = ref('')
 const waitAuthCode = ref(false) // 等待验证码
 const waitAuthTime = ref(sendMinute) // 等待倒计时
 
@@ -146,19 +154,45 @@ const waitAuthTime = ref(sendMinute) // 等待倒计时
  * 是否可以登录
  */
 const canLogin = computed(() => {
-  return loginInfo.value.agreeProtocol && loginInfo.value.username && loginInfo.value.password
+  return loginInfo.value.agreeProtocol && loginInfo.value.telephone && loginInfo.value.authCode
 })
 /**
  * 获取验证码
  */
 const getAuthCode = () => {
-  waitAuthCode.value = true
-  waitTimer = setInterval(() => {
-    waitAuthTime.value -= 1
-    if (waitAuthTime.value <= 0) {
-      clearInterval(waitTimer)
-    }
-  }, 1000)
+  if (!loginInfo.value.telephone) {
+    uni.showToast({
+      icon: 'none',
+      title: '请输入手机号',
+    })
+    return false
+  }
+  if (loginInfo.value.telephone && !telReg.test(loginInfo.value.telephone)) {
+    uni.showToast({
+      icon: 'none',
+      title: '请输入正确的手机号',
+    })
+    return false
+  }
+  if (waitAuthCode.value) return false
+
+  $apiGetSendCode({
+    phone: loginInfo.value.telephone,
+  }).then((res: any) => {
+    uni.showToast({
+      icon: 'success',
+      title: `验证码已发送到${loginInfo.value.telephone}`,
+    })
+    waitAuthCode.value = true
+    waitTimer = setInterval(() => {
+      waitAuthTime.value -= 1
+      if (waitAuthTime.value <= 0) {
+        clearInterval(waitTimer)
+        waitAuthTime.value = 60
+        waitAuthCode.value = false
+      }
+    }, 1000)
+  })
 }
 /**
  * 重新发送验证码
@@ -172,10 +206,10 @@ const resendCode = () => {
 const login = () => {
   if (!canLogin.value) return false
   const obj = {
-    account: loginInfo.value.username,
-    password: encrypt(loginInfo.value.password, publicKey.value),
+    phone: loginInfo.value.telephone,
+    code: loginInfo.value.authCode,
   }
-  $apiLogin(obj).then((res: any) => {
+  $apiLoginByPhone(obj).then((res: any) => {
     const userInfo = getUserInfoByToken(res.data) // 解析token 获取保存个人信息
     userStore.setUserInfo(userInfo)
     userStore.setUserToken(res.data)
@@ -190,16 +224,16 @@ const login = () => {
     }, 500)
   })
 }
-// 获取公钥
-const getPublicKeys = () => {
-  $apiGetPublicKey().then((res: any) => {
-    publicKey.value = res.data
-    uni.setStorage({
-      key: 'publicKey',
-      data: res.data,
-    })
-  })
-}
+// // 获取公钥
+// const getPublicKeys = () => {
+//   $apiGetPublicKey().then((res: any) => {
+//     publicKey.value = res.data
+//     uni.setStorage({
+//       key: 'publicKey',
+//       data: res.data,
+//     })
+//   })
+// }
 /**
  * 跳转协议
  * @param name
@@ -208,7 +242,7 @@ const gotoPDF = (name) => {
   //  是区分运行的环境，在小程序中可使用如下方法
   /* #ifdef MP */
   uni.downloadFile({
-    url: `${import.meta.env.VITE_SERVER_UAAURL}/docs/${name}.pdf`, //文件地址
+    url: `${docsUrl}/docs/${name}.pdf`, //文件地址
     success: function (res) {
       var filePath = res.tempFilePath
       uni.openDocument({
@@ -225,11 +259,11 @@ const gotoPDF = (name) => {
   // uni.navigateTo({
   //   url: `/packageB/protocol/index?protocolName=${name}`,
   // })
-  window.open(`${import.meta.env.VITE_SERVER_UAAURL}/docs/${name}.pdf`)
+  window.open(`${docsUrl}/docs/${name}.pdf`)
   /* #endif */
 }
 onMounted(() => {
-  getPublicKeys()
+  // getPublicKeys()
 })
 </script>
 
@@ -322,6 +356,10 @@ onMounted(() => {
   border-radius: 4px 4px 4px 4px;
   border: 1px solid #1890ff;
 }
+:deep(.wd-button.is-disabled) {
+  padding: 0 15px !important;
+}
+
 :deep(.wd-button.is-text) {
   color: #1890ff !important;
   font-weight: 400;

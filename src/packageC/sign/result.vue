@@ -24,7 +24,9 @@
       </div>
       <div class="CollectResult_block_item">
         <div class="CollectResult_block_item_left">配送方式:</div>
-        <div class="CollectResult_block_item_right">无人机配送</div>
+        <div class="CollectResult_block_item_right">
+          {{ transportWays[orderDetail.outboundType] || '--' }}
+        </div>
       </div>
     </div>
     <div class="CollectResult_block">
@@ -56,6 +58,7 @@
     <BoxTemp
       v-if="showTempBox"
       lock-scroll
+      :outboundOrderNo="orderDetail.outboundOrderNo"
       :safe-area-inset-bottom="true"
       :tempBoxList="tempBoxList"
       @closeTempBox="closeTempBox"
@@ -64,6 +67,7 @@
 </template>
 
 <script setup lang="ts">
+import { transStatusTextMap, transportWays } from '@/constant'
 import { $apiGetCollectItemDetail } from '@/service/index/collect'
 import { getNavigateOptions } from '@/utils'
 import { getCurrentInstance, onMounted, ref } from 'vue'

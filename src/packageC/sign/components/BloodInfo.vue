@@ -9,9 +9,23 @@
         @click="copyVal(bloodInfo.outboundOrderNo)"
       />
       <!-- <wd-tag color="#EE0A24" bg-color="#FEE6E8">紧急</wd-tag> -->
-      <div class="BloodInfo_header_type">
-        <image class="BloodInfo_header_type_img" src="@img/uavUnSel.png" mode="scaleToFill" />
-        <p class="BloodInfo_header_type_text">无人机配送</p>
+      <div
+        class="BloodInfo_header_type"
+        v-if="bloodInfo.outboundType || bloodInfo.outboundType == 0"
+      >
+        <image
+          class="BloodInfo_header_type_img"
+          v-if="bloodInfo.outboundType === 2"
+          src="@img/uavUnSel.png"
+          mode="scaleToFill"
+        />
+        <image
+          class="BloodInfo_header_type_img"
+          v-else
+          src="@img/carUnSel.png"
+          mode="scaleToFill"
+        />
+        <p class="BloodInfo_header_type_text">{{ transportWays[bloodInfo.outboundType] }}</p>
       </div>
     </div>
     <div class="BloodInfo_divider"></div>
@@ -30,6 +44,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { transportWays } from '@/constant/index'
 defineOptions({
   name: 'BloodInfo',
 })

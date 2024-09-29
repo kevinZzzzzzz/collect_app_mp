@@ -59,3 +59,11 @@ export const transOrderTimeTextMap = {
   1: '启运时间',
   4: '签收时间',
 }
+
+// 运输方式
+export const transportWays = {
+  0: '医院取血',
+  1: '血站送血',
+  2: '无人机配送',
+}
+export const telReg = /^[1][3-9][0-9]{9}$/ // 手机正则

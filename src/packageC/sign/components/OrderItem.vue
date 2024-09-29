@@ -47,6 +47,7 @@
     <BoxTemp
       v-if="showTempBox"
       lock-scroll
+      :outboundOrderNo="orderItem.outboundOrderNo"
       :safe-area-inset-bottom="true"
       :tempBoxList="tempBoxList"
       @closeTempBox="closeTempBox"

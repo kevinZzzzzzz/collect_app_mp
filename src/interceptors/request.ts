@@ -3,10 +3,11 @@ import qs from 'qs'
 import store, { useUserStore } from '@/store'
 import { platform } from '@/utils/platform'
 const isDev = import.meta.env.DEV
-
+const noToken = ['sendCode', 'loginByPhone']
 export type CustomRequestOptions = UniApp.RequestOptions & {
   query?: Record<string, any>
   token?: string
+  hasToken?: boolean
   /** 出错时是否隐藏错误提示 */
   hideErrorToast?: boolean
   isMap?: boolean
@@ -21,6 +22,7 @@ export type CustomRequestOptions = UniApp.RequestOptions & {
 const httpInterceptor = {
   // 拦截前触发
   invoke(options: CustomRequestOptions) {
+    console.info(options, 'options------------')
     // 接口请求支持通过 query 参数配置 queryString
     if (options.query) {
       const queryStr = qs.stringify(options.query)
@@ -62,7 +64,12 @@ const httpInterceptor = {
       options.header = {
         platform, // 可选，与 uniapp 定义的平台一致，告诉后台来源
         ...options.header,
-        token: options.token,
+      }
+      if (options.hasToken) {
+        options.header = {
+          ...options.header,
+          token: options.token,
+        }
       }
     }
     // 3. 添加 token 请求头标识
@@ -78,7 +85,7 @@ export const requestInterceptor = {
   install() {
     // 拦截 request 请求
     uni.addInterceptor('request', httpInterceptor)
-    // 拦截 uploadFile 文件上传
-    uni.addInterceptor('uploadFile', httpInterceptor)
+    // // 拦截 uploadFile 文件上传
+    // uni.addInterceptor('uploadFile', httpInterceptor)
   },
 }

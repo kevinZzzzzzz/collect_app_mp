@@ -20,7 +20,27 @@ const setProxy = (url: string): string => {
   获取公钥
 */
 export const $apiGetPublicKey = () => {
-  return http.get(setProxy(`/uaa/coldchain/api/key/getPublicKey`), null,null)
+  return http.get(setProxy(`/uaa/coldchain/api/key/getPublicKey`), null, null)
+}
+/*
+  获取角色权限
+*/
+export const $apiGetRoleList = () => {
+  return http.get(setProxy(`/uaa/coldchain/api/role/query`), null, null)
+}
+/*
+  获取验证码
+*/
+export const $apiGetSendCode = (params: any) => {
+  return http.get(
+    setProxy(`/uaa/coldchain/api/key/sendCode`),
+    null,
+    params,
+    false,
+    true,
+    true,
+    false,
+  )
 }
 /*
   登录
@@ -33,5 +53,19 @@ export const $apiLogin = (params: any) => {
     false,
     true,
     true,
+  )
+}
+/*
+  手机号登录
+*/
+export const $apiLoginByPhone = (params: any) => {
+  return http.post(
+    setProxy('/uaa/coldchain/api/user/loginByPhone'),
+    params,
+    null,
+    false,
+    true,
+    true,
+    false,
   )
 }

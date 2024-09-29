@@ -14,7 +14,7 @@
     <ul class="home_list">
       <li
         class="home_list_item"
-        @click="goUrl(item.route)"
+        @click="goUrl(item.route, item.authId)"
         v-for="(item, idx) in routerList"
         :key="idx"
       >
@@ -28,41 +28,49 @@
 <script lang="ts" setup>
 import { useUserStore } from '@/store'
 import PLATFORM from '@/utils/platform'
-import pathBg1 from '@/static/images/pathBg1.png'
-import pathBg2 from '@/static/images/pathBg2.png'
-import pathBg3 from '@/static/images/pathBg3.png'
-import pathBg4 from '@/static/images/pathBg4.png'
+import { $apiGetRoleList } from '@/service/index/common'
+
+const imagesUrl = import.meta.env.VITE_SERVER_IMAGEURI
+
+const pathBg1 = `${imagesUrl}pathBg1.png`
+const pathBg2 = `${imagesUrl}pathBg2.png`
+const pathBg3 = `${imagesUrl}pathBg3.png`
+const pathBg4 = `${imagesUrl}pathBg4.png`
 const userStore = useUserStore()
 defineOptions({
   name: 'Home',
 })
-
+let menusRole = userStore.userInfo.menus?.split(',') // 菜单权限
+console.log(userStore.userInfo, menusRole, 'userStore0000000')
 // 获取屏幕边界到安全区域距离
-const { safeAreaInsets } = uni.getSystemInfoSync()
+// const { safeAreaInsets } = uni.getSystemInfoSync()
 const routerList = ref([
   {
     name: '血液揽收',
     bgImgUrl: pathBg1,
     route: '/packageA/collect/index',
+    authId: '10101',
   },
   {
     name: '血液签收',
     bgImgUrl: pathBg2,
     route: '/packageC/sign/index',
+    authId: '10102',
   },
   {
     name: '我的任务',
     bgImgUrl: pathBg3,
     route: '',
+    authId: '10103',
   },
   {
     name: '血液交接查询',
     bgImgUrl: pathBg4,
-    route: '/packageD/search/index',
+    // route: '/packageD/search/index',
+    route: '',
+    authId: '10104',
   },
 ])
-const isMp = ref(PLATFORM.isMp)
-// 测试 uni API 自动引入
 onLoad(() => {
   if (!userStore.isLogined) {
     uni.showToast({
@@ -74,10 +82,27 @@ onLoad(() => {
         url: '/pages/login/index',
       })
     }, 1000)
+  } else {
+    $apiGetRoleList().then((res: any) => {
+      const { data } = res
+      data.forEach((item) => {
+        if (item.id === userStore.userInfo.roleId) {
+          item.menus && userStore.setMenu(item.menus)
+          menusRole = item.menus?.split(',')
+        }
+      })
+    })
   }
 })
-const goUrl = (url) => {
+const goUrl = (url, id) => {
   if (url) {
+    if (!menusRole.includes(id)) {
+      uni.showToast({
+        icon: 'error',
+        title: '无权限访问',
+      })
+      return false
+    }
     uni.navigateTo({ url, animationType: 'pop-in', animationDuration: 200 })
   } else {
     uni.showToast({
@@ -115,9 +140,8 @@ const goUrl = (url) => {
       position: relative;
       height: 94px;
       &_img {
-        margin: -16px;
-        width: calc(100% + 32px);
-        height: calc(94px + 32px);
+        width: 100%;
+        height: 100%;
         position: absolute;
         top: 0;
         left: 0;

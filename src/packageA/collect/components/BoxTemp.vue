@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="BoxTemp_main_boxItem_list_item_col-2line">
-              <p class="BoxTemp_main_boxItem_list_item_col_num">{{ d.capacity }}</p>
+              <p class="BoxTemp_main_boxItem_list_item_col_num">{{ d.conversion || '--' }}U</p>
               <p class="BoxTemp_main_boxItem_list_item_col_type">{{ d.bloodType }}</p>
             </div>
             <div class="BoxTemp_main_boxItem_list_item_col-2line">
@@ -37,8 +37,14 @@
             </div>
           </div>
         </div>
-        <div class="charts-box">
-          <qiun-data-charts type="line" :opts="opts" :chartData="chartData" />
+        <div
+          class="charts-box"
+          v-if="showChart && item.chartData?.series && item.chartData?.series.length"
+        >
+          <qiun-data-charts type="line" :opts="opts" :chartData="item.chartData" />
+        </div>
+        <div class="charts-box" v-else>
+          <wd-status-tip image="search" tip="暂无数据" />
         </div>
       </div>
     </div>
@@ -52,6 +58,7 @@
 </template>
 
 <script setup lang="ts">
+import { $apiGetBoxDeviceData } from '@/service/index/collect'
 import { ref, onMounted } from 'vue'
 defineOptions({
   name: 'BoxTemp',
@@ -64,11 +71,28 @@ const props = defineProps({
       return []
     },
   },
+  outboundOrderNo: {
+    type: String,
+    default: () => {
+      return ''
+    },
+  },
 })
 const boxList = ref<any>(props.tempBoxList || [])
-const chartData = ref({})
+const bloodBagGroupList = ref<any>([])
+const showChart = ref(false)
 const opts = ref({
-  color: ['#1ACDB4', '#FAAB0C'],
+  color: [
+    '#1890FF',
+    '#91CB74',
+    '#FAC858',
+    '#EE6666',
+    '#73C0DE',
+    '#3CA272',
+    '#FC8452',
+    '#9A60B4',
+    '#ea7ccc',
+  ],
   padding: [0, 10, 0, 10],
   enableScroll: false,
   legend: {
@@ -90,36 +114,67 @@ const opts = ref({
     line: {
       type: 'curve',
       width: 2,
-      activeType: 'hollow',
+      activeType: 'none',
     },
   },
 })
-const getServerData = () => {
-  //模拟从服务器获取数据时的延时
-  setTimeout(() => {
-    //模拟服务器返回数据，如果数据格式和标准格式不同，需自行按下面的格式拼接
-    let res = {
-      categories: ['装箱', '发血', '揽收', '启运', '运送中', '签收'],
-      series: [
-        {
-          name: '成交量A',
-          data: [35, 8, 25, 37, 4, 20],
-        },
-        {
-          name: '成交量B',
-          data: [70, 40, 65, 100, 44, 68],
-        },
-      ],
-    }
-    chartData.value = JSON.parse(JSON.stringify(res))
-  }, 500)
+const handleChartData = (dataMap: any, assetCode: string) => {
+  let categories = []
+  let series = []
+  if (dataMap) {
+    const assetData: Array<any> = Object.values(dataMap)
+    categories = assetData[0]?.map((d) => {
+      return (d.remark && d.remark.replace('已', '')) || ''
+    })
+    series = Object.keys(dataMap)?.map((key, index) => {
+      return {
+        name: assetCode,
+        pointShape: 'none',
+        data: dataMap[key]?.map((d, idx) => {
+          return d.insideTemp || 0
+        }),
+      }
+    })
+    return JSON.parse(
+      JSON.stringify({
+        categories,
+        series,
+      }),
+    )
+  }
+
+  return null
+}
+const getChartData = () => {
+  const boxCodeArr = boxList.value.map((d) => d.code)
+  $apiGetBoxDeviceData({
+    outboundOrderNo: props.outboundOrderNo,
+    boxCodeSet: boxCodeArr,
+  }).then((res: any) => {
+    const { data } = res
+    data.assetBaseDeviceInfoVoList.forEach((item, index) => {
+      boxList.value.forEach((d, idx) => {
+        if (item.assetCode === d.code) {
+          if (item.deviceId2InfoDataMap) {
+            d.chartData = handleChartData(item.deviceId2InfoDataMap, item.assetCode)
+          } else {
+            d.chartData = null
+          }
+        }
+      })
+    })
+    setTimeout(() => {
+      showChart.value = true
+    }, 500)
+  })
 }
 const closeTemp = () => {
+  boxList.value = []
   emit('closeTempBox')
 }
-const bloodBagGroupList = computed(() => {
+const initData = () => {
   let arr = []
-  // 处理温度数据
+  //   // 处理温度数据
   const handleTemp = (obj) => {
     let tempL = null
     let tempR = null
@@ -141,17 +196,39 @@ const bloodBagGroupList = computed(() => {
       arr[idx] = []
       const tempData = handleTemp(d)
       Object.values(d?.bloodBagGroupMap).forEach((item: Array<any>) => {
-        item?.forEach((d) => {
-          d.temp = tempData
-          arr[idx].push(d)
-        })
+        if (item.length > 1) {
+          const obj = {
+            bloodType: '',
+            conversion: null,
+          }
+          item.forEach((d) => {
+            d.bloodType && (obj.bloodType = d.bloodType)
+            d.conversion && (obj.conversion += Number(d.conversion))
+          })
+          arr[idx].push({
+            bloodType: obj.bloodType,
+            conversion: obj.conversion,
+            temp: tempData,
+          })
+        } else {
+          arr[idx].push({
+            bloodType: item[0].bloodType,
+            conversion: item[0].conversion,
+            temp: tempData,
+          })
+        }
+        // item?.forEach((d) => {
+        //   d.temp = tempData
+        //   arr[idx].push(d)
+        // })
       })
     })
   }
-  return arr
-})
+  bloodBagGroupList.value = arr
+}
 onMounted(() => {
-  getServerData()
+  initData()
+  getChartData()
 })
 </script>
 
