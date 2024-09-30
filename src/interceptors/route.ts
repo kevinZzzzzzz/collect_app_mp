@@ -12,7 +12,6 @@ const loginRoute = '/pages/login/index'
 
 const isLogined = () => {
   const userStore = useUserStore()
-  console.log(userStore, ' userStore-----------')
   return userStore.isLogined
 }
 

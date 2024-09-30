@@ -2,8 +2,7 @@
 import qs from 'qs'
 import store, { useUserStore } from '@/store'
 import { platform } from '@/utils/platform'
-const isDev = import.meta.env.DEV
-const noToken = ['sendCode', 'loginByPhone']
+
 export type CustomRequestOptions = UniApp.RequestOptions & {
   query?: Record<string, any>
   token?: string

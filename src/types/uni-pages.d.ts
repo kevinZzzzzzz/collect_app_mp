@@ -19,6 +19,8 @@ interface NavigateToOptions {
        "/packageC/sign/detail" |
        "/packageC/sign/index" |
        "/packageC/sign/result" |
+       "/packageD/historyList/index" |
+       "/packageD/historyStatistic/index" |
        "/packageD/search/index";
 }
 interface RedirectToOptions extends NavigateToOptions {}

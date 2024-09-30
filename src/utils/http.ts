@@ -22,9 +22,7 @@ export const http = <T>(options: any) => {
     uni.request({
       ...options,
       token: userStore.userToken,
-      data: {
-        ...options.data,
-      },
+      data: options.data,
       dataType: 'json',
       // #ifndef MP-WEIXIN
       responseType: 'json',
@@ -90,6 +88,7 @@ export const http = <T>(options: any) => {
  * @param isMap 是否是地图接口
  * @param showToast 是否显示错误提示
  * @param showLoading 是否显示loading
+ * @param hasToken 是否携带token
  * @returns
  */
 export const httpGet = <T>(
@@ -121,6 +120,7 @@ export const httpGet = <T>(
  * @param isMap 是否是地图接口
  * @param showToast 是否显示错误提示
  * @param showLoading 是否显示loading
+ * @param hasToken 是否携带token
  * @returns
  */
 export const httpPost = <T>(

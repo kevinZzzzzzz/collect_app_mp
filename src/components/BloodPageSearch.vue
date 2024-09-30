@@ -20,29 +20,57 @@
         </template>
       </wd-input>
     </div>
-    <div class="BloodPageSearch_icon">
-      <image class="BloodPageSearch_icon_img" src="@img/taskIcon.png" mode="scaleToFill" />
+    <div class="BloodPageSearch_icon" v-if="rightBtnType">
+      <image
+        :style="{ width: '24px', height: '24px' }"
+        v-if="rightBtnType === 'person'"
+        class="BloodPageSearch_icon_img"
+        :src="taskIcon"
+        mode="scaleToFill"
+        @click="gotoUrl('person')"
+      />
+      <image
+        :style="{ width: '30px', height: '30px' }"
+        v-if="rightBtnType === 'history'"
+        class="BloodPageSearch_icon_img"
+        :src="historyRecordIcon"
+        mode="scaleToFill"
+        @click="gotoUrl('history')"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import taskIcon from '@img/taskIcon.png'
+import historyRecordIcon from '@img/historyRecordIcon.png'
 defineOptions({
   name: 'BloodPageSearch',
 })
 const emit = defineEmits(['searchKeyword'])
+const props = defineProps({
+  rightBtnType: {
+    type: String,
+    default: '',
+  },
+})
 const searchValue = ref('')
 const searchKeyword = () => {
   emit('searchKeyword', searchValue.value)
+}
+const gotoUrl = (type) => {
+  if (type === 'history') {
+    uni.navigateTo({
+      url: '/packageD/historyStatistic/index',
+    })
+  }
 }
 </script>
 
 <style scoped lang="scss">
 .BloodPageSearch {
-  display: grid;
-  grid-template-columns: 92% 8%;
-  grid-gap: 2%;
+  display: flex;
   align-items: center;
   width: 100%;
   padding: 8px 0;
@@ -54,8 +82,7 @@ const searchKeyword = () => {
     border-radius: 4px 4px 4px 4px;
   }
   &_icon {
-    width: 24px;
-    height: 24px;
+    margin-left: 8px;
     &_img {
       width: 100%;
       height: 100%;

@@ -140,6 +140,7 @@
 </template>
 
 <script setup lang="ts">
+import { onShow } from '@dcloudio/uni-app'
 import { onMounted, ref, getCurrentInstance } from 'vue'
 import MapComp from '@/components/MapComp.vue'
 import BloodInfo from './components/BloodInfo.vue'
@@ -253,9 +254,18 @@ const sureCollect = () => {
     params.transportPackages.push(obj)
   })
   $apiAddTransOrder(params).then((res: any) => {
-    uni.navigateTo({
-      url: `/packageA/collect/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}`,
-    })
+    setTimeout(() => {
+      if (!orderDetail.value.outboundType) {
+        // 医院取血
+        uni.redirectTo({
+          url: `/packageC/sign/detail?outboundOrderNo=${orderDetail.value.outboundOrderNo}&tranStatus=5`,
+        })
+      } else {
+        uni.redirectTo({
+          url: `/packageA/collect/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}`,
+        })
+      }
+    }, 500)
   })
 }
 /**

@@ -46,11 +46,20 @@ watch(
   },
 )
 const save = () => {
-  // 校验 保留一位小数
+  // 校验不能为0
   const flag = weighBoxRef.value.every((item) => {
-    return item.weight > 0 && hasOneDecimalPlace(item.weight)
+    return item.weight > 0
+  })
+  // 校验 保留一位小数
+  const flag1 = weighBoxRef.value.every((item) => {
+    return hasOneDecimalPlace(item.weight)
   })
   if (!flag) {
+    message.alert({
+      msg: '重量不能为0',
+      title: '温馨提醒',
+    })
+  } else if (!flag1) {
     message.alert({
       msg: '保留一位小数',
       title: '温馨提醒',

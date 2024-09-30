@@ -9,7 +9,11 @@
 <template>
   <page-meta :page-style="'overflow:' + (pageScroll && isMp ? 'hidden' : 'visible')"></page-meta>
   <div class="collect pageCenter">
-    <BloodPageSearch style="width: 100%" @searchKeyword="searchKeyword($event)" />
+    <BloodPageSearch
+      style="width: 100%"
+      rightBtnType="person"
+      @searchKeyword="searchKeyword($event)"
+    />
     <DateSelect style="width: 100%" @searchByTime="searchByTime($event)" />
     <!-- <div class="collect_alert" @click="goNotified">
       <wd-badge :top="10" modelValue="12" bg-color="red">

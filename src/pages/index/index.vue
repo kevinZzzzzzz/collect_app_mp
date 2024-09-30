@@ -30,6 +30,7 @@ import { useUserStore } from '@/store'
 import PLATFORM from '@/utils/platform'
 import { $apiGetRoleList } from '@/service/index/common'
 
+const isDev = import.meta.env.DEV
 const imagesUrl = import.meta.env.VITE_SERVER_IMAGEURI
 
 const pathBg1 = `${imagesUrl}pathBg1.png`
@@ -66,8 +67,8 @@ const routerList = ref([
   {
     name: '血液交接查询',
     bgImgUrl: pathBg4,
-    // route: '/packageD/search/index',
-    route: '',
+    route: '/packageD/search/index',
+    // route: '',
     authId: '10104',
   },
 ])
@@ -96,7 +97,7 @@ onLoad(() => {
 })
 const goUrl = (url, id) => {
   if (url) {
-    if (!menusRole.includes(id)) {
+    if (!menusRole.includes(id) && !isDev) {
       uni.showToast({
         icon: 'error',
         title: '无权限访问',

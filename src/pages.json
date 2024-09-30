@@ -163,6 +163,22 @@
       "root": "packageD",
       "pages": [
         {
+          "path": "historyList/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "历史记录"
+          },
+          "needLogin": true
+        },
+        {
+          "path": "historyStatistic/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "历史统计"
+          },
+          "needLogin": true
+        },
+        {
           "path": "search/index",
           "type": "page",
           "style": {

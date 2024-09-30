@@ -204,6 +204,7 @@ const resendCode = () => {
 }
 
 const login = () => {
+  loginInfo.value.authCode = loginInfo.value.authCode.replace(/\s/g, '')
   if (!canLogin.value) return false
   const obj = {
     phone: loginInfo.value.telephone,

@@ -95,6 +95,7 @@
 </template>
 
 <script setup lang="ts">
+import { onShow } from '@dcloudio/uni-app'
 import { onMounted, ref, getCurrentInstance, computed } from 'vue'
 import MapComp from '@/components/MapComp.vue'
 import BoxListInfo from './components/BoxListInfo.vue'
@@ -234,7 +235,7 @@ const signSuccess = (type) => {
 const backHome = () => {
   uni.reLaunch({ url: '/pages/index/index' })
 }
-onMounted(() => {
+onShow(() => {
   const options: any = getCurrentInstance()
   outboundOrderNo.value = getNavigateOptions(options, 'outboundOrderNo')
   tranStatus.value = getNavigateOptions(options, 'tranStatus') || ''
