@@ -226,7 +226,7 @@ const confirmUAV = () => {
       icon: 'none',
     })
   } else {
-    let params = []
+    const params = []
     orderPackageList.value.forEach((d) => {
       params.push({
         transportOrderNo: orderDetail.value.transportOrderNo,
@@ -251,7 +251,7 @@ const confirmUAV = () => {
  * 温度曲线
  * */
 const openTempBox = (obj) => {
-  tempBoxList.value = [obj] || []
+  tempBoxList.value = (obj && [obj]) || []
   showTempBox.value = true // 打开温度曲线弹窗
   store.changePageScroll(true)
 }

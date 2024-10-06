@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "title": "2024年度",
+      "breedValue": "5421",
+      "dataMap": {
+        "collect": {
+          "amount": "2712"
+        },
+        "sign": {
+          "amount": "2710"
+        }
+      }
+    },
+    {
+      "title": "2023年度",
+      "breedValue": "4217",
+      "dataMap": {
+        "collect": {
+          "amount": "2712"
+        },
+        "sign": {
+          "amount": "2710"
+        }
+      }
+    }
+  ]
+}

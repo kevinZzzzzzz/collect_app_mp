@@ -230,13 +230,13 @@ const closeTempBox = () => {
  */
 const sureCollect = () => {
   if (notCollect.value) return
-  let params = {
+  const params = {
     outboundOrderNo: orderDetail.value.outboundOrderNo,
     OrderType: 2,
     transportPackages: [],
   }
   orderDetail.value.eventNoPackageArr.forEach((e) => {
-    let obj = {
+    const obj = {
       packageRelationNo: e.code,
       weight: e.weight,
       cargoList: [],
@@ -344,7 +344,7 @@ const confirmUAV = () => {
       icon: 'none',
     })
   } else {
-    let params = []
+    const params = []
     orderPackageList.value.forEach((d) => {
       params.push({
         transportOrderNo: orderDetail.value.transportOrderNo,
