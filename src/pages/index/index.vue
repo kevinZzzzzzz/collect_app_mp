@@ -61,14 +61,15 @@ const routerList = ref([
   {
     name: '我的任务',
     bgImgUrl: pathBg3,
+    // route: '/packageD/myTask/index',
     route: '',
     authId: '10103',
   },
   {
     name: '血液交接查询',
     bgImgUrl: pathBg4,
-    route: '/packageD/search/index',
-    // route: '',
+    // route: '/packageD/search/index',
+    route: '',
     authId: '10104',
   },
 ])

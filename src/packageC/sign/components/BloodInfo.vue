@@ -31,7 +31,14 @@
     <div class="BloodInfo_divider"></div>
     <div class="BloodInfo_address">
       <div class="BloodInfo_address_item">
-        <p class="BloodInfo_address_item_icon start">始</p>
+        <div class="BloodInfo_address_item_icon start">
+          始
+          <div class="start_divide">
+            <span>·</span>
+            <span>·</span>
+            <span>·</span>
+          </div>
+        </div>
         <p class="BloodInfo_address_item_addr">{{ bloodInfo.outboundApplicant || '--' }}</p>
       </div>
       <div class="BloodInfo_address_item">
@@ -140,6 +147,22 @@ const copyVal = (val) => {
 }
 .start {
   background: #f6bc46;
+  position: relative;
+  &_divide {
+    margin-top: 3px;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 2px;
+    span {
+      width: 2px;
+      height: 2px;
+      background: #848485;
+    }
+  }
 }
 .end {
   background: #5db1ff;

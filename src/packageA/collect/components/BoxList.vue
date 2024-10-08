@@ -2,7 +2,10 @@
   <div class="BoxList">
     <div class="BoxList_header">
       <p class="BoxList_header_title">揽件信息</p>
-      <p class="BoxList_header_right">{{ boxAmount }}箱</p>
+      <p class="BoxList_header_right">
+        {{ boxAmount }}
+        <sub>箱</sub>
+      </p>
     </div>
     <div class="Waybill">
       <div class="Waybill_main">
@@ -125,6 +128,16 @@ const setTemp = (obj) => {
       content: '';
       background: #1890ff;
       border-radius: 5px 5px 5px 5px;
+    }
+    &_right {
+      display: flex;
+      font-size: 18px;
+      align-items: baseline;
+      sub {
+        font-weight: 400;
+        font-size: 14px;
+        color: #323233;
+      }
     }
   }
   &_list {

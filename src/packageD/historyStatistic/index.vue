@@ -26,7 +26,11 @@
                 <div class="content_item_header_right">已发血{{ item?.breedValue || 0 }}</div>
               </div>
             </template>
-            <StatisticCharts :statisticData="item" :hosList="hosList" />
+            <StatisticCharts
+              v-if="collapseOpen.includes(item.title)"
+              :statisticData="item"
+              :hosList="hosList"
+            />
           </wd-collapse-item>
         </wd-collapse>
       </div>
@@ -63,10 +67,10 @@ page {
   background: #f7f8fa;
 }
 .HistoryStatistic {
+  width: 100%;
   padding: 9px 16px;
 }
 .content {
-  width: 100%;
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 16px;

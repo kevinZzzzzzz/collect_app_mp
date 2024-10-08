@@ -90,8 +90,8 @@ const getLocation = (from, to) => {
       latitude: from[0],
       longitude: from[1],
       callout: {
-        content: transStatusMap[props.bloodInfo.transportStatus].text,
-        color: transStatusMap[props.bloodInfo.transportStatus].color,
+        content: transStatusMap[props.bloodInfo.transportStatus]?.text,
+        color: transStatusMap[props.bloodInfo.transportStatus]?.color,
         fontSize: 12,
         borderRadius: 5,
         padding: 5,

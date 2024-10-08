@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="StatisticDetail_header_right">
-        {{ tab === 'collect' ? '揽收总数：' : '签收总数：' }}{{ chartData.amount }}
+        {{ tab === 'collect' ? '揽收总数：' : '签收总数：' }}{{ statisticObj.amount }}
       </div>
     </div>
     <ul class="StatisticDetail_table">
@@ -29,8 +29,14 @@
       </li>
       <li class="StatisticDetail_table_item" v-for="(item, index) in 12" :key="index">
         <div class="StatisticDetail_table_item_tr">{{ item }}月</div>
-        <div class="StatisticDetail_table_item_tr">--</div>
-        <div class="StatisticDetail_table_item_tr">--</div>
+        <div class="StatisticDetail_table_item_tr">
+          <span :style="{ color: '#1890FF' }">{{ tableData[index]?.uav || '--' }}</span>
+          <span :style="{ color: '#4BBBA1' }">({{ tableData[index]?.uavPer || '--' }}%)</span>
+        </div>
+        <div class="StatisticDetail_table_item_tr">
+          <span :style="{ color: '#1890FF' }">{{ tableData[index]?.hos || '--' }}</span>
+          <span :style="{ color: '#FAAB0C' }">({{ tableData[index]?.hosPer || '--' }}%)</span>
+        </div>
       </li>
     </ul>
   </div>
@@ -51,11 +57,13 @@ const props = defineProps({
   },
 })
 const tab = ref('collect') // collect揽收 sign签收
-const chartData = ref(props.statisticDetail.dataMap[tab.value] || {})
-
+const statisticObj = ref(props.statisticDetail.dataMap[tab.value] || {})
+const tableData = computed(() => {
+  return statisticObj.value.data || []
+})
 const changeTab = (type: string) => {
   tab.value = type
-  chartData.value = props.statisticDetail.dataMap[tab.value] || {}
+  statisticObj.value = props.statisticDetail.dataMap[tab.value] || {}
 }
 </script>
 
@@ -87,9 +95,11 @@ const changeTab = (type: string) => {
       background: #ffffff;
       &_tr {
         text-align: center;
-        font-weight: 400;
-        font-size: 12px;
-        color: #323233;
+        span {
+          color: #323233;
+          font-weight: 400;
+          font-size: 12px;
+        }
       }
     }
     &_item:nth-of-type(odd) {

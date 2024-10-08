@@ -127,14 +127,6 @@
     <wd-tabs v-model="tab" inactiveColor="#CDCDCD" @click="handleChangTab">
       <block v-for="(item, index) in tabs" :key="index">
         <wd-tab :title="`${item}`" :name="item">
-          <!-- <div class="loadingPage" v-if="isLoading">
-            <wd-loading :size="30" />
-          </div> -->
-          <!-- <wd-status-tip
-            v-if="!isLoading && searchData && !searchData.length"
-            image="search"
-            tip="暂无数据"
-          /> -->
           <view class="content">
             <div class="main">
               <div class="main_filter">
@@ -157,6 +149,49 @@
                   </p>
                 </div>
               </div>
+              <div class="loadingPage" v-if="isLoading">
+                <wd-loading :size="30" />
+              </div>
+              <wd-status-tip
+                v-if="!isLoading && searchData && !searchData.length"
+                image="search"
+                tip="暂无数据"
+              />
+              <div class="main_content">
+                <div class="main_content_item" v-for="(item, idx) in searchData" :key="idx">
+                  <wd-collapse v-model="collapseOpen">
+                    <wd-collapse-item :name="item.hosName">
+                      <!-- ="{ expanded }" -->
+                      <template #title>
+                        <div class="main_content_item_header">
+                          <div class="main_content_item_header_left">
+                            发往
+                            <p class="main_content_item_header_left_name">{{ item.hosName }}</p>
+                          </div>
+                          <div class="main_content_item_header_right">
+                            {{ (item?.data && item?.data?.length) || 0 }}条
+                            <wd-icon
+                              :name="
+                                collapseOpen.includes(item.hosName)
+                                  ? 'caret-down-small'
+                                  : 'caret-right-small'
+                              "
+                              size="16px"
+                            ></wd-icon>
+                          </div>
+                        </div>
+                      </template>
+                      <div class="main_content_item_order" v-for="(i, d) in item.data" :key="d">
+                        <OrderItem
+                          ref="OrderItemRef"
+                          :orderItem="i"
+                          :transportStatus="transStatusValueMap[tab]"
+                        ></OrderItem>
+                      </div>
+                    </wd-collapse-item>
+                  </wd-collapse>
+                </div>
+              </div>
             </div>
           </view>
         </wd-tab>
@@ -169,6 +204,9 @@
 import { onShow } from '@dcloudio/uni-app'
 import { computed, onMounted, ref } from 'vue'
 import BloodPageSearch from '@/components/BloodPageSearch.vue'
+import { transStatusValueMap } from '@/constant'
+import { $apiGetCollectList } from '@/service/index/collect'
+import OrderItem from '../components/OrderItem.vue'
 
 const imagesUrl = import.meta.env.VITE_SERVER_IMAGEURI
 
@@ -209,7 +247,8 @@ const filterTabMap = {
     },
   ],
 }
-const searchData = ref([])
+const searchData = ref<any>([])
+const collapseOpen = ref<string[]>([])
 const tabs = ['无人机配送', '医院取血']
 const tab = ref('无人机配送')
 const filterTab = ref('') // 筛选条件
@@ -271,6 +310,41 @@ const searchKeyword = (data) => {
 const gotoHistory = () => {
   uni.navigateTo({ url: '/packageD/historyList/index' })
 }
+/**
+ * 获取数据
+ */
+const getData = () => {
+  searchData.value = []
+  isLoading.value = true
+  $apiGetCollectList({
+    outboundStatus: transStatusValueMap[tab.value],
+    keyword: keyword.value || '',
+  })
+    .then((res: any) => {
+      const { data } = res
+      if (data) {
+        const arrTemp: Array<{
+          hosName?: string
+          data?: any
+        }> = []
+        Object.keys(data).forEach((d) => {
+          const obj = {
+            hosName: d,
+            data: data[d].filter((item) => item.bloodPackages?.length > 0),
+          }
+          obj.data.length && arrTemp.push(obj)
+        })
+        searchData.value = arrTemp
+        console.log(searchData.value)
+      }
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
+}
+onShow(() => {
+  getData()
+})
 </script>
 
 <style scoped lang="scss">
@@ -468,8 +542,53 @@ page {
       }
     }
   }
+  &_content {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 16px;
+    padding: 0 16px;
+    &_item {
+      position: relative;
+      width: 100%;
+      &_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        // width: 100%;
+        &_left {
+          display: flex;
+          width: auto;
+          font-family: PingFang SC;
+          font-size: 14px;
+          font-weight: bold;
+          color: #323233;
+          &_name {
+            margin-left: 12px;
+            color: #055197;
+          }
+        }
+        &_right {
+          position: absolute;
+          right: 16px;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 18px;
+          color: #959799;
+        }
+      }
+      &_order {
+        width: 100%;
+        margin-bottom: 16px;
+      }
+    }
+  }
 }
 .content {
   background: #f7f8fa;
+}
+.loadingPage {
+  width: 100%;
+  height: 50vh;
+  @include CenterHorVertical();
 }
 </style>

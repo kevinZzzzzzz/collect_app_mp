@@ -179,6 +179,15 @@
           "needLogin": true
         },
         {
+          "path": "myTask/index",
+          "type": "page"
+        },
+        {
+          "path": "search/detail",
+          "type": "page",
+          "needLogin": true
+        },
+        {
           "path": "search/index",
           "type": "page",
           "style": {

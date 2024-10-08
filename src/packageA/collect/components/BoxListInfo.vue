@@ -224,8 +224,8 @@ const setTemps = (data) => {
           margin: 0 3px;
         }
         &_img {
-          width: 14px;
-          height: 8px;
+          width: 20px;
+          height: 14px;
           margin: 0 3px;
         }
       }

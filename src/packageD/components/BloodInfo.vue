@@ -147,7 +147,7 @@ const copyVal = (val) => {
 }
 .start {
   background: #f6bc46;
-  position: relative;
+  portion: relative;
   &_divide {
     margin-top: 3px;
     position: absolute;

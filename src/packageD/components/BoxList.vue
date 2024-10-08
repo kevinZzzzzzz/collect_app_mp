@@ -1,7 +1,7 @@
 <template>
   <div class="BoxList">
     <div class="BoxList_header">
-      <p class="BoxList_header_title">签收信息</p>
+      <p class="BoxList_header_title">揽件信息</p>
       <p class="BoxList_header_right">
         {{ boxAmount }}
         <sub>箱</sub>
@@ -15,20 +15,27 @@
           :key="idx"
         >
           <!-- 运输编号单组件 -->
-          <div class="Waybill_main_boxItem_header" v-if="item.transportMachineNo">
-            <image
-              class="Waybill_main_boxItem_header_img"
-              src="@img/uavUnSel.png"
-              mode="scaleToFill"
-            />
-            <div class="Waybill_main_boxItem_header_text">{{ item.transportMachineNo }}</div>
-          </div>
+          <!-- <div class="Waybill_main_boxItem_header">
+          <image
+            class="Waybill_main_boxItem_header_img"
+            src="@img/uavUnSel.png"
+            mode="scaleToFill"
+          />
+          <div class="Waybill_main_boxItem_header_text">粤B XY008</div>
+        </div> -->
           <BoxListInfo
-            :showTempAndTime="showTempAndTime"
             :noEditWeight="noEditWeight"
+            :showTempAndTime="!!item.weight"
             :boxItem="item"
+            @setWeight="setWeigh($event)"
             @setTemps="setTemp($event)"
           />
+          <!-- && !showTempAndTime -->
+          <div class="Waybill_main_btm" v-if="!item.weight">
+            <div class="Waybill_main_btm_btn Waybill_main_btm_btn-left" @click="setTemp(item)">
+              温度曲线
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -36,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import BoxListInfo from './BoxListInfo.vue'
 defineOptions({
   name: 'BoxList', // 揽件信息
@@ -70,7 +77,7 @@ watch(
     deep: true,
   },
 )
-const emit = defineEmits(['tempBox'])
+const emit = defineEmits(['weighBox', 'tempBox'])
 const boxAmount = computed(() => {
   return (
     (bloodInfoRef.value.eventNoPackageArr &&
@@ -79,7 +86,14 @@ const boxAmount = computed(() => {
   )
 })
 /**
- * 查看温度曲线
+ * 称重
+ * @param obj 单例对象
+ */
+const setWeigh = (obj) => {
+  emit('weighBox', JSON.parse(JSON.stringify(obj)))
+}
+/**
+ * 温度曲线
  * @param obj 单例对象
  */
 const setTemp = (obj) => {
@@ -219,7 +233,7 @@ const setTemp = (obj) => {
     &_btm {
       width: 100%;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       grid-gap: 27px;
       &_btn {
         font-size: 14px;

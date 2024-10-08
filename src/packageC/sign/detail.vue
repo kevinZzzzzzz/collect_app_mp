@@ -28,8 +28,21 @@
       </div>
     </div>
     <div class="CollectDetail_bottom" :style="{ zIndex: pageScroll ? 0 : 3 }">
-      <div class="CollectDetail_bottom_ctx" v-if="[2].includes(orderDetail.transportStatus)">
-        <div class="CollectDetail_bottom_ctx_left" @click="signPartOpen()">
+      <div
+        class="CollectDetail_bottom_ctx"
+        :style="{
+          'grid-template-columns':
+            orderDetail.eventNoPackageArr && orderDetail.eventNoPackageArr.length > 1
+              ? '1fr 1fr'
+              : '1fr',
+        }"
+        v-if="[2].includes(orderDetail.transportStatus)"
+      >
+        <div
+          class="CollectDetail_bottom_ctx_left"
+          v-if="orderDetail.eventNoPackageArr && orderDetail.eventNoPackageArr.length > 1"
+          @click="signPartOpen()"
+        >
           <p class="CollectDetail_bottom_ctx_left_text">部分签收</p>
         </div>
         <div class="CollectDetail_bottom_ctx_right" @click="signAll()">
@@ -303,7 +316,7 @@ page {
     &_ctx {
       width: 100%;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      // grid-template-columns: 1fr 1fr;
       grid-gap: 16px;
       padding: 10px 16px;
       background: #fff;

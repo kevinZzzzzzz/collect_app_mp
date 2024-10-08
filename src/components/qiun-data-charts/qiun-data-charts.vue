@@ -1,4 +1,4 @@
-<!-- 
+<!--
  * qiun-data-charts 秋云高性能跨全端图表组件
  * Copyright (c) 2021 QIUN® 秋云 https://www.ucharts.cn All rights reserved.
  * Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
@@ -7,13 +7,13 @@
  *
  * uCharts®官方网站
  * https://www.uCharts.cn
- * 
+ *
  * 开源地址:
  * https://gitee.com/uCharts/uCharts
- * 
+ *
  * uni-app插件市场地址：
  * http://ext.dcloud.net.cn/plugin?id=271
- * 
+ *
  -->
 <template>
   <view class="chartsview" :id="'ChartBoxId' + cid">

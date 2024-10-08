@@ -44,10 +44,14 @@
                       </div>
                       <div class="collect_item_header_right">
                         {{ (item?.data && item?.data?.length) || 0 }}条
-                        <!-- <wd-icon
-                          :name="expanded ? 'caret-down-small' : 'caret-right-small'"
+                        <wd-icon
+                          :name="
+                            collapseOpen.includes(item.hosName)
+                              ? 'caret-down-small'
+                              : 'caret-right-small'
+                          "
                           size="16px"
-                        ></wd-icon> -->
+                        ></wd-icon>
                       </div>
                     </div>
                   </template>
