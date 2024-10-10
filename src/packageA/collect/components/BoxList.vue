@@ -25,13 +25,13 @@
         </div> -->
           <BoxListInfo
             :noEditWeight="noEditWeight"
-            :showTempAndTime="!!item.weight"
+            :showTempAndTime="showTempAndTime || !!item.weight || noEditWeight"
             :boxItem="item"
             @setWeight="setWeigh($event)"
             @setTemps="setTemp($event)"
           />
           <!-- && !showTempAndTime -->
-          <div class="Waybill_main_btm" v-if="!item.weight">
+          <div class="Waybill_main_btm" v-if="!item.weight && !noEditWeight && showBtnFlag">
             <div class="Waybill_main_btm_btn Waybill_main_btm_btn-left" @click="setTemp(item)">
               温度曲线
             </div>
@@ -86,6 +86,13 @@ const boxAmount = computed(() => {
     (bloodInfoRef.value.eventNoPackageArr &&
       Object.keys(bloodInfoRef.value.eventNoPackageArr).length) ||
     0
+  )
+})
+// 判断展示操作按钮 没有箱子不显示操作按钮
+const showBtnFlag = computed(() => {
+  return (
+    bloodInfoRef.value.eventNoPackageArr.length &&
+    bloodInfoRef.value.eventNoPackageArr.every((d) => d.code !== '--')
   )
 })
 /**

@@ -1,12 +1,12 @@
 <template>
   <div class="BloodInfo">
     <div class="BloodInfo_header">
-      <div class="BloodInfo_header_text">交接单号: {{ bloodInfo.outboundOrderNo }}</div>
+      <div class="BloodInfo_header_text">交接单号: {{ bloodInfo.handoverId }}</div>
       <image
         class="BloodInfo_header_copy"
         src="@img/copyIcon.png"
         mode="scaleToFill"
-        @click="copyVal(bloodInfo.outboundOrderNo)"
+        @click="copyVal(bloodInfo.handoverId)"
       />
       <!-- <wd-tag color="#EE0A24" bg-color="#FEE6E8">紧急</wd-tag> -->
       <div
@@ -34,9 +34,9 @@
         <div class="BloodInfo_address_item_icon start">
           始
           <div class="start_divide">
-            <span>·</span>
-            <span>·</span>
-            <span>·</span>
+            <div class="start_divide_item">·</div>
+            <div class="start_divide_item">·</div>
+            <div class="start_divide_item">·</div>
           </div>
         </div>
         <p class="BloodInfo_address_item_addr">{{ bloodInfo.outboundApplicant || '--' }}</p>
@@ -157,10 +157,11 @@ const copyVal = (val) => {
     display: grid;
     grid-template-columns: 1fr;
     grid-gap: 2px;
-    span {
+    &_item {
       width: 2px;
       height: 2px;
       background: #848485;
+      border-radius: 50%;
     }
   }
 }

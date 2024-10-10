@@ -129,49 +129,6 @@ const closeTempBox = () => {
   store.changePageScroll(false)
 }
 /**
- * 确定揽收
- */
-const sureCollect = () => {
-  if (notCollect.value) return
-  const params = {
-    outboundOrderNo: orderDetail.value.outboundOrderNo,
-    OrderType: 2,
-    transportPackages: [],
-  }
-  orderDetail.value.eventNoPackageArr.forEach((e) => {
-    const obj = {
-      packageRelationNo: e.code,
-      weight: e.weight,
-      cargoList: [],
-    }
-    if (e.bloodBagGroupMap) {
-      Object.values(e.bloodBagGroupMap).forEach((item: Array<any>) => {
-        item.forEach((ele) => {
-          obj.cargoList.push({
-            cargoType: 1,
-            cargoRelationNo: ele.bloodBagId,
-          })
-        })
-      })
-    }
-    params.transportPackages.push(obj)
-  })
-  $apiAddTransOrder(params).then((res: any) => {
-    setTimeout(() => {
-      if (!orderDetail.value.outboundType) {
-        // 医院取血
-        uni.redirectTo({
-          url: `/packageC/sign/detail?outboundOrderNo=${orderDetail.value.outboundOrderNo}&tranStatus=5`,
-        })
-      } else {
-        uni.redirectTo({
-          url: `/packageA/collect/result?outboundOrderNo=${orderDetail.value.outboundOrderNo}`,
-        })
-      }
-    }, 500)
-  })
-}
-/**
  * 跳转到异常页面
  */
 const gotoError = () => {
@@ -179,13 +136,6 @@ const gotoError = () => {
     url: `/packageA/collect/error?outboundOrderNo=${orderDetail.value.outboundOrderNo}&tranStatus=${tranStatus.value}`,
   })
 }
-// 是否可揽收
-const notCollect = computed(() => {
-  return (
-    orderDetail.value?.eventNoPackageArr &&
-    orderDetail.value?.eventNoPackageArr.some((e) => !e.weight)
-  )
-})
 /**
  * 返回首页
  */

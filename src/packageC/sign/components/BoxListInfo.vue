@@ -12,44 +12,30 @@
         <div class="BoxListInfo_header_info_id">{{ boxItemRef.code }}</div>
         <div class="BoxListInfo_header_info_detail">
           <span class="BoxListInfo_header_info_detail_num">
-            {{ boxItemRef.energy ? boxItemRef.energy + '%' : '--%' }}
+            {{ boxItemRef.energy && boxItemRef.signal + '%' }}
           </span>
+          <!-- 电量 -->
           <image
-            v-if="boxItemRef.energy >= 90"
-            class="BoxListInfo_header_info_detail_img"
-            src="@img/powerH.png"
-            mode="scaleToFill"
-          />
-          <image
-            v-else-if="boxItemRef.energy < 90 && boxItemRef.energy > 20"
+            v-if="boxItemRef.energy"
             class="BoxListInfo_header_info_detail_img"
             src="@img/powerM.png"
             mode="scaleToFill"
           />
-          <image
-            v-else
-            class="BoxListInfo_header_info_detail_img"
-            src="@img/powerL.png"
-            mode="scaleToFill"
-          />
-          <image
-            v-if="boxItemRef.signal"
-            class="BoxListInfo_header_info_detail_img"
-            src="@img/wifiH.png"
-            mode="scaleToFill"
-          />
-          <image
-            v-else
-            class="BoxListInfo_header_info_detail_img"
-            src="@img/wifiL.png"
-            mode="scaleToFill"
-          />
+          <!--  && boxItemRef.energy >= 90 -->
           <!-- <image
-            v-else-if="boxItemRef.signal && boxItemRef.signal < -35 && boxItemRef.signal >= -90"
+            v-if="boxItemRef.energy && boxItemRef.energy < 90"
             class="BoxListInfo_header_info_detail_img"
-            src="@img/wifiM.png"
+            src="@img/powerM.png"
             mode="scaleToFill"
           /> -->
+          <!-- 信号 -->
+          <image
+            v-if="boxItemRef.signal"
+            style="transform: scale(0.8)"
+            class="BoxListInfo_header_info_detail_img"
+            src="@img/WiFiH.png"
+            mode="scaleToFill"
+          />
         </div>
       </div>
       <div v-if="boxItemRef.weight" class="BoxListInfo_header_editWeight">
@@ -84,7 +70,11 @@
     </ul>
     <div class="BoxListInfo_time">
       <p class="BoxListInfo_time_text">更新时间: {{ boxItemRef.updateTime }}</p>
-      <div v-if="showTempAndTime" class="BoxListInfo_time_btn" @click="setTemps(boxItemRef)">
+      <div
+        v-if="showTempAndTime && boxItemRef.code !== '--'"
+        class="BoxListInfo_time_btn"
+        @click="setTemps(boxItemRef)"
+      >
         温度曲线
       </div>
     </div>
@@ -155,16 +145,16 @@ const bloodBagGroupList = computed(() => {
   return arr
 })
 const tempData = computed(() => {
-  let tempL = null
-  let tempR = null
+  let temp = ''
   if (
     boxItemRef.value.deviceStremDataMap?.temp &&
     Array.isArray(boxItemRef.value.deviceStremDataMap?.temp)
   ) {
-    tempL = boxItemRef.value.deviceStremDataMap?.temp[0]
-    tempR = boxItemRef.value.deviceStremDataMap?.temp[1]
+    boxItemRef.value.deviceStremDataMap?.temp.forEach((item, index) => {
+      temp += `${item}℃ `
+    })
   }
-  return tempL && tempR ? `${tempL}~${tempR}°C` : tempL ? `${tempL}°C` : tempR ? `${tempR}°C` : '--'
+  return temp || '--'
 })
 
 // // 单个称重

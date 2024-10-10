@@ -176,19 +176,13 @@ const initData = () => {
   let arr = []
   //   // 处理温度数据
   const handleTemp = (obj) => {
-    let tempL = null
-    let tempR = null
+    let temp = ''
     if (obj.deviceStremDataMap?.temp && Array.isArray(obj.deviceStremDataMap?.temp)) {
-      tempL = obj.deviceStremDataMap?.temp[0]
-      tempR = obj.deviceStremDataMap?.temp[1]
+      obj.deviceStremDataMap?.temp.forEach((item, index) => {
+        temp += `${item}℃ `
+      })
     }
-    return tempL && tempR
-      ? `${tempL}~${tempR}°C`
-      : tempL
-        ? `${tempL}°C`
-        : tempR
-          ? `${tempR}°C`
-          : '--'
+    return temp || '--'
   }
   if (boxList.value && boxList.value.length) {
     arr = new Array(boxList.value.length)

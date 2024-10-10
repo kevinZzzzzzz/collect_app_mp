@@ -2,7 +2,7 @@
   <div class="OrderItem">
     <div class="OrderItem_header">
       <div class="OrderItem_header_left">
-        <p class="OrderItem_header_left_text">交接单号：{{ orderItem.outboundOrderNo }}</p>
+        <p class="OrderItem_header_left_text">交接单号：{{ orderItem.handoverId }}</p>
         <!-- <wd-tag custom-class="space" color="#EE0A24" bg-color="#EFDFE8">紧急</wd-tag> -->
       </div>
       <div class="OrderItem_header_right">
@@ -24,7 +24,7 @@
         <!-- 箱子信息组件 -->
         <BoxListInfo :boxItem="item" noEditWeight />
       </div>
-      <div class="OrderItem_main_btm">
+      <div class="OrderItem_main_btm" v-if="showBtnFlag">
         <div class="OrderItem_main_btm_btn OrderItem_main_btm_btn-left" @click="setTemp">
           温度曲线
         </div>
@@ -34,15 +34,6 @@
       </div>
     </div>
   </div>
-  <!-- <wd-popup v-model="showWeighBox" position="bottom" @close="closeWeighBox">
-    <BoxWeigh
-      v-if="showWeighBox"
-      lock-scroll
-      :safe-area-inset-bottom="true"
-      :weighBoxList="weighBoxList"
-      @closeWeighBox="closeWeighBox"
-    />
-  </wd-popup> -->
   <wd-popup v-model="showTempBox" position="bottom" @close="closeTempBox">
     <BoxTemp
       v-if="showTempBox"
@@ -59,7 +50,6 @@
 import { ref, getCurrentInstance } from 'vue'
 import { transStatusMap, transStatusValueMap } from '@/constant/index'
 import BoxListInfo from './BoxListInfo.vue'
-import BoxWeigh from './BoxWeigh.vue'
 import BoxTemp from './BoxTemp.vue'
 import { globalSettingStore } from '@/store/global'
 defineOptions({
@@ -81,17 +71,16 @@ const props = defineProps({
     },
   },
 })
-const showWeighBox = ref(false) // 展示称重弹窗
-const weighBoxList = ref([]) // 称重数据
 const showTempBox = ref(false) // 展示温度曲线弹窗
 const tempBoxList = ref([]) // 温度曲线数据
 
-// // 关闭称重弹窗
-// const closeWeighBox = () => {
-//   showWeighBox.value = false
-//   weighBoxList.value = []
-//   store.changePageScroll(false)
-// }
+// 判断展示操作按钮 没有箱子不显示操作按钮
+const showBtnFlag = computed(() => {
+  return (
+    props.orderItem.bloodPackages.length &&
+    props.orderItem.bloodPackages.every((d) => d.code !== '--')
+  )
+})
 /**
  * 温度曲线
  * */
@@ -140,9 +129,15 @@ const goDetail = () => {
       display: flex;
       align-items: center;
       &_text {
+        font-weight: bold;
         margin-right: 10px;
         font-size: 14px;
         color: #323233;
+      }
+    }
+    &_right {
+      &_text {
+        font-weight: bold;
       }
     }
   }

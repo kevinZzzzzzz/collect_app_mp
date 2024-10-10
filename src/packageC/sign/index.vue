@@ -145,6 +145,7 @@ const getData = () => {
  */
 const handleChangTab = ({ name }) => {
   collectData.value = []
+  collapseOpen.value = []
   tab.value = name
   getData()
 }

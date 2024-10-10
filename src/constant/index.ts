@@ -43,7 +43,7 @@ export const transStatusMap = {
   },
   6: {
     color: '#4BBBA1',
-    text: '未揽收',
+    text: '待揽收',
   },
   7: {
     color: '#FF0000',

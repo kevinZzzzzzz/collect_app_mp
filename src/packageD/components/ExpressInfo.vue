@@ -4,8 +4,19 @@
       <div class="ExpressInfo_header_receive">
         <p class="ExpressInfo_header_receive_text">收</p>
       </div>
-      <p class="ExpressInfo_header_info">{{ bloodInfo.consigneePerson || '--' }}</p>
-      <p class="ExpressInfo_header_info">{{ bloodInfo.consigneeTelephone || '--' }}</p>
+      <div class="ExpressInfo_header_info">
+        <div class="ExpressInfo_header_info_line">
+          <p class="ExpressInfo_header_info_line_name" v-if="bloodInfo.consigneePerson">
+            {{ bloodInfo.consigneePerson || '--' }}
+          </p>
+          <p class="ExpressInfo_header_info_line_tel" v-if="bloodInfo.consigneeTelephone">
+            {{ bloodInfo.consigneeTelephone || '--' }}
+          </p>
+        </div>
+        <div class="ExpressInfo_header_info_line" v-if="bloodInfo.consigneeAddress">
+          <p class="ExpressInfo_header_info_line_addr">{{ bloodInfo.consigneeAddress || '--' }}</p>
+        </div>
+      </div>
     </div>
     <ul class="ExpressInfo_precess">
       <li
@@ -97,9 +108,26 @@ const precessList = computed(() => {
     }
     &_info {
       margin-left: 12px;
-      font-size: 14px;
-      font-weight: bold;
-      color: #323233;
+      &_line {
+        display: flex;
+        align-items: center;
+        &_name {
+          font-size: 14px;
+          font-weight: bold;
+          color: #323233;
+          margin-right: 16px;
+        }
+        &_tel {
+          font-weight: 400;
+          font-size: 12px;
+          color: #323233;
+        }
+        &_addr {
+          font-weight: 400;
+          font-size: 12px;
+          color: #323233;
+        }
+      }
     }
   }
   &_precess {

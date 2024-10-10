@@ -2,7 +2,7 @@
   <div class="OrderItem">
     <div class="OrderItem_header">
       <div class="OrderItem_header_left">
-        <p class="OrderItem_header_left_text">交接单号：{{ orderItem.outboundOrderNo }}</p>
+        <p class="OrderItem_header_left_text">交接单号：{{ orderItem.handoverId }}</p>
         <!-- <wd-tag custom-class="space" color="#EE0A24" bg-color="#EFDFE8">紧急</wd-tag> -->
       </div>
       <div class="OrderItem_header_right">
@@ -29,6 +29,7 @@
           'OrderItem_main_btm',
           +orderItem.transportStatus === 7 && 'OrderItem_main_btm-1line',
         ]"
+        v-if="showBtnFlag"
       >
         <div class="OrderItem_main_btm_btn OrderItem_main_btm_btn-left" @click="setTemp">
           温度曲线
@@ -104,9 +105,13 @@ const weighBoxList = ref([]) // 称重数据
 const showTempBox = ref(false) // 展示温度曲线弹窗
 const tempBoxList = ref([]) // 温度曲线数据
 
-// const transStatusValue = computed(() => {
-//   return transStatusValueMap[props.transportStatus] || ''
-// })
+// 判断展示操作按钮 没有箱子不显示操作按钮
+const showBtnFlag = computed(() => {
+  return (
+    props.orderItem.bloodPackages.length &&
+    props.orderItem.bloodPackages.every((d) => d.code !== '--')
+  )
+})
 /**
  * 称重
  */
@@ -173,9 +178,15 @@ const goDetail = () => {
       display: flex;
       align-items: center;
       &_text {
+        font-weight: bold;
         margin-right: 10px;
         font-size: 14px;
         color: #323233;
+      }
+    }
+    &_right {
+      &_text {
+        font-weight: bold;
       }
     }
   }

@@ -16,7 +16,7 @@
     <div class="CollectResult_block">
       <div class="CollectResult_block_item">
         <div class="CollectResult_block_item_left">交接单号:</div>
-        <div class="CollectResult_block_item_right">{{ orderDetail.outboundOrderNo }}</div>
+        <div class="CollectResult_block_item_right">{{ orderDetail.handoverId }}</div>
       </div>
       <div class="CollectResult_block_item">
         <div class="CollectResult_block_item_left">运输单号:</div>
@@ -34,6 +34,7 @@
         <div class="CollectResult_block_item_left">发送方:</div>
         <div class="CollectResult_block_item_right">{{ orderDetail.outboundApplicant }}</div>
       </div>
+      <div class="CollectResult_block_divider"></div>
       <div class="CollectResult_block_item">
         <div class="CollectResult_block_item_left">接收方:</div>
         <div class="CollectResult_block_item_right">{{ orderDetail.outboundReceiver }}</div>
@@ -181,11 +182,16 @@ page {
     display: grid;
     grid-template-columns: 1fr;
     grid-gap: 16px;
+
+    &_divider {
+      height: 1px;
+      width: 100%;
+      background: #eaedf0;
+    }
     &_item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 9px 0;
       &_left {
         font-weight: bold;
         font-size: 14px;

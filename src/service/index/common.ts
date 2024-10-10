@@ -1,7 +1,7 @@
 import { http } from '@/utils/http'
 import { isMp } from '@/utils/platform'
 const isDev = import.meta.env.DEV
-const baseUrl = import.meta.env.VITE_SERVER_BASEURL
+// const baseUrl = import.meta.env.VITE_SERVER_BASEURL
 const uaaUrl = import.meta.env.VITE_SERVER_UAAURL
 // 设置代理
 const setProxy = (url: string): string => {

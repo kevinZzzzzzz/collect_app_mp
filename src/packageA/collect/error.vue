@@ -23,7 +23,7 @@
     <div class="CollectError_block">
       <div class="CollectError_block_item">
         <div class="CollectError_block_item_left">交接单号:</div>
-        <div class="CollectError_block_item_right">{{ orderDetail.outboundOrderNo }}</div>
+        <div class="CollectError_block_item_right">{{ orderDetail.handoverId }}</div>
       </div>
       <div class="CollectError_block_item">
         <div class="CollectError_block_item_left">配送方式:</div>

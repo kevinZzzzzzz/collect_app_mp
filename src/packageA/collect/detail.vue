@@ -276,11 +276,22 @@ const gotoError = () => {
     url: `/packageA/collect/error?outboundOrderNo=${orderDetail.value.outboundOrderNo}&tranStatus=${tranStatus.value}`,
   })
 }
-// 是否可揽收
+
+/**
+ * 是否可揽收
+ * 无人机配送 没装箱 => 可揽收
+ * 无人机配送 有箱子没称重 => 不可揽收
+ */
 const notCollect = computed(() => {
+  if (
+    orderDetail.value?.eventNoPackageArr &&
+    orderDetail.value?.eventNoPackageArr.some((d) => d.code == '--')
+  ) {
+    return false
+  }
   return (
     orderDetail.value?.eventNoPackageArr &&
-    orderDetail.value?.eventNoPackageArr.some((e) => !e.weight)
+    orderDetail.value?.eventNoPackageArr.every((e) => !e.weight)
   )
 })
 /**

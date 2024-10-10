@@ -159,7 +159,7 @@ const signPartOpen = () => {
 const signAll = () => {
   message
     .confirm({
-      msg: `是否确定签收交接单${orderDetail.value.outboundOrderNo}`,
+      msg: `是否确定签收交接单${orderDetail.value.handoverId}`,
       title: '确定签收',
     })
     .then(() => {
@@ -189,7 +189,7 @@ const closePartSignBox = () => {
 const signPart = (obj) => {
   message
     .confirm({
-      msg: `是否确定签收交接单${orderDetail.value.outboundOrderNo}的${obj.code}号箱子`,
+      msg: `是否确定签收交接单${orderDetail.value.handoverId}的${obj.code}号箱子`,
       title: '确定签收',
     })
     .then(() => {

@@ -8,7 +8,7 @@
         no-border
         v-model="searchValue"
         size="midium"
-        placeholder="请输入交接单号/运输箱号/医院名"
+        placeholder="请输入交接单号/医院名"
       >
         <template #prefix>
           <wd-icon name="search" color="#1890ff" size="14px"></wd-icon>
